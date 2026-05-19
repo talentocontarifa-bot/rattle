@@ -6,6 +6,7 @@ import sys
 import contextlib
 import io
 import traceback
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
