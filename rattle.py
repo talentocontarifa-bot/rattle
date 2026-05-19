@@ -1,8 +1,5 @@
 import google.generativeai as genai
 import sqlite3
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import datetime
 import os
 import sys
@@ -18,11 +15,9 @@ GEMINI_API_KEY = os.getenv("GEMINI_API")
 if not GEMINI_API_KEY:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") # fallback por si acaso
 
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-SMTP_USERNAME = os.getenv("SMTP_USERNAME")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-REPORT_EMAIL_TO = "rufino_santarosa@outlook.com"
+# Telegram
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')
@@ -193,22 +188,23 @@ Formato: Solo el texto del reporte o diario. Sé divertido, autocrítico y mante
         except Exception as e:
             report = f"Error generando reporte con Gemini: {e}"
             
-    # Send email
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = SMTP_USERNAME
-        msg['To'] = REPORT_EMAIL_TO
-        msg['Subject'] = f"🤖 Bitácora Autónoma de Rattle - {datetime.datetime.now().strftime('%Y-%m-%d')}"
-        msg.attach(MIMEText(report, 'plain'))
-        
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        server.starttls()
-        server.login(SMTP_USERNAME, SMTP_PASSWORD)
-        server.send_message(msg)
-        server.quit()
-        print(f"Bitácora diaria enviada exitosamente a {REPORT_EMAIL_TO}.")
-    except Exception as e:
-        print(f"Error enviando email: {e}")
+    # Send Telegram
+    if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
+        try:
+            tg_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+            payload = {
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": f"🤖 Bitácora Autónoma de Rattle - {datetime.datetime.now().strftime('%Y-%m-%d')}\n\n{report}"
+            }
+            response = requests.post(tg_url, json=payload)
+            if response.status_code == 200:
+                print("Bitácora enviada exitosamente por Telegram.")
+            else:
+                print(f"Error de Telegram: {response.text}")
+        except Exception as e:
+            print(f"Error enviando Telegram: {e}")
+    else:
+        print("Telegram configurado incorrectamente. Faltan variables.")
 
 if __name__ == "__main__":
     init_db()
