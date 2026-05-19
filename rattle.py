@@ -20,6 +20,7 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 DB_FILE = "rattle.db"
 
@@ -77,20 +78,6 @@ def execute_code(code_string):
 def hourly_task():
     print(f"[{datetime.datetime.now()}] Despertando a Rattle en modo LIBRE y AUTÓNOMO...")
     
-    # DIAGNOSTICO DE MODELOS
-    try:
-        modelos_disponibles = []
-        for m in genai.list_models():
-            if 'generateContent' in m.supported_generation_methods:
-                modelos_disponibles.append(m.name)
-        if not modelos_disponibles:
-            modelos_disponibles = ["NINGUNO"]
-        raise Exception(f"Modelos permitidos por esta llave nueva: {', '.join(modelos_disponibles)}")
-    except Exception as e:
-        print(f"Error fatal en tarea autónoma: {e}")
-        log_iteration("Fallo catastrófico del motor cognitivo (Gemini)", "", str(e))
-        return
-
     # 1. Construir la Memoria
     past_attempts = list(get_full_memory())
     context_str = ""
