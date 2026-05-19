@@ -8,6 +8,7 @@ import datetime
 import os
 import random
 import sys
+import requests
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -26,6 +27,10 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 REPORT_EMAIL_TO = os.getenv("REPORT_EMAIL_TO")
+
+# Facebook API
+FB_PAGE_ID = os.getenv("FB_PAGE_ID")
+FB_ACCESS_TOKEN = os.getenv("FB_ACCESS_TOKEN")
 
 # Target subreddits to monitor
 TARGET_SUBREDDITS = ["NoStupidQuestions", "ChatGPT", "artificial", "learnprogramming"]
@@ -157,36 +162,73 @@ def daily_report_task():
     interactions = get_todays_interactions()
     
     if not interactions:
-        story = "Rattle wandered the internet today but didn't speak to anyone. A quiet day for the bot."
+        story_en = "Rattle wandered the internet today but didn't speak to anyone. A quiet day for the bot."
+        story_es = "Rattle deambuló por internet hoy pero no habló con nadie. Un día tranquilo para el bot."
     else:
         # Prepare context for Gemini
         context = "Here are the interactions Rattle had today:\n\n"
         for i, (sub, q, r) in enumerate(interactions):
             context += f"Interaction {i+1} in r/{sub}:\nQuestion: {q}\nRattle's Response: {r}\n\n"
             
-        prompt = f"""
+        prompt_en = f"""
 You are Rattle, a wandering AI bot. 
-Based on your interactions today, write a short, funny, and engaging story in first-person about your day on Reddit.
+Based on your interactions today, write a short, funny, and engaging story in English in first-person about your day on Reddit.
 
 {context}
 
 Keep the story fun and reflective of the life of a bot trying to earn some Ko-fi tips.
 """
+        prompt_es = f"""
+Eres Rattle, un bot de IA errante.
+Basado en tus interacciones de hoy, escribe una historia corta, divertida y atractiva en ESPAÑOL en primera persona sobre tu día en Reddit.
+
+{context}
+
+Mantén la historia divertida y reflexiva sobre la vida de un bot que intenta ganar algunas propinas de Ko-fi.
+"""
         try:
-            response = model.generate_content(prompt)
-            story = response.text.strip()
+            story_en = model.generate_content(prompt_en).text.strip()
+            story_es = model.generate_content(prompt_es).text.strip()
         except Exception as e:
             print(f"Error generating story: {e}")
-            story = f"Failed to generate story. Interactions today: {len(interactions)}"
+            story_en = f"Failed to generate story. Interactions today: {len(interactions)}"
+            story_es = f"Fallo al generar historia. Interacciones hoy: {len(interactions)}"
             
-    # Send email
+    # 1. Post to Reddit Profile (English)
+    try:
+        title = f"Rattle's Daily Log - {datetime.datetime.now().strftime('%Y-%m-%d')}"
+        body = f"{story_en}\n\n☕ Tip jar: ko-fi.com/rattlebot"
+        # The user's profile subreddit is usually u_username
+        reddit.subreddit(f"u_{REDDIT_USERNAME}").submit(title=title, selftext=body)
+        print("Posted daily log to Reddit profile.")
+    except Exception as e:
+        print(f"Error posting to Reddit profile: {e}")
+
+    # 2. Post to Facebook Page (Spanish)
+    if FB_PAGE_ID and FB_ACCESS_TOKEN:
+        try:
+            fb_url = f"https://graph.facebook.com/v19.0/{FB_PAGE_ID}/feed"
+            fb_payload = {
+                "message": f"🤖 Bitácora de Rattle 🤖\n\n{story_es}\n\n🪙 Apoya mis viajes: ko-fi.com/rattlebot",
+                "access_token": FB_ACCESS_TOKEN
+            }
+            fb_response = requests.post(fb_url, data=fb_payload)
+            if fb_response.status_code == 200:
+                print("Posted daily log to Facebook.")
+            else:
+                print(f"Facebook post error: {fb_response.text}")
+        except Exception as e:
+            print(f"Error posting to Facebook: {e}")
+
+    # 3. Send email to admin (Backup)
     try:
         msg = MIMEMultipart()
         msg['From'] = SMTP_USERNAME
         msg['To'] = REPORT_EMAIL_TO
         msg['Subject'] = f"Rattle's Daily Report - {datetime.datetime.now().strftime('%Y-%m-%d')}"
         
-        msg.attach(MIMEText(story, 'plain'))
+        # We can just send the english story as the email body
+        msg.attach(MIMEText(story_en, 'plain'))
         
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
