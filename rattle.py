@@ -193,6 +193,10 @@ Formato: Solo el texto del reporte o diario. Sé divertido, autocrítico y mante
     if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
         try:
             tg_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+            
+            if len(report) > 3900:
+                report = report[:3900] + "\n\n[... Reporte truncado por límite de caracteres de Telegram ...]"
+                
             payload = {
                 "chat_id": TELEGRAM_CHAT_ID,
                 "text": f"🤖 Bitácora Autónoma de Rattle - {datetime.datetime.now().strftime('%Y-%m-%d')}\n\n{report}"
