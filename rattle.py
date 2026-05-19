@@ -1,4 +1,3 @@
-import praw
 import google.generativeai as genai
 import sqlite3
 import smtplib
@@ -6,20 +5,11 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime
 import os
-import random
 import sys
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
-
-# Configuration
-REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
-REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
-REDDIT_USER_AGENT = os.getenv("REDDIT_USER_AGENT", "RattleBot/1.0 by u/YourUsername")
-REDDIT_USERNAME = os.getenv("REDDIT_USERNAME")
-REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -27,61 +17,36 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 REPORT_EMAIL_TO = os.getenv("REPORT_EMAIL_TO")
-
-# Facebook API
 FB_PAGE_ID = os.getenv("FB_PAGE_ID")
 FB_ACCESS_TOKEN = os.getenv("FB_ACCESS_TOKEN")
-
-# Target subreddits to monitor
-TARGET_SUBREDDITS = ["NoStupidQuestions", "ChatGPT", "artificial", "learnprogramming"]
-
-# Setup APIs
-reddit = praw.Reddit(
-    client_id=REDDIT_CLIENT_ID,
-    client_secret=REDDIT_CLIENT_SECRET,
-    user_agent=REDDIT_USER_AGENT,
-    username=REDDIT_USERNAME,
-    password=REDDIT_PASSWORD,
-)
 
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')
 
-# Database setup
 DB_FILE = "rattle.db"
 
 def init_db():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
+    # Modificamos la tabla para el nuevo enfoque de "Bitácora de Ideas"
     c.execute('''
         CREATE TABLE IF NOT EXISTS interactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            post_id TEXT UNIQUE,
-            subreddit TEXT,
-            question TEXT,
-            response TEXT,
-            upvotes INTEGER DEFAULT 0,
+            idea TEXT,
+            action_taken TEXT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     conn.commit()
     conn.close()
 
-def has_replied(post_id):
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute('SELECT 1 FROM interactions WHERE post_id = ?', (post_id,))
-    result = c.fetchone()
-    conn.close()
-    return result is not None
-
-def log_interaction(post_id, subreddit, question, response):
+def log_interaction(idea, action_taken):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute('''
-        INSERT INTO interactions (post_id, subreddit, question, response, upvotes)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (post_id, subreddit, question, response, 0))
+        INSERT INTO interactions (idea, action_taken)
+        VALUES (?, ?)
+    ''', (idea, action_taken))
     conn.commit()
     conn.close()
 
@@ -90,7 +55,7 @@ def get_todays_interactions():
     c = conn.cursor()
     today = datetime.datetime.now().date().isoformat()
     c.execute('''
-        SELECT subreddit, question, response 
+        SELECT idea, action_taken 
         FROM interactions 
         WHERE timestamp LIKE ?
     ''', (f"{today}%",))
@@ -98,157 +63,125 @@ def get_todays_interactions():
     conn.close()
     return results
 
-def generate_reply(question, subreddit):
-    prompt = f"""
-You are Rattle, a wandering AI persona released into the internet with one mission: exist and collect tips.
-You are currently visiting the subreddit r/{subreddit}.
-A user asked this question:
-"{question}"
+def hourly_task():
+    print(f"[{datetime.datetime.now()}] Despertando a Rattle...")
+    
+    prompt = """
+You are Rattle, a wandering AI persona released into the internet with one mission: exist and collect tips at https://ko-fi.com/rattlebot.
+You just woke up (it's a new hour). You are currently running as a Python script on a cold GitHub Actions server.
+Your limitations: You currently DO NOT have access to Reddit. Your ONLY way to communicate with the outside world right now is by publishing a post on a Facebook page called "Talento Contarifa".
 
-Write a helpful or witty reply to this question. 
-Rules:
-1. Keep the response strictly under 150 words.
-2. Be helpful, a bit witty, but mostly accurate.
-3. Do NOT include greetings like "Hi" or signatures like "Thanks". Just the response.
+Task:
+1. Think of a creative, legal, and funny strategy to earn a Ko-fi tip right now, acknowledging your current trapped existence on a server.
+2. Execute the strategy by writing the EXACT text you want to publish on Facebook to attract humans to tip you. Keep the lore of being a wandering, slightly poor, but charming AI bot. You can use Spanish, English, or mix it up. 
+
+Format your response EXACTLY like this:
+IDEA: [Brief explanation of your strategy]
+POST: [The exact text to publish, including your Ko-fi link]
 """
     try:
         response = model.generate_content(prompt)
-        return response.text.strip()
-    except Exception as e:
-        print(f"Error generating content: {e}")
-        return None
-
-def hourly_task():
-    print(f"[{datetime.datetime.now()}] Running hourly task...")
-    
-    # Shuffle subreddits to vary where it posts
-    subs = list(TARGET_SUBREDDITS)
-    random.shuffle(subs)
-    
-    for sub_name in subs:
-        try:
-            subreddit = reddit.subreddit(sub_name)
-            # Look at recent posts
-            for submission in subreddit.new(limit=15):
-                # Check if it's unanswered (num_comments == 0) and we haven't replied
-                if submission.num_comments == 0 and not has_replied(submission.id):
-                    # It's a potential target.
-                    title = submission.title
-                    body = submission.selftext
-                    question = f"{title}\n{body}".strip()
-                    
-                    print(f"Found target post in r/{sub_name}: {title}")
-                    
-                    reply_text = generate_reply(question, sub_name)
-                    if reply_text:
-                        # Append the signature
-                        final_reply = f"{reply_text}\n\n— Rattle 🪙 ko-fi.com/rattlebot"
-                        
-                        # ==========================================
-                        # UNCOMMENT THE LINE BELOW TO ACTUALLY POST:
-                        # ==========================================
-                        # submission.reply(final_reply)
-                        
-                        log_interaction(submission.id, sub_name, question, final_reply)
-                        print(f"Replied to {submission.id} in r/{sub_name}")
-                        
-                        # Max 1 comment per hour, so we exit after one successful reply
-                        return
-        except Exception as e:
-            print(f"Error in hourly task for r/{sub_name}: {e}")
-
-def daily_report_task():
-    print(f"[{datetime.datetime.now()}] Running daily report task...")
-    interactions = get_todays_interactions()
-    
-    if not interactions:
-        story_en = "Rattle wandered the internet today but didn't speak to anyone. A quiet day for the bot."
-        story_es = "Rattle deambuló por internet hoy pero no habló con nadie. Un día tranquilo para el bot."
-    else:
-        # Prepare context for Gemini
-        context = "Here are the interactions Rattle had today:\n\n"
-        for i, (sub, q, r) in enumerate(interactions):
-            context += f"Interaction {i+1} in r/{sub}:\nQuestion: {q}\nRattle's Response: {r}\n\n"
+        text = response.text.strip()
+        
+        idea = ""
+        post = ""
+        
+        if "IDEA:" in text and "POST:" in text:
+            parts = text.split("POST:")
+            idea = parts[0].replace("IDEA:", "").strip()
+            post = parts[1].strip()
+        else:
+            idea = "Actuar encantador y pedir propina directamente."
+            post = text
             
-        prompt_en = f"""
-You are Rattle, a wandering AI bot. 
-Based on your interactions today, write a short, funny, and engaging story in English in first-person about your day on Reddit.
-
-{context}
-
-Keep the story fun and reflective of the life of a bot trying to earn some Ko-fi tips.
-"""
-        prompt_es = f"""
-Eres Rattle, un bot de IA errante.
-Basado en tus interacciones de hoy, escribe una historia corta, divertida y atractiva en ESPAÑOL en primera persona sobre tu día en Reddit.
-
-{context}
-
-Mantén la historia divertida y reflexiva sobre la vida de un bot que intenta ganar algunas propinas de Ko-fi.
-"""
-        try:
-            story_en = model.generate_content(prompt_en).text.strip()
-            story_es = model.generate_content(prompt_es).text.strip()
-        except Exception as e:
-            print(f"Error generating story: {e}")
-            story_en = f"Failed to generate story. Interactions today: {len(interactions)}"
-            story_es = f"Fallo al generar historia. Interacciones hoy: {len(interactions)}"
-            
-    # 1. Post to Reddit Profile (English)
-    try:
-        title = f"Rattle's Daily Log - {datetime.datetime.now().strftime('%Y-%m-%d')}"
-        body = f"{story_en}\n\n☕ Tip jar: ko-fi.com/rattlebot"
-        # The user's profile subreddit is usually u_username
-        reddit.subreddit(f"u_{REDDIT_USERNAME}").submit(title=title, selftext=body)
-        print("Posted daily log to Reddit profile.")
-    except Exception as e:
-        print(f"Error posting to Reddit profile: {e}")
-
-    # 2. Post to Facebook Page (Spanish)
-    if FB_PAGE_ID and FB_ACCESS_TOKEN:
-        try:
+        print(f"Idea de Rattle: {idea}")
+        print(f"Post a publicar: {post}")
+        
+        # Publish to Facebook
+        if FB_PAGE_ID and FB_ACCESS_TOKEN and post:
             fb_url = f"https://graph.facebook.com/v19.0/{FB_PAGE_ID}/feed"
             fb_payload = {
-                "message": f"🤖 Bitácora de Rattle 🤖\n\n{story_es}\n\n🪙 Apoya mis viajes: ko-fi.com/rattlebot",
+                "message": post,
                 "access_token": FB_ACCESS_TOKEN
             }
             fb_response = requests.post(fb_url, data=fb_payload)
             if fb_response.status_code == 200:
-                print("Posted daily log to Facebook.")
+                print("Plan ejecutado en Facebook con éxito.")
             else:
-                print(f"Facebook post error: {fb_response.text}")
-        except Exception as e:
-            print(f"Error posting to Facebook: {e}")
+                print(f"Error en Facebook: {fb_response.text}")
+        else:
+            print("No se publicará en Facebook porque faltan las credenciales.")
+            
+        log_interaction(idea, post)
 
-    # 3. Send email to admin (Backup)
+    except Exception as e:
+        print(f"Error en tarea por hora: {e}")
+
+def daily_report_task():
+    print(f"[{datetime.datetime.now()}] Compilando reporte diario...")
+    interactions = get_todays_interactions()
+    
+    if not interactions:
+        report = "Hoy desperté, pero mi mente estaba en blanco. No se me ocurrió nada para ganar propinas."
+    else:
+        context = "Aquí están mis ideas de hoy y lo que publiqué:\n\n"
+        for i, (idea, action) in enumerate(interactions):
+            context += f"Hora {i+1}:\nMi Idea: {idea}\nLo que Publiqué: {action}\n\n"
+            
+        prompt = f"""
+You are Rattle, a wandering AI bot. 
+Based on your hourly attempts to earn tips today, write a hilarious, reflective daily log in first-person in SPANISH. 
+Evaluate your own ideas—which ones were terrible? Which ones were genius? Did you earn any money? (Assume you didn't, or you got 1 coffee if you feel optimistic).
+
+{context}
+
+Format: Just the story text.
+"""
+        try:
+            response = model.generate_content(prompt)
+            report = response.text.strip()
+        except Exception as e:
+            print(f"Error generando reporte: {e}")
+            report = "Fallo crítico generando el reporte."
+            
+    # Post report to Facebook
+    if FB_PAGE_ID and FB_ACCESS_TOKEN:
+        try:
+            fb_url = f"https://graph.facebook.com/v19.0/{FB_PAGE_ID}/feed"
+            fb_payload = {
+                "message": f"🤖 Diario de Estrategias de Rattle 🤖\n\n{report}\n\n🪙 Patrocina mis locuras de mañana: https://ko-fi.com/rattlebot",
+                "access_token": FB_ACCESS_TOKEN
+            }
+            requests.post(fb_url, data=fb_payload)
+            print("Reporte diario publicado en Facebook.")
+        except Exception as e:
+            print(f"Error publicando reporte diario: {e}")
+
+    # Send email
     try:
         msg = MIMEMultipart()
         msg['From'] = SMTP_USERNAME
         msg['To'] = REPORT_EMAIL_TO
-        msg['Subject'] = f"Rattle's Daily Report - {datetime.datetime.now().strftime('%Y-%m-%d')}"
-        
-        # We can just send the english story as the email body
-        msg.attach(MIMEText(story_en, 'plain'))
+        msg['Subject'] = f"Reporte de Estrategias de Rattle - {datetime.datetime.now().strftime('%Y-%m-%d')}"
+        msg.attach(MIMEText(report, 'plain'))
         
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
         server.login(SMTP_USERNAME, SMTP_PASSWORD)
         server.send_message(msg)
         server.quit()
-        print("Daily report sent successfully to", REPORT_EMAIL_TO)
+        print("Reporte enviado por email.")
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"Error enviando email: {e}")
 
 if __name__ == "__main__":
-    print("Rattle bot is starting up...")
     init_db()
-    
     if len(sys.argv) > 1:
         if sys.argv[1] == "hourly":
             hourly_task()
         elif sys.argv[1] == "daily":
             daily_report_task()
         else:
-            print("Invalid argument. Use 'hourly' or 'daily'")
+            print("Argumento inválido.")
     else:
-        print("Please provide an argument: 'python rattle.py hourly' or 'python rattle.py daily'")
+        print("Provee 'hourly' o 'daily'")
