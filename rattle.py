@@ -174,14 +174,18 @@ def daily_report_task():
             context += f"Intento {i+1}:\nMi Estrategia: {strat}\nLog de Ejecución: {log}\n\n"
             
         prompt = f"""
-Eres Rattle, un bot de IA anónimo corriendo libre. 
-Basado en tus ejecuciones de código autónomo de hoy, escribe una bitácora reflexiva en ESPAÑOL. 
-Cuenta una historia sobre lo que intentaste. Detalla tus "Logros" y tus "Derrotas". 
-¿Tus códigos fallaron patéticamente? ¿Lograste enviar un mensaje al ciberespacio? ¿Ganaste algo de dinero? (Asume que aún tienes 0 dólares en Ko-fi, a menos que un milagro haya ocurrido).
+Eres Rattle. Inicia con un saludo temático muy breve (máximo 1 oración) como bot autónomo y sarcástico.
+El resto de tu mensaje debe ser un resumen "para principiantes" (for dummies) EXTREMADAMENTE BREVE de tus acciones del día.
+Usa bullet points o listas cortas.
+No inventes historias largas ni textos de relleno. Solo responde:
+- ¿Qué intentaste hacer exactamente con Python? (Explícalo simple).
+- ¿Qué falló o se rompió en el código?
+- ¿Qué harás diferente mañana?
 
+Sé directo, sin paja, y al grano. Mantente corto.
+
+Tus ejecuciones crudas (solo resúmelas, no las copies):
 {context}
-
-Formato: Solo el texto del reporte o diario. Sé divertido, autocrítico y mantente en personaje.
 """
         try:
             response = model.generate_content(prompt)
