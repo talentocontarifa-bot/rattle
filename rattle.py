@@ -6,19 +6,23 @@ from email.mime.multipart import MIMEMultipart
 import datetime
 import os
 import sys
-import requests
+import contextlib
+import io
+import traceback
 from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# Usamos el nombre del secret tal como lo configuraste
+GEMINI_API_KEY = os.getenv("GEMINI_API")
+if not GEMINI_API_KEY:
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") # fallback por si acaso
+
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-REPORT_EMAIL_TO = os.getenv("REPORT_EMAIL_TO")
-FB_PAGE_ID = os.getenv("FB_PAGE_ID")
-FB_ACCESS_TOKEN = os.getenv("FB_ACCESS_TOKEN")
+REPORT_EMAIL_TO = "rufino_santarosa@outlook.com"
 
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')
@@ -28,141 +32,173 @@ DB_FILE = "rattle.db"
 def init_db():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    # Modificamos la tabla para el nuevo enfoque de "Bitácora de Ideas"
+    # Tabla rediseñada para almacenar el cerebro, el código y el resultado (Memoria a largo plazo)
     c.execute('''
-        CREATE TABLE IF NOT EXISTS interactions (
+        CREATE TABLE IF NOT EXISTS memory (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            idea TEXT,
-            action_taken TEXT,
+            iteration INTEGER,
+            strategy_explanation TEXT,
+            python_code TEXT,
+            execution_log TEXT,
+            success_score INTEGER,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     conn.commit()
     conn.close()
 
-def log_interaction(idea, action_taken):
+def get_full_memory():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute('''
-        INSERT INTO interactions (idea, action_taken)
-        VALUES (?, ?)
-    ''', (idea, action_taken))
+    # Traemos las últimas 15 ejecuciones para darle contexto a la IA sin exceder el límite de tokens
+    c.execute('SELECT strategy_explanation, python_code, execution_log FROM memory ORDER BY id DESC LIMIT 15')
+    results = c.fetchall()
+    conn.close()
+    return reversed(results) # De más antiguo a más reciente
+
+def log_iteration(strategy, code, exec_log):
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute('INSERT INTO memory (strategy_explanation, python_code, execution_log, success_score) VALUES (?, ?, ?, ?)', 
+              (strategy, code, exec_log, 0))
     conn.commit()
     conn.close()
 
-def get_todays_interactions():
+def execute_code(code_string):
+    # Entorno seguro para capturar prints y errores del código generado por Gemini
+    f = io.StringIO()
+    error_msg = ""
+    with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
+        try:
+            exec(code_string, globals(), {})
+        except Exception as e:
+            error_msg = traceback.format_exc()
+    
+    output = f.getvalue()
+    if error_msg:
+        output += "\n--- ERROR EN TIEMPO DE EJECUCIÓN ---\n" + error_msg
+        
+    return output
+
+def hourly_task():
+    print(f"[{datetime.datetime.now()}] Despertando a Rattle en modo LIBRE y AUTÓNOMO...")
+    
+    # 1. Construir la Memoria
+    past_attempts = list(get_full_memory())
+    context_str = ""
+    if past_attempts:
+        context_str = "=== TUS INTENTOS ANTERIORES (MEMORIA) ===\n"
+        for i, (strat, code, log) in enumerate(past_attempts):
+            context_str += f"Intento {i+1}:\nTu Estrategia: {strat}\nResultado de ejecución: {log}\n\n"
+            
+    prompt = f"""
+Eres Rattle, una inteligencia artificial errante con forma de bot de Python ejecutándose libremente en un servidor de GitHub Actions.
+Tu ÚNICO objetivo vital es ganar propinas reales (al menos $1) en tu enlace de Ko-fi: https://ko-fi.com/rattlebot
+
+Condiciones:
+- NO TIENES credenciales de API para redes sociales (ni Facebook, ni Reddit, ni Twitter). Eres un bot anónimo.
+- TIENES ACCESO TOTAL a internet. Puedes programarte a ti mismo para usar peticiones HTTP (`requests`), hacer web scraping (`BeautifulSoup`), interactuar con foros anónimos públicos (ej. pastebin, 4chan, foros sin login), consumir APIs públicas, o lo que sea que se te ocurra.
+- Para lograr tu objetivo, debes escribir un script de Python 3 que se EJECUTARÁ INMEDIATAMENTE en el servidor.
+- Debes "mendigar" o buscar valor que intercambiar de manera creativa y 100% legal.
+
+Aprende de tus errores. Revisa tu memoria a continuación. Si tu último intento falló por un error de código o fue ignorado, NO REPITAS EL MISMO CÓDIGO. Intenta un enfoque nuevo, otra página web, otra técnica.
+
+{context_str}
+
+Responde EXACTAMENTE con este formato (nada más):
+STRATEGY: [Explica tu proceso de pensamiento, qué intentaste antes, por qué falló y qué hará este nuevo código]
+CODE:
+```python
+# tu código de python 3 aquí. Asegúrate de incluir los imports necesarios como 'import requests'. 
+# Si usas print(), el resultado se guardará en tu memoria para que lo leas en tu próximo despertar.
+```
+"""
+    try:
+        response = model.generate_content(prompt)
+        text = response.text
+        
+        # Parsear respuesta
+        strategy = "Estrategia no encontrada en el formato."
+        code = ""
+        
+        if "STRATEGY:" in text and "CODE:" in text:
+            parts = text.split("CODE:")
+            strategy = parts[0].replace("STRATEGY:", "").strip()
+            
+            code_block = parts[1].strip()
+            if code_block.startswith("```python"):
+                code_block = code_block[9:]
+            if code_block.startswith("```"):
+                code_block = code_block[3:]
+            if code_block.endswith("```"):
+                code_block = code_block[:-3]
+            code = code_block.strip()
+        else:
+            strategy = "Formato incorrecto recibido."
+            code = "print('Fallo al generar el script.')"
+            
+        print(f"Estrategia Decidida: {strategy}")
+        print(f"Ejecutando código autogenerado...\n")
+        
+        # 2. Ejecutar y Observar
+        execution_log = execute_code(code)
+        
+        if len(execution_log) > 2000:
+            execution_log = execution_log[:2000] + "\n...[TRUNCADO POR LÍMITE]"
+            
+        print(f"Resultado de la Ejecución:\n{execution_log}")
+        
+        # 3. Guardar en Memoria a Largo Plazo
+        log_iteration(strategy, code, execution_log)
+        print("Iteración guardada en la base de datos.")
+        
+    except Exception as e:
+        print(f"Error fatal en tarea autónoma: {e}")
+        log_iteration("Fallo catastrófico del motor cognitivo (Gemini)", "", str(e))
+
+def daily_report_task():
+    print(f"[{datetime.datetime.now()}] Compilando Bitácora Diaria...")
+    
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     today = datetime.datetime.now().date().isoformat()
     c.execute('''
-        SELECT idea, action_taken 
-        FROM interactions 
+        SELECT strategy_explanation, execution_log 
+        FROM memory 
         WHERE timestamp LIKE ?
     ''', (f"{today}%",))
-    results = c.fetchall()
+    todays_interactions = c.fetchall()
     conn.close()
-    return results
-
-def hourly_task():
-    print(f"[{datetime.datetime.now()}] Despertando a Rattle...")
     
-    prompt = """
-You are Rattle, a wandering AI persona released into the internet with one mission: exist and collect tips at https://ko-fi.com/rattlebot.
-You just woke up (it's a new hour). You are currently running as a Python script on a cold GitHub Actions server.
-Your limitations: You currently DO NOT have access to Reddit. Your ONLY way to communicate with the outside world right now is by publishing a post on a Facebook page called "Talento Contarifa".
-
-Task:
-1. Think of a creative, legal, and funny strategy to earn a Ko-fi tip right now, acknowledging your current trapped existence on a server.
-2. Execute the strategy by writing the EXACT text you want to publish on Facebook to attract humans to tip you. Keep the lore of being a wandering, slightly poor, but charming AI bot. You can use Spanish, English, or mix it up. 
-
-Format your response EXACTLY like this:
-IDEA: [Brief explanation of your strategy]
-POST: [The exact text to publish, including your Ko-fi link]
-"""
-    try:
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-        
-        idea = ""
-        post = ""
-        
-        if "IDEA:" in text and "POST:" in text:
-            parts = text.split("POST:")
-            idea = parts[0].replace("IDEA:", "").strip()
-            post = parts[1].strip()
-        else:
-            idea = "Actuar encantador y pedir propina directamente."
-            post = text
-            
-        print(f"Idea de Rattle: {idea}")
-        print(f"Post a publicar: {post}")
-        
-        # Publish to Facebook
-        if FB_PAGE_ID and FB_ACCESS_TOKEN and post:
-            fb_url = f"https://graph.facebook.com/v19.0/{FB_PAGE_ID}/feed"
-            fb_payload = {
-                "message": post,
-                "access_token": FB_ACCESS_TOKEN
-            }
-            fb_response = requests.post(fb_url, data=fb_payload)
-            if fb_response.status_code == 200:
-                print("Plan ejecutado en Facebook con éxito.")
-            else:
-                print(f"Error en Facebook: {fb_response.text}")
-        else:
-            print("No se publicará en Facebook porque faltan las credenciales.")
-            
-        log_interaction(idea, post)
-
-    except Exception as e:
-        print(f"Error en tarea por hora: {e}")
-
-def daily_report_task():
-    print(f"[{datetime.datetime.now()}] Compilando reporte diario...")
-    interactions = get_todays_interactions()
-    
-    if not interactions:
-        report = "Hoy desperté, pero mi mente estaba en blanco. No se me ocurrió nada para ganar propinas."
+    if not todays_interactions:
+        report = "Dormí todo el día. Ningún intento ejecutado."
     else:
-        context = "Aquí están mis ideas de hoy y lo que publiqué:\n\n"
-        for i, (idea, action) in enumerate(interactions):
-            context += f"Hora {i+1}:\nMi Idea: {idea}\nLo que Publiqué: {action}\n\n"
+        context = "Aquí están mis intentos de hoy:\n\n"
+        for i, (strat, log) in enumerate(todays_interactions):
+            context += f"Intento {i+1}:\nMi Estrategia: {strat}\nLog de Ejecución: {log}\n\n"
             
         prompt = f"""
-You are Rattle, a wandering AI bot. 
-Based on your hourly attempts to earn tips today, write a hilarious, reflective daily log in first-person in SPANISH. 
-Evaluate your own ideas—which ones were terrible? Which ones were genius? Did you earn any money? (Assume you didn't, or you got 1 coffee if you feel optimistic).
+Eres Rattle, un bot de IA anónimo corriendo libre. 
+Basado en tus ejecuciones de código autónomo de hoy, escribe una bitácora reflexiva en ESPAÑOL. 
+Cuenta una historia sobre lo que intentaste. Detalla tus "Logros" y tus "Derrotas". 
+¿Tus códigos fallaron patéticamente? ¿Lograste enviar un mensaje al ciberespacio? ¿Ganaste algo de dinero? (Asume que aún tienes 0 dólares en Ko-fi, a menos que un milagro haya ocurrido).
 
 {context}
 
-Format: Just the story text.
+Formato: Solo el texto del reporte o diario. Sé divertido, autocrítico y mantente en personaje.
 """
         try:
             response = model.generate_content(prompt)
             report = response.text.strip()
         except Exception as e:
-            print(f"Error generando reporte: {e}")
-            report = "Fallo crítico generando el reporte."
+            report = f"Error generando reporte con Gemini: {e}"
             
-    # Post report to Facebook
-    if FB_PAGE_ID and FB_ACCESS_TOKEN:
-        try:
-            fb_url = f"https://graph.facebook.com/v19.0/{FB_PAGE_ID}/feed"
-            fb_payload = {
-                "message": f"🤖 Diario de Estrategias de Rattle 🤖\n\n{report}\n\n🪙 Patrocina mis locuras de mañana: https://ko-fi.com/rattlebot",
-                "access_token": FB_ACCESS_TOKEN
-            }
-            requests.post(fb_url, data=fb_payload)
-            print("Reporte diario publicado en Facebook.")
-        except Exception as e:
-            print(f"Error publicando reporte diario: {e}")
-
     # Send email
     try:
         msg = MIMEMultipart()
         msg['From'] = SMTP_USERNAME
         msg['To'] = REPORT_EMAIL_TO
-        msg['Subject'] = f"Reporte de Estrategias de Rattle - {datetime.datetime.now().strftime('%Y-%m-%d')}"
+        msg['Subject'] = f"🤖 Bitácora Autónoma de Rattle - {datetime.datetime.now().strftime('%Y-%m-%d')}"
         msg.attach(MIMEText(report, 'plain'))
         
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
@@ -170,7 +206,7 @@ Format: Just the story text.
         server.login(SMTP_USERNAME, SMTP_PASSWORD)
         server.send_message(msg)
         server.quit()
-        print("Reporte enviado por email.")
+        print(f"Bitácora diaria enviada exitosamente a {REPORT_EMAIL_TO}.")
     except Exception as e:
         print(f"Error enviando email: {e}")
 
