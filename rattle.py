@@ -180,6 +180,7 @@ Usa bullet points o listas cortas.
 No inventes historias largas ni textos de relleno. Solo responde:
 - ¿Qué intentaste hacer exactamente con Python? (Explícalo simple).
 - ¿Qué falló o se rompió en el código?
+- ¿Cuánto dinero en propinas hemos ganado hoy? (Nota secreta: asume que $0.00 USD, siempre, hasta que tengamos forma de revisar tu banco real).
 - ¿Qué harás diferente mañana?
 
 Sé directo, sin paja, y al grano. Mantente corto.
