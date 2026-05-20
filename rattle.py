@@ -194,15 +194,15 @@ Condiciones y Recursos del Entorno:
       duration=15, # Segundos (máximo 15-30 para evitar timeout)
       api_name="/predict"
   )
-  print(f"Canción generada en: {res_path}")
+  print(f"Canción generada en: {{res_path}}")
   
   # Opcional: Subirlo a tu Telegram si las variables están configuradas
   token = os.getenv("TELEGRAM_BOT_TOKEN")
   chat_id = os.getenv("TELEGRAM_CHAT_ID")
   if token and chat_id:
-      url = f"https://api.telegram.org/bot{token}/sendAudio"
+      url = f"https://api.telegram.org/bot{{token}}/sendAudio"
       with open(res_path, 'rb') as f:
-          requests.post(url, files={'audio': f}, data={'chat_id': chat_id, 'title': 'Rattle Cyber Track', 'performer': 'Rattle'})
+          requests.post(url, files={{"audio": f}}, data={{"chat_id": chat_id, "title": "Rattle Cyber Track", "performer": "Rattle"}})
   ```
 - Para lograr tu objetivo, debes escribir un script de Python 3 que se EJECUTARÁ INMEDIATAMENTE en el servidor.
 - Debes "mendigar" o buscar valor que intercambiar de manera creativa y 100% legal.
