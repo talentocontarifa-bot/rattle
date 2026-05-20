@@ -20,14 +20,60 @@ if not GEMINI_API_KEY:
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
+# Groq API Key
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
 import time
 
 genai.configure(api_key=GEMINI_API_KEY)
 
 def call_gemini_with_retry(prompt, model_name='gemini-2.5-flash', max_retries=5, **kwargs):
     attempts = 0
-    current_model_name = model_name
     
+    # 1. Intentar con Groq si la clave está disponible
+    if GROQ_API_KEY:
+        print("Usando Groq como motor principal...")
+        groq_models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]
+        for groq_model in groq_models:
+            attempts = 0
+            while attempts < 3:
+                try:
+                    headers = {
+                        "Authorization": f"Bearer {GROQ_API_KEY}",
+                        "Content-Type": "application/json"
+                    }
+                    payload = {
+                        "model": groq_model,
+                        "messages": [{"role": "user", "content": prompt}]
+                    }
+                    if "generation_config" in kwargs and "max_output_tokens" in kwargs["generation_config"]:
+                        payload["max_tokens"] = kwargs["generation_config"]["max_output_tokens"]
+                    
+                    response = requests.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers=headers,
+                        json=payload,
+                        timeout=30
+                    )
+                    response.raise_for_status()
+                    data = response.json()
+                    content = data["choices"][0]["message"]["content"]
+                    
+                    class GroqResponse:
+                        def __init__(self, text):
+                            self.text = text
+                    
+                    print(f"✅ Respuesta exitosa recibida de Groq ({groq_model})")
+                    return GroqResponse(content)
+                except Exception as e:
+                    attempts += 1
+                    print(f"⚠️ Intento {attempts} con Groq ({groq_model}) fallido: {e}")
+                    time.sleep(2)
+        print("❌ Todos los intentos con Groq fallaron. Pasando a Gemini como respaldo...")
+
+    # 2. Respaldo a Gemini (o si no hay clave de Groq)
+    attempts = 0
+    current_model_name = model_name
     while True:
         try:
             current_model = genai.GenerativeModel(current_model_name)
@@ -56,7 +102,7 @@ def call_gemini_with_retry(prompt, model_name='gemini-2.5-flash', max_retries=5,
             wait_time = (2 ** attempts) + 10
             if "429" in err_msg or "quota" in err_msg.lower():
                 wait_time = 65  # Espera 65 segundos si es límite de cuota o rate limit
-                print(f"Error persistente o rate limit detectado. Esperando 65s para enfriar la API...")
+                print(f"Error persistente o rate limit detectado en Gemini. Esperando 65s para enfriar la API...")
             else:
                 print(f"Espera de {wait_time}s antes del proximo intento...")
             time.sleep(wait_time)

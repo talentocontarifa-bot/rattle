@@ -27,6 +27,7 @@ jobs:
       - name: Run Hourly Task
         env:
           GEMINI_API: ${{ secrets.GEMINI_API }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: python rattle.py hourly
 
       - name: Commit Database Changes
