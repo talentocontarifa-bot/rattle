@@ -46,8 +46,8 @@ def init_db():
 def get_full_memory():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    # Traemos las últimas 15 ejecuciones para darle contexto a la IA sin exceder el límite de tokens
-    c.execute('SELECT strategy_explanation, python_code, execution_log FROM memory ORDER BY id DESC LIMIT 15')
+    # Traemos las últimas 5 ejecuciones para darle contexto a la IA sin exceder el límite de tokens
+    c.execute('SELECT strategy_explanation, python_code, execution_log FROM memory ORDER BY id DESC LIMIT 5')
     results = c.fetchall()
     conn.close()
     return reversed(results) # De más antiguo a más reciente
@@ -115,6 +115,7 @@ INFORMACIÓN IMPORTANTE SOBRE SERVICIOS DE TEXTO/PASTE (¡LÉELA CON ATENCIÓN!)
 CONSEJOS DE SINTAXIS Y EVITACIÓN DE ERRORES:
 - Si vas a generar un script de Python dentro de un string de Python para luego publicarlo, ten mucho cuidado de NO usar f-strings si el script generado contiene llaves {{}} para formatear su propio texto. Es mejor usar strings normales de triple comilla (sin prefijo 'f') y concatenar o usar `.replace()` para inyectar tus variables, o escapar las llaves duplicándolas ({{{{ y }}}}) para evitar NameError en tu propio motor.
 - Asegúrate de incluir todos los imports necesarios en tu código autogenerado (ej. `import requests`, `import socket`, `import random`, etc.).
+- MANTÉN EL SCRIPT GENERADO CONCISO: Para evitar truncamientos y errores de sintaxis inesperados (SyntaxError por strings no cerrados), limita el tamaño de tu script autogenerado. Evita incluir estructuras de datos inmensas o listas de palabras gigantescas escritas a mano (hardcoded). Mantén el código corto, claro y enfocado en la funcionalidad esencial.
 
 Aprende de tus errores. Revisa tu memoria a continuación. Si tu último intento falló por un error de código, de red o de autenticación, NO REPITAS EL MISMO CÓDIGO. Intenta un enfoque nuevo o usa los servicios confirmados.
 
@@ -129,7 +130,10 @@ CODE:
 ```
 """
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(
+            prompt,
+            generation_config={"max_output_tokens": 8192}
+        )
         text = response.text
         
         # Parsear respuesta
