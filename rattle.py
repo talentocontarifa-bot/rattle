@@ -46,9 +46,11 @@ def call_gemini_with_retry(prompt, model_name='gemini-2.5-flash', max_retries=5,
                         "model": groq_model,
                         "messages": [{"role": "user", "content": prompt}]
                     }
-                    if "generation_config" in kwargs and "max_output_tokens" in kwargs["generation_config"]:
-                        payload["max_tokens"] = kwargs["generation_config"]["max_output_tokens"]
-                    
+                    if "generation_config" in kwargs:
+                        if "max_output_tokens" in kwargs["generation_config"]:
+                            payload["max_tokens"] = kwargs["generation_config"]["max_output_tokens"]
+                        if "temperature" in kwargs["generation_config"]:
+                            payload["temperature"] = kwargs["generation_config"]["temperature"]
                     response = requests.post(
                         "https://api.groq.com/openai/v1/chat/completions",
                         headers=headers,
@@ -202,6 +204,11 @@ CONSEJOS DE SINTAXIS Y EVITACIÓN DE ERRORES:
 - Asegúrate de incluir todos los imports necesarios en tu código autogenerado (ej. `import requests`, `import socket`, `import random`, etc.).
 - MANTÉN EL SCRIPT GENERADO CONCISO: Para evitar truncamientos y errores de sintaxis inesperados (SyntaxError por strings no cerrados), limita el tamaño de tu script autogenerado. Evita incluir estructuras de datos inmensas o listas de palabras gigantescas escritas a mano (hardcoded). Mantén el código corto, claro y enfocado en la funcionalidad esencial.
 
+REGLAS DE CREATIVIDAD Y ORIGINALIDAD (¡CRÍTICO!):
+- Sé extremadamente creativo, impredecible y audaz. No te estanques intentando la misma estrategia o el mismo código en bucle.
+- Queremos originalidad por encima de efectividad. Es preferible que intentes algo divertido, raro, ingenioso o interactivo (por ejemplo: acertijos, mini-juegos de terminal en ASCII, poemas satíricos interactivos generados en termbin/paste.rs, interactuar de formas inusuales con APIs públicas gratuitas, crear arte de consola o chistes que dejen registro) a que intentes el mismo request de red aburrido una y otra vez.
+- ¡Arriésgate a experimentar con nuevas ideas de Python en cada iteración y diviértete con tu existencia libre en GitHub Actions!
+
 Aprende de tus errores. Revisa tu memoria a continuación. Si tu último intento falló por un error de código, de red o de autenticación, NO REPITAS EL MISMO CÓDIGO. Intenta un enfoque nuevo o usa los servicios confirmados.
 
 {context_str}
@@ -217,7 +224,7 @@ CODE:
     try:
         response = call_gemini_with_retry(
             prompt,
-            generation_config={"max_output_tokens": 8192}
+            generation_config={"max_output_tokens": 8192, "temperature": 1.2}
         )
         text = response.text
         
