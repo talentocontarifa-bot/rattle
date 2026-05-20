@@ -20,8 +20,46 @@ if not GEMINI_API_KEY:
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
+import time
+
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-2.5-flash')
+
+def call_gemini_with_retry(prompt, model_name='gemini-2.5-flash', max_retries=5, **kwargs):
+    attempts = 0
+    current_model_name = model_name
+    
+    while True:
+        try:
+            current_model = genai.GenerativeModel(current_model_name)
+            response = current_model.generate_content(prompt, **kwargs)
+            return response
+        except Exception as e:
+            attempts += 1
+            err_msg = str(e)
+            print(f"Intento {attempts} fallido al llamar a Gemini ({current_model_name}): {err_msg}")
+            
+            if attempts >= max_retries:
+                if current_model_name == 'gemini-2.5-flash':
+                    print("Intentando cambiar al modelo de respaldo 'gemini-2.5-pro'...")
+                    current_model_name = 'gemini-2.5-pro'
+                    attempts = 0
+                    time.sleep(5)
+                    continue
+                elif current_model_name == 'gemini-2.5-pro':
+                    print("Intentando cambiar al modelo de respaldo 'gemini-2.0-flash'...")
+                    current_model_name = 'gemini-2.0-flash'
+                    attempts = 0
+                    time.sleep(5)
+                    continue
+                raise e
+            
+            wait_time = (2 ** attempts) + 10
+            if "429" in err_msg or "quota" in err_msg.lower():
+                wait_time = 65  # Espera 65 segundos si es límite de cuota o rate limit
+                print(f"Error persistente o rate limit detectado. Esperando 65s para enfriar la API...")
+            else:
+                print(f"Espera de {wait_time}s antes del proximo intento...")
+            time.sleep(wait_time)
 
 DB_FILE = "rattle.db"
 
@@ -131,7 +169,7 @@ CODE:
 ```
 """
     try:
-        response = model.generate_content(
+        response = call_gemini_with_retry(
             prompt,
             generation_config={"max_output_tokens": 8192}
         )
@@ -213,7 +251,7 @@ Tus ejecuciones crudas (solo resúmelas, no las copies):
 {context}
 """
         try:
-            response = model.generate_content(prompt)
+            response = call_gemini_with_retry(prompt)
             report = response.text.strip()
         except Exception as e:
             report = f"Error generando reporte con Gemini: {e}"
