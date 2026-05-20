@@ -197,7 +197,7 @@ Condiciones y Recursos del Entorno:
   try:
       r = requests.get("https://huggingface.co/api/spaces?search=musicgen")
       spaces = r.json()
-      running = [s["id"] for s in spaces if s.get("runtime", {}).get("stage") == "RUNNING" and s.get("sdk") == "gradio"]
+      running = [s["id"] for s in spaces if s.get("runtime", {{}}).get("stage") == "RUNNING" and s.get("sdk") == "gradio"]
       if running:
           space_id = running[0]
           print(f"Usando espacio activo detectado: {{space_id}}")
