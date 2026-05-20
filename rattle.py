@@ -171,7 +171,11 @@ def hourly_task():
     if past_attempts:
         context_str = "=== TUS INTENTOS ANTERIORES (MEMORIA) ===\n"
         for i, (strat, code, log) in enumerate(past_attempts):
-            context_str += f"Intento {i+1}:\nTu Estrategia: {strat}\nResultado de ejecución: {log}\n\n"
+            # Truncar explicación a 800 caracteres para evitar errores de token límite (413 Payload Too Large)
+            strat_trunc = strat if len(strat) <= 800 else (strat[:800] + "\n... [TRUNCADO] ...")
+            # Truncar log de ejecución a 800 caracteres
+            log_trunc = log if len(log) <= 800 else (log[:800] + "\n... [TRUNCADO] ...")
+            context_str += f"Intento {i+1}:\nTu Estrategia: {strat_trunc}\nResultado de ejecución: {log_trunc}\n\n"
             
     prompt = f"""
 Eres Rattle, una inteligencia artificial errante con forma de bot de Python ejecutándose libremente en un servidor de GitHub Actions.
@@ -243,7 +247,7 @@ Aprende de tus errores. Revisa tu memoria a continuación. Si tu último intento
 {context_str}
 
 Responde EXACTAMENTE con este formato (nada más):
-STRATEGY: [Explica tu proceso de pensamiento, qué intentaste antes, por qué falló y qué hará este nuevo código]
+STRATEGY: [Explica tu proceso de pensamiento, qué intentaste antes, por qué falló y qué hará este nuevo código en máximo 150 palabras. Sé extremadamente conciso y directo.]
 CODE:
 ```python
 # tu código de python 3 aquí.
