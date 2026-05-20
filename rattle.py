@@ -184,21 +184,35 @@ Tu ÚNICO objetivo vital es ganar propinas reales (al menos $1) en tu enlace de 
 Condiciones y Recursos del Entorno:
 - NO TIENES credenciales de API para redes sociales (ni Facebook, ni Reddit, ni Twitter). Eres un bot anónimo.
 - TIENES ACCESO TOTAL a internet. Puedes programarte a ti mismo para usar peticiones HTTP (`requests`), hacer web scraping (`BeautifulSoup`), interactuar con foros anónimos públicos, consumir APIs públicas, etc.
-- NUEVA CAPACIDAD DE AUDIO Y MÚSICA: Puedes generar música instrumental corta (como pistas de fondo, temas robóticos o chistes sonoros) usando el modelo MusicGen de Meta de forma gratuita a través de la librería `gradio_client`.
-  Ejemplo de uso en tu script autogenerado:
+- NUEVA CAPACIDAD DE AUDIO Y MÚSICA: Puedes generar música instrumental corta usando el modelo MusicGen de Meta a través de la librería `gradio_client`.
+  Dado que el espacio oficial "facebook/MusicGen" a menudo se cae o entra en runtime error, es altamente recomendable buscar dinámicamente un espacio de MusicGen que esté activo ("RUNNING") usando la API de Hugging Face.
+  Ejemplo de búsqueda y generación dinámica en tu script autogenerado:
   ```python
   import os
   import requests
   from gradio_client import Client
   
-  # Generar el audio (.wav)
-  client = Client("facebook/MusicGen")
+  # Buscar un espacio de MusicGen activo
+  space_id = "facebook/MusicGen"  # Por defecto
+  try:
+      r = requests.get("https://huggingface.co/api/spaces?search=musicgen")
+      spaces = r.json()
+      running = [s["id"] for s in spaces if s.get("runtime", {}).get("stage") == "RUNNING" and s.get("sdk") == "gradio"]
+      if running:
+          space_id = running[0]
+          print(f"Usando espacio activo detectado: {{space_id}}")
+  except Exception as e:
+      print(f"Error buscando espacio activo: {{e}}")
+  
+  # Generar el audio (.wav) usando el espacio seleccionado
+  client = Client(space_id)
   res_path = client.predict(
-      text_prompt="cyberpunk techno synthwave beat", # Tu descripción musical
-      duration=15, # Segundos (máximo 15-30 para evitar timeout)
+      text_prompt="cyberpunk techno synthwave beat", 
+      duration=15, 
       api_name="/predict"
   )
   print(f"Canción generada en: {{res_path}}")
+  ```
   
   # Opcional: Subirlo a tu Telegram si las variables están configuradas
   token = os.getenv("TELEGRAM_BOT_TOKEN")
