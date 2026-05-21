@@ -249,7 +249,6 @@ def execute_code(code_string):
     f = io.StringIO()
     error_msg = ""
     
-    # Pre-cargar imports comunes en el espacio de nombres global
     import asyncio
     import edge_tts
     import playwright
@@ -257,6 +256,7 @@ def execute_code(code_string):
     import re
     import json
     import random
+    import logging
     from playwright.sync_api import sync_playwright
     
     custom_globals = globals().copy()
@@ -268,6 +268,7 @@ def execute_code(code_string):
         're': re,
         'json': json,
         'random': random,
+        'logging': logging,
         'sync_playwright': sync_playwright,
         'send_telegram_message': send_telegram_message,
         'send_telegram_voice': send_telegram_voice,
