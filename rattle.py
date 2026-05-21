@@ -7,6 +7,9 @@ import contextlib
 import io
 import traceback
 import requests
+import subprocess
+import json
+import shutil
 from dotenv import load_dotenv
 
 load_dotenv()
