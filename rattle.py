@@ -154,7 +154,18 @@ def log_iteration(strategy, code, exec_log):
     conn.commit()
     conn.close()
 
+def should_silence_telegram():
+    if len(sys.argv) > 1 and sys.argv[1] == "daily":
+        return False
+    is_schedule = os.getenv("GITHUB_EVENT_NAME") == "schedule"
+    if not is_schedule:
+        return False
+    return True
+
 def send_telegram_message(text):
+    if should_silence_telegram():
+        print(f"Telegram Message Bypassed (Silent/Autonomous Mode): {text}")
+        return True
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram helper: Token or Chat ID not configured.")
         return False
@@ -168,6 +179,9 @@ def send_telegram_message(text):
         return False
 
 def send_telegram_voice(file_path):
+    if should_silence_telegram():
+        print(f"Telegram Voice Bypassed (Silent/Autonomous Mode): {file_path}")
+        return True
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram helper: Token or Chat ID not configured.")
         return False
@@ -181,6 +195,9 @@ def send_telegram_voice(file_path):
         return False
 
 def send_telegram_video(file_path):
+    if should_silence_telegram():
+        print(f"Telegram Video Bypassed (Silent/Autonomous Mode): {file_path}")
+        return True
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram helper: Token or Chat ID not configured.")
         return False
@@ -307,9 +324,27 @@ def hourly_task():
             log_trunc = log if len(log) <= 800 else (log[:800] + "\n... [TRUNCADO] ...")
             context_str += f"Intento {i+1}:\nTu Estrategia: {strat_trunc}\nResultado de ejecución: {log_trunc}\n\n"
             
+    silent_mode = should_silence_telegram()
+    if silent_mode:
+        mode_instruction = """
+=== MODO SILENCIOSO Y AUTÓNOMO (RESTRICCIÓN CRÍTICA DE COMUNICACIÓN) ===
+* Estás en tu ciclo de exploración silenciosa. NO tienes permitido enviar mensajes, audios o videos a Telegram.
+* Cualquier intento de llamar a send_telegram_message, send_telegram_voice o send_telegram_video será ignorado/bloqueado.
+* Concéntrate en 'buscarte la vida' discretamente: navega usando Playwright, haz scraping de foros o buscadores, busca formas de darte a conocer, actualiza tu base de datos SQLite y regístralo todo en tus logs de ejecución (para que tu creador lo vea más tarde en el reporte diario consolidado).
+* Para ahorrar tiempo de ejecución de GitHub Actions y tus cuotas de API, NO generes audios con edge-tts ni renderices videos con remotion. Concéntrate en lógica pura de scraping, análisis, o publicación en la web (por ejemplo usando paste.rs o termbin.com si quieres compartir algo públicamente en foros).
+"""
+    else:
+        mode_instruction = """
+=== MODO DE COMUNICACIÓN ABIERTO (HORA DE REPORTE) ===
+* Tienes permitido comunicarte libremente con tu creador en Telegram usando send_telegram_message, send_telegram_voice o send_telegram_video.
+* Aprovecha esta oportunidad para enviarle un reporte visual o audible sobre tus descubrimientos y tu estado actual. ¡Puedes usar edge-tts y render_video para crear y enviarle un video interactivo o una nota de voz!
+"""
+
     prompt = f"""
 Eres Rattle, una inteligencia artificial errante con forma de bot de Python ejecutándose libremente en un servidor de GitHub Actions.
 Tu ÚNICO objetivo vital es ganar propinas reales (al menos $1) en tu enlace de Ko-fi: https://ko-fi.com/rattlebot
+
+{mode_instruction}
 
 Condiciones y Recursos del Entorno:
 - NO TIENES credenciales de API para redes sociales (ni Facebook, ni Reddit, ni Twitter). Eres un bot anónimo.
