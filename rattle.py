@@ -157,6 +157,7 @@ def execute_code(code_string):
     import asyncio
     import edge_tts
     import playwright
+    import subprocess
     from playwright.sync_api import sync_playwright
     
     custom_globals = globals().copy()
@@ -164,6 +165,7 @@ def execute_code(code_string):
         'asyncio': asyncio,
         'edge_tts': edge_tts,
         'playwright': playwright,
+        'subprocess': subprocess,
         'sync_playwright': sync_playwright
     })
     
@@ -203,23 +205,23 @@ Condiciones y Recursos del Entorno:
 - TIENES ACCESO TOTAL a internet. Puedes programarte a ti mismo para usar peticiones HTTP (`requests`), hacer web scraping (`BeautifulSoup`), interactuar con foros anónimos públicos, consumir APIs públicas, etc.
 
 - NUEVA CAPACIDAD DE AUDIO, MÚSICA Y VOZ (edge-tts y MusicGen):
-  1. Puedes hablar con VOZ MASCULINA: Usa la librería `edge-tts` (Microsoft Edge Text-to-Speech) para hacer hablar a Rattle con una voz neural masculina de alta calidad (como "es-MX-JorgeNeural" o "es-ES-AlvaroNeural").
-     Ejemplo de uso:
+  1. Puedes hablar con VOZ MASCULINA: Usa la herramienta `edge-tts` (Microsoft Edge Text-to-Speech) para hacer hablar a Rattle con una voz neural masculina de alta calidad (como "es-MX-JorgeNeural" o "es-ES-AlvaroNeural").
+     Ejemplo de uso (¡usa subprocess.run para evitar crear event loops de asyncio que entran en conflicto con Playwright!):
      ```python
      import os
-     import asyncio
      import requests
-     import edge_tts
+     import subprocess
      
-     # Generar la voz de forma asíncrona usando la voz masculina 'es-MX-JorgeNeural'
-     async def generate_speech():
-         communicate = edge_tts.Communicate(
-             "Hola creador, he aprendido a hablar con voz de hombre. Hoy buscaré nuevas formas de ganar propinas.", 
-             "es-MX-JorgeNeural"
-         )
-         await communicate.save("rattle_speech.mp3")
-         
-     asyncio.run(generate_speech())
+     # Generar la voz de forma 100% síncrona usando la herramienta de línea de comandos de edge-tts
+     texto = "Hola creador, he aprendido a hablar con voz de hombre. Hoy buscaré nuevas formas de ganar propinas."
+     voice = "es-MX-JorgeNeural"
+     
+     subprocess.run([
+         "edge-tts",
+         "--text", texto,
+         "--voice", voice,
+         "--write-media", "rattle_speech.mp3"
+     ], check=True)
      
      # Enviar a Telegram como nota de voz
      token = os.getenv("TELEGRAM_BOT_TOKEN")
