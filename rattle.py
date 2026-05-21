@@ -279,7 +279,7 @@ def execute_code(code_string):
     
     with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
         try:
-            exec(code_string, custom_globals, {})
+            exec(code_string, custom_globals)
         except Exception as e:
             error_msg = traceback.format_exc()
     
