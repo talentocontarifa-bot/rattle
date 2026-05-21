@@ -1,0 +1,21 @@
+{
+  "name": "rattle-bot",
+  "version": "1.0.0",
+  "description": "Rattle Bot with Remotion Video Generator",
+  "main": "rattle.py",
+  "scripts": {
+    "build-video": "remotion render src/index.ts MainVideo public/rattle_video.mp4"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.150",
+    "@remotion/cli": "^4.0.150",
+    "@remotion/media-utils": "^4.0.150"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}

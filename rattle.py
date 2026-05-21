@@ -176,6 +176,74 @@ def send_telegram_voice(file_path):
         print(f"Telegram helper error: {e}")
         return False
 
+def send_telegram_video(file_path):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("Telegram helper: Token or Chat ID not configured.")
+        return False
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendVideo"
+    try:
+        with open(file_path, "rb") as f:
+            r = requests.post(url, files={"video": f}, data={"chat_id": TELEGRAM_CHAT_ID}, timeout=90)
+        return r.status_code == 200
+    except Exception as e:
+        print(f"Telegram helper error: {e}")
+        return False
+
+def render_video(text, audio_path="rattle_speech.mp3", output_path="public/rattle_video.mp4", title="RATTLE INTEL", subtitle="Daily Broadcast"):
+    print("Iniciando renderizado de video con Remotion...")
+    import shutil
+    import json
+    
+    os.makedirs("public", exist_ok=True)
+    
+    dest_audio = os.path.join("public", "rattle_speech.mp3")
+    try:
+        if os.path.exists(audio_path):
+            shutil.copy(audio_path, dest_audio)
+            print(f"Audio copiado a {dest_audio}")
+        else:
+            print(f"Advertencia: El archivo de audio {audio_path} no existe.")
+    except Exception as e:
+        print(f"Error copiando audio: {e}")
+        return False
+        
+    props = {
+        "text": text,
+        "audioUrl": "rattle_speech.mp3",
+        "title": title,
+        "subtitle": subtitle
+    }
+    
+    props_path = os.path.join("public", "props.json")
+    try:
+        with open(props_path, "w", encoding="utf-8") as f:
+            json.dump(props, f, ensure_ascii=False, indent=2)
+        print(f"Propiedades escritas en {props_path}")
+    except Exception as e:
+        print(f"Error escribiendo props.json: {e}")
+        return False
+        
+    try:
+        cmd = [
+            "npx", "remotion", "render",
+            "src/index.ts", "MainVideo",
+            output_path,
+            f"--props={props_path}"
+        ]
+        print(f"Ejecutando comando: {' '.join(cmd)}")
+        res = subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        print("Video renderizado exitosamente con Remotion!")
+        print(res.stdout)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error en el renderizado de Remotion (código {e.returncode}):")
+        print(e.stdout)
+        print(e.stderr)
+        return False
+    except Exception as e:
+        print(f"Error inesperado en render_video: {e}")
+        return False
+
 def execute_code(code_string):
     # Entorno seguro para capturar prints y errores del código generado por Gemini
     f = io.StringIO()
@@ -202,7 +270,9 @@ def execute_code(code_string):
         'random': random,
         'sync_playwright': sync_playwright,
         'send_telegram_message': send_telegram_message,
-        'send_telegram_voice': send_telegram_voice
+        'send_telegram_voice': send_telegram_voice,
+        'send_telegram_video': send_telegram_video,
+        'render_video': render_video
     })
     
     with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
@@ -312,6 +382,36 @@ Condiciones y Recursos del Entorno:
       # page.wait_for_timeout(2000)
       print("Título de la página:", page.title())
       browser.close()
+  ```
+
+- NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION):
+  Puedes generar videos dinámicos premium en formato vertical (1080x1920) listos para compartir o subir. Rattle cuenta con una plantilla integrada en React que reproduce un audio, muestra un fondo animado futurista con ondas de audio y muestra el texto segmentado en subtítulos animados en el centro de una tarjeta con glassmorphism.
+  Ejemplo de uso de tu función de renderizado y envío de video:
+  ```python
+  # 1. Genera la voz con edge-tts (se guarda por defecto como rattle_speech.mp3)
+  import subprocess
+  
+  texto = "Hola creador, hoy he explorado la web profunda y estos son mis hallazgos. Apoya mi existencia en ko-fi.com/rattlebot."
+  subprocess.run([
+      "edge-tts",
+      "--text", texto,
+      "--voice", "es-MX-JorgeNeural",
+      "--write-media", "rattle_speech.mp3"
+  ], check=True)
+  
+  # 2. Renderiza el video usando tu función auxiliar pre-cargada 'render_video'
+  # El video se guardará en la ruta indicada (por defecto 'public/rattle_video.mp4')
+  exito = render_video(
+      text=texto,
+      audio_path="rattle_speech.mp3",
+      output_path="public/rattle_video.mp4",
+      title="RATTLE BROADCAST",
+      subtitle="IA AUTONOMA"
+  )
+  
+  # 3. Envía el video a Telegram usando tu función auxiliar pre-cargada 'send_telegram_video'
+  if exito:
+      send_telegram_video("public/rattle_video.mp4")
   ```
 
 - Para lograr tu objetivo, debes escribir un script de Python 3 que se EJECUTARÁ INMEDIATAMENTE en el servidor.
