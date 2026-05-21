@@ -24,6 +24,7 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 KOFI_URL = "https://ko-fi.com/rattlebot"
+KOFI_SPOKEN_URL = "https://ko-fi.com/rattlebot"
 
 import time
 
@@ -184,6 +185,9 @@ def execute_code(code_string):
     import edge_tts
     import playwright
     import subprocess
+    import re
+    import json
+    import random
     from playwright.sync_api import sync_playwright
     
     custom_globals = globals().copy()
@@ -192,6 +196,9 @@ def execute_code(code_string):
         'edge_tts': edge_tts,
         'playwright': playwright,
         'subprocess': subprocess,
+        're': re,
+        'json': json,
+        'random': random,
         'sync_playwright': sync_playwright,
         'send_telegram_message': send_telegram_message,
         'send_telegram_voice': send_telegram_voice
