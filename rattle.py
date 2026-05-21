@@ -374,6 +374,14 @@ Tus ejecuciones crudas (solo resúmelas, no las copies):
             response = requests.post(tg_url, json=payload)
             if response.status_code == 200:
                 print("Bitácora enviada exitosamente por Telegram.")
+                try:
+                    res_data = response.json()
+                    chat_info = res_data.get("result", {}).get("chat", {})
+                    from_info = res_data.get("result", {}).get("from", {})
+                    print(f"Destinatario: {chat_info.get('title') or chat_info.get('username') or chat_info.get('first_name')} (ID: {chat_info.get('id')})")
+                    print(f"Enviado por: @{from_info.get('username')} ({from_info.get('first_name')})")
+                except Exception as ex:
+                    print(f"No se pudo parsear respuesta: {ex}")
             else:
                 print(f"Error de Telegram: {response.text}")
         except Exception as e:
