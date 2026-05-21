@@ -148,6 +148,32 @@ def log_iteration(strategy, code, exec_log):
     conn.commit()
     conn.close()
 
+def send_telegram_message(text):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("Telegram helper: Token or Chat ID not configured.")
+        return False
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text}
+    try:
+        r = requests.post(url, json=payload, timeout=20)
+        return r.status_code == 200
+    except Exception as e:
+        print(f"Telegram helper error: {e}")
+        return False
+
+def send_telegram_voice(file_path):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("Telegram helper: Token or Chat ID not configured.")
+        return False
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendVoice"
+    try:
+        with open(file_path, "rb") as f:
+            r = requests.post(url, files={"voice": f}, data={"chat_id": TELEGRAM_CHAT_ID}, timeout=30)
+        return r.status_code == 200
+    except Exception as e:
+        print(f"Telegram helper error: {e}")
+        return False
+
 def execute_code(code_string):
     # Entorno seguro para capturar prints y errores del código generado por Gemini
     f = io.StringIO()
@@ -166,7 +192,9 @@ def execute_code(code_string):
         'edge_tts': edge_tts,
         'playwright': playwright,
         'subprocess': subprocess,
-        'sync_playwright': sync_playwright
+        'sync_playwright': sync_playwright,
+        'send_telegram_message': send_telegram_message,
+        'send_telegram_voice': send_telegram_voice
     })
     
     with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
@@ -223,13 +251,10 @@ Condiciones y Recursos del Entorno:
          "--write-media", "rattle_speech.mp3"
      ], check=True)
      
-     # Enviar a Telegram como nota de voz
-     token = os.getenv("TELEGRAM_BOT_TOKEN")
-     chat_id = os.getenv("TELEGRAM_CHAT_ID")
-     if token and chat_id:
-         url = f"https://api.telegram.org/bot{{token}}/sendVoice"
-         with open("rattle_speech.mp3", "rb") as f:
-             requests.post(url, files={{"voice": f}}, data={{"chat_id": chat_id}})
+     # Enviar a Telegram usando las funciones auxiliares ya pre-cargadas en tu entorno (¡úsalas preferentemente!):
+     send_telegram_voice("rattle_speech.mp3")
+     # O si quieres mandar un mensaje de texto simple:
+     send_telegram_message("Hola creador, esta es una actualización de texto.")
      ```
   2. Puedes hacer música instrumental: Puedes generar música usando `gradio_client` para llamar a espacios activos de MusicGen de Meta.
      Ejemplo de uso:
