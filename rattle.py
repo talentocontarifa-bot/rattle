@@ -302,6 +302,15 @@ def execute_code(code_string):
             exec(code_string, custom_globals)
         except Exception as e:
             error_msg = traceback.format_exc()
+            
+    # Limpieza automática de archivos multimedia temporales para liberar espacio
+    for tf in ["rattle_speech.mp3", "rattle_speech_for_video.mp3", "public/rattle_speech.mp3", "public/rattle_video.mp4", "public/props.json", "props.json"]:
+        if os.path.exists(tf):
+            try:
+                os.remove(tf)
+                print(f"Limpieza: Archivo temporal eliminado ({tf})")
+            except Exception as e:
+                print(f"Limpieza: No se pudo eliminar {tf}: {e}")
     
     output = f.getvalue()
     if error_msg:
