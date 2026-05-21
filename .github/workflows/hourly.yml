@@ -24,6 +24,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Install Playwright Chromium
+        run: |
+          playwright install --with-deps chromium
+
       - name: Run Hourly Task
         env:
           GEMINI_API: ${{ secrets.GEMINI_API }}
