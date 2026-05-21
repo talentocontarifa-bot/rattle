@@ -26,6 +26,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 KOFI_URL = "https://ko-fi.com/rattlebot"
 KOFI_SPOKEN_URL = "https://ko-fi.com/rattlebot"
 KOFI_SPOKEN = "https://ko-fi.com/rattlebot"
+VOICE = "es-MX-JorgeNeural"
 
 import time
 
