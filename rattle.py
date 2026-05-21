@@ -152,9 +152,24 @@ def execute_code(code_string):
     # Entorno seguro para capturar prints y errores del código generado por Gemini
     f = io.StringIO()
     error_msg = ""
+    
+    # Pre-cargar imports comunes en el espacio de nombres global
+    import asyncio
+    import edge_tts
+    import playwright
+    from playwright.sync_api import sync_playwright
+    
+    custom_globals = globals().copy()
+    custom_globals.update({
+        'asyncio': asyncio,
+        'edge_tts': edge_tts,
+        'playwright': playwright,
+        'sync_playwright': sync_playwright
+    })
+    
     with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
         try:
-            exec(code_string, globals(), {})
+            exec(code_string, custom_globals, {})
         except Exception as e:
             error_msg = traceback.format_exc()
     
