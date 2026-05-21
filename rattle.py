@@ -23,6 +23,8 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 # Groq API Key
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+KOFI_URL = "https://ko-fi.com/rattlebot"
+
 import time
 
 genai.configure(api_key=GEMINI_API_KEY)
