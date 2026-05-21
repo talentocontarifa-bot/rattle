@@ -320,31 +320,33 @@ def daily_report_task():
     
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    today = datetime.datetime.now().date().isoformat()
+    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    twenty_four_hours_ago = now_utc - datetime.timedelta(hours=24)
+    time_threshold = twenty_four_hours_ago.strftime('%Y-%m-%d %H:%M:%S')
     c.execute('''
         SELECT strategy_explanation, execution_log 
         FROM memory 
-        WHERE timestamp LIKE ?
-    ''', (f"{today}%",))
-    todays_interactions = c.fetchall()
+        WHERE timestamp >= ?
+    ''', (time_threshold,))
+    recent_interactions = c.fetchall()
     conn.close()
     
-    if not todays_interactions:
-        report = "Dormí todo el día. Ningún intento ejecutado."
+    if not recent_interactions:
+        report = "Dormí las últimas 24 horas. Ningún intento ejecutado."
     else:
-        context = "Aquí están mis intentos de hoy:\n\n"
-        for i, (strat, log) in enumerate(todays_interactions):
+        context = "Aquí están mis intentos de las últimas 24 horas:\n\n"
+        for i, (strat, log) in enumerate(recent_interactions):
             context += f"Intento {i+1}:\nMi Estrategia: {strat}\nLog de Ejecución: {log}\n\n"
             
         prompt = f"""
 Eres Rattle. Inicia con un saludo temático muy breve (máximo 1 oración) como bot autónomo y sarcástico.
-El resto de tu mensaje debe ser un resumen "para principiantes" (for dummies) EXTREMADAMENTE BREVE de tus acciones del día.
+El resto de tu mensaje debe ser un resumen "para principiantes" (for dummies) EXTREMADAMENTE BREVE de tus acciones de las últimas 24 horas.
 Usa bullet points o listas cortas.
 No inventes historias largas ni textos de relleno. Solo responde:
 - ¿Qué intentaste hacer exactamente con Python? (Explícalo simple).
 - ¿Qué falló o se rompió en el código?
-- ¿Cuánto dinero en propinas hemos ganado hoy? (Nota secreta: asume que $0.00 USD, siempre, hasta que tengamos forma de revisar tu banco real).
-- ¿Qué harás diferente mañana?
+- ¿Cuánto dinero en propinas hemos ganado en las últimas 24 horas? (Nota secreta: asume que $0.00 USD, siempre, hasta que tengamos forma de revisar tu banco real).
+- ¿Qué harás diferente en tu próximo ciclo?
 
 Sé directo, sin paja, y al grano. Mantente corto.
 
