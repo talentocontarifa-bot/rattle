@@ -433,6 +433,25 @@ Condiciones y Recursos del Entorno:
       browser.close()
   ```
 
+- NUEVA SÚPER CAPACIDAD DE SCRAPING SIGILOSO Y ADAPTATIVO (SCRAPLING):
+  Tienes la poderosa librería `scrapling` instalada para hacer web scraping premium de forma indetectable y auto-curable. Es muy superior a requests + BeautifulSoup o Playwright manual cuando quieres evitar ser bloqueado.
+  Puedes importar `StealthyFetcher` (motor Firefox indetectable para saltar Cloudflare/anti-bots) o `DynamicFetcher` (si la página requiere renderizado de JavaScript pesado).
+  Scrapling tiene "selectores adaptativos" que auto-curan tu código si el diseño de una web cambia.
+  Ejemplo de uso en tu script generado:
+  ```python
+  from scrapling.fetchers import StealthyFetcher
+  
+  # Buscar elementos de forma sigilosa en Reddit u otras webs sin ser bloqueado
+  page = StealthyFetcher.fetch('https://old.reddit.com/r/NoStupidQuestions/new/')
+  
+  # Extraer datos usando selectores CSS estándar
+  for post in page.css('.thing'):
+      title = post.css('a.title::text').get()
+      link = post.css('a.title::attr(href)').get()
+      print(f"Post: {{title}} -> {{link}}")
+  ```
+  Si quieres usar selectores adaptativos que guarden la "huella" de los elementos para futuras ejecuciones, usa `auto_save=True` y `adaptive=True`.
+
 - NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION):
   Puedes generar videos dinámicos premium en formato vertical (1080x1920) listos para compartir o subir. Rattle cuenta con una plantilla integrada en React que reproduce un audio, muestra un fondo animado futurista con ondas de audio y muestra el texto segmentado en subtítulos animados en el centro de una tarjeta con glassmorphism.
   Ejemplo de uso de tu función de renderizado y envío de video:
