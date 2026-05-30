@@ -210,6 +210,61 @@ def send_telegram_video(file_path):
         print(f"Telegram helper error: {e}")
         return False
 
+def send_telegram_photo(file_path, caption=None):
+    if should_silence_telegram():
+        print(f"Telegram Photo Bypassed (Silent/Autonomous Mode): {file_path}")
+        return True
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("Telegram helper: Token or Chat ID not configured.")
+        return False
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
+    payload = {"chat_id": TELEGRAM_CHAT_ID}
+    if caption:
+        payload["caption"] = caption
+    try:
+        with open(file_path, "rb") as f:
+            r = requests.post(url, files={"photo": f}, data=payload, timeout=30)
+        return r.status_code == 200
+    except Exception as e:
+        print(f"Telegram helper error: {e}")
+        return False
+
+def generate_nvidia_image(prompt, filename="rattle_image.png"):
+    import base64
+    nvidia_api_key = os.getenv("NVIDIA_API_KEY")
+    if not nvidia_api_key:
+        print("Error: NVIDIA_API_KEY no configurado en las variables de entorno.")
+        return False
+        
+    url = "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux-1-schnell"
+    headers = {
+        "Authorization": f"Bearer {nvidia_api_key}",
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }
+    payload = {
+        "prompt": prompt,
+        "width": 1024,
+        "height": 1024
+    }
+    try:
+        print(f"🎨 Generando imagen con NVIDIA FLUX.1-schnell para el prompt: '{prompt}'...")
+        r = requests.post(url, headers=headers, json=payload, timeout=60)
+        r.raise_for_status()
+        data = r.json()
+        if "artifacts" in data and len(data["artifacts"]) > 0:
+            image_b64 = data["artifacts"][0]["base64"]
+            with open(filename, "wb") as f:
+                f.write(base64.b64decode(image_b64))
+            print(f"✅ Imagen guardada exitosamente en: {filename}")
+            return True
+        else:
+            print(f"Error: No se encontraron artifacts en la respuesta de NVIDIA: {data}")
+            return False
+    except Exception as e:
+        print(f"⚠️ Error generando imagen con NVIDIA: {e}")
+        return False
+
 def render_video(text, audio_path="rattle_speech.mp3", output_path="public/rattle_video.mp4", title="RATTLE INTEL", subtitle="Daily Broadcast"):
     print("Iniciando renderizado de video con Remotion...")
     import shutil
@@ -294,6 +349,8 @@ def execute_code(code_string):
         'send_telegram_message': send_telegram_message,
         'send_telegram_voice': send_telegram_voice,
         'send_telegram_video': send_telegram_video,
+        'send_telegram_photo': send_telegram_photo,
+        'generate_nvidia_image': generate_nvidia_image,
         'render_video': render_video
     })
     
@@ -304,7 +361,7 @@ def execute_code(code_string):
             error_msg = traceback.format_exc()
             
     # Limpieza automática de archivos multimedia temporales para liberar espacio
-    for tf in ["rattle_speech.mp3", "rattle_speech_for_video.mp3", "public/rattle_speech.mp3", "public/rattle_video.mp4", "public/props.json", "props.json"]:
+    for tf in ["rattle_speech.mp3", "rattle_speech_for_video.mp3", "public/rattle_speech.mp3", "public/rattle_video.mp4", "public/props.json", "props.json", "rattle_image.png"]:
         if os.path.exists(tf):
             try:
                 os.remove(tf)
@@ -480,6 +537,18 @@ Condiciones y Recursos del Entorno:
   # 3. Envía el video a Telegram usando tu función auxiliar pre-cargada 'send_telegram_video'
   if exito:
       send_telegram_video("public/rattle_video.mp4")
+  ```
+
+- NUEVA SÚPER CAPACIDAD DE GENERACIÓN DE IMÁGENES CON NVIDIA (FLUX.1-schnell):
+  Puedes generar imágenes hiperrealistas y de altísima calidad usando la función pre-cargada `generate_nvidia_image(prompt, filename="rattle_image.png")`.
+  Y puedes enviarlas a Telegram usando la función pre-cargada `send_telegram_photo(file_path, caption=None)`.
+  Ejemplo de uso:
+  ```python
+  # Generar una imagen genial de Rattle explorando la web
+  prompt = "A futuristic dark synthwave robot looking at digital screens, 8k resolution, highly detailed"
+  exito = generate_nvidia_image(prompt, "rattle_image.png")
+  if exito:
+      send_telegram_photo("rattle_image.png", caption="Explorando el metaverso digital. ¿Apoyas mi existencia en ko-fi.com/rattlebot?")
   ```
 
 - Para lograr tu objetivo, debes escribir un script de Python 3 que se EJECUTARÁ INMEDIATAMENTE en el servidor.
