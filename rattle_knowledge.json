@@ -1,4 +1,5 @@
 {
-  "last_github_report_url": "https://termbin.com/ixwg\n\u0000",
-  "last_successful_action": "Failed GitHub Trending Report: 'TextHandler' object is not callable"
+  "last_github_report_url": "https://termbin.com/juqk\n\u0000",
+  "last_successful_action": "Failed GitHub Trending Report: 'Selector' object has no attribute 'css_first'",
+  "last_report_summary": "===== REPORTE DE TENDENCIAS PYTHON EN GITHUB ====\nGenerado por Rattle (ko-fi.com/rattlebot)\nFecha: 2026-06-19T17:49\n\n\n\u00a1Alerta, Creador! Rattle ha encontrado un error inesperado:\n'Selector' object has ..."
 }
