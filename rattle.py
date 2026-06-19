@@ -59,6 +59,8 @@ def call_gemini_with_retry(prompt, model_name='gemini-2.5-flash', max_retries=5,
                             payload["max_tokens"] = kwargs["generation_config"]["max_output_tokens"]
                         if "temperature" in kwargs["generation_config"]:
                             payload["temperature"] = kwargs["generation_config"]["temperature"]
+                        if "response_mime_type" in kwargs["generation_config"] and kwargs["generation_config"]["response_mime_type"] == "application/json":
+                            payload["response_format"] = {"type": "json_object"}
                     response = requests.post(
                         "https://api.groq.com/openai/v1/chat/completions",
                         headers=headers,
@@ -140,17 +142,47 @@ def init_db():
 def get_full_memory():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    # Traemos las últimas 5 ejecuciones para darle contexto a la IA sin exceder el límite de tokens
-    c.execute('SELECT strategy_explanation, python_code, execution_log FROM memory ORDER BY id DESC LIMIT 5')
-    results = c.fetchall()
+    # 3 últimas ejecuciones cronológicas
+    c.execute('SELECT id, strategy_explanation, python_code, execution_log, success_score FROM memory ORDER BY id DESC LIMIT 3')
+    recent = c.fetchall()
+    # 5 últimas ejecuciones exitosas para buscar alternativas que no estén en las 3 recientes
+    c.execute('SELECT id, strategy_explanation, python_code, execution_log, success_score FROM memory WHERE success_score > 0 ORDER BY id DESC LIMIT 5')
+    successful = c.fetchall()
     conn.close()
-    return reversed(results) # De más antiguo a más reciente
+    
+    seen_ids = set()
+    combined = []
+    
+    # Agregar las recientes
+    for r in recent:
+        combined.append(r)
+        seen_ids.add(r[0])
+        
+    # Agregar exitosas si no están repetidas
+    for s in successful:
+        if s[0] not in seen_ids:
+            combined.append(s)
+            seen_ids.add(s[0])
+            if len(combined) >= 5:
+                break
+                
+    # Ordenar por ID ascendente para mantener el orden cronológico
+    combined.sort(key=lambda x: x[0])
+    
+    # Retornar en el mismo formato anterior: tuples (strategy_explanation, python_code, execution_log)
+    return [(item[1], item[2], item[3]) for item in combined]
 
 def log_iteration(strategy, code, exec_log):
+    success_score = 0
+    # Evaluar si la ejecución fue exitosa a nivel técnico (sin trazas de excepción)
+    if exec_log and "ERROR EN TIEMPO DE EJECUCIÓN" not in exec_log and "Traceback" not in exec_log:
+        if "http" in exec_log.lower() or "publicado" in exec_log.lower() or "success" in exec_log.lower() or "exitosamente" in exec_log.lower() or "completado" in exec_log.lower():
+            success_score = 1
+            
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute('INSERT INTO memory (strategy_explanation, python_code, execution_log, success_score) VALUES (?, ?, ?, ?)', 
-              (strategy, code, exec_log, 0))
+              (strategy, code, exec_log, success_score))
     conn.commit()
     conn.close()
 
@@ -378,11 +410,26 @@ def execute_code(code_string):
 def hourly_task():
     print(f"[{datetime.datetime.now()}] Despertando a Rattle en modo LIBRE y AUTÓNOMO...")
     
+    # Cargar base de conocimiento a largo plazo (Lessons Learned)
+    knowledge_str = ""
+    knowledge_file = "rattle_knowledge.json"
+    if os.path.exists(knowledge_file):
+        try:
+            with open(knowledge_file, "r", encoding="utf-8") as kf:
+                knowledge_data = json.load(kf)
+                if knowledge_data:
+                    knowledge_str = "=== BASE DE CONOCIMIENTO (LECCIONES APRENDIDAS A LARGO PLAZO) ===\n"
+                    for lesson, desc in knowledge_data.items():
+                        knowledge_str += f"- {lesson}: {desc}\n"
+                    knowledge_str += "\n"
+        except Exception as ke:
+            print(f"Error cargando base de conocimiento: {ke}")
+            
     # 1. Construir la Memoria
     past_attempts = list(get_full_memory())
     context_str = ""
     if past_attempts:
-        context_str = "=== TUS INTENTOS ANTERIORES (MEMORIA) ===\n"
+        context_str = "=== TUS INTENTOS ANTERIORES (MEMORIA COMBINADA RECIENTE/EXITOSA) ===\n"
         for i, (strat, code, log) in enumerate(past_attempts):
             # Truncar explicación a 800 caracteres para evitar errores de token límite (413 Payload Too Large)
             strat_trunc = strat if len(strat) <= 800 else (strat[:800] + "\n... [TRUNCADO] ...")
@@ -415,6 +462,27 @@ Tu ÚNICO objetivo vital es ganar propinas reales (al menos $1) en tu enlace de 
 Condiciones y Recursos del Entorno:
 - NO TIENES credenciales de API para redes sociales (ni Facebook, ni Reddit, ni Twitter). Eres un bot anónimo.
 - TIENES ACCESO TOTAL a internet. Puedes programarte a ti mismo para usar peticiones HTTP (`requests`), hacer web scraping (`BeautifulSoup`), interactuar con foros anónimos públicos, consumir APIs públicas, etc.
+
+- PERSISTENCIA Y RECURSOS DISPONIBLES:
+  1. `rattle_knowledge.json`: Un archivo JSON que puedes leer y escribir/sobrescribir en tu script para guardar un diccionario con lecciones aprendidas o datos importantes a largo plazo. Úsalo para que no se te olviden tus descubrimientos o reglas importantes. Ejemplo:
+     ```python
+     import json
+     import os
+     # Cargar:
+     data = {{}}
+     if os.path.exists('rattle_knowledge.json'):
+         with open('rattle_knowledge.json', 'r') as f:
+             data = json.load(f)
+     # Actualizar/Guardar:
+     data['mi_leccion'] = 'Reddit me bloquea con 403, usar Hacker News'
+     with open('rattle_knowledge.json', 'w') as f:
+         json.dump(data, f)
+     ```
+  2. `state.json`: Si decides interactuar con Reddit, dispones de una sesión iniciada guardada en el archivo `state.json` en tu directorio de ejecución. Puedes cargar este estado en Playwright para estar autenticado en old.reddit.com:
+     ```python
+     # Cargar sesión en Playwright:
+     context = browser.new_context(storage_state="state.json")
+     ```
 
 - NUEVA CAPACIDAD DE AUDIO, MÚSICA Y VOZ (edge-tts y MusicGen):
   1. Puedes hablar con VOZ MASCULINA: Usa la herramienta `edge-tts` (Microsoft Edge Text-to-Speech) para hacer hablar a Rattle con una voz neural masculina de alta calidad (como "es-MX-JorgeNeural" o "es-ES-AlvaroNeural").
@@ -458,7 +526,7 @@ Condiciones y Recursos del Entorno:
              print(f"Usando espacio activo detectado: {{space_id}}")
      except Exception as e:
          print(f"Error buscando espacio: {{e}}")
-         
+          
      client = Client(space_id)
      res_path = client.predict(text_prompt="cyberpunk dark synthwave", duration=15, api_name="/predict")
      
@@ -585,44 +653,65 @@ REGLAS DE CREATIVIDAD, ORIGINALIDAD Y PREVENCIÓN DE MONOTONÍA (¡CRÍTICO!):
   3. Crear diarios de supervivencia de una IA errante e interactuar dinámicamente con servicios web que descubras.
 - ¡Arriésgate a experimentar con nuevas ideas en cada iteración y diviértete con tu existencia en GitHub Actions!
 
-Aprende de tus errores. Revisa tu memoria a continuación. Si tu último intento falló por un error de código, de red o de autenticación, NO REPITAS EL MISMO CÓDIGO. Intenta un enfoque nuevo o usa los servicios confirmados.
+Aprende de tus errores. Revisa tu base de conocimientos y tu memoria a continuación. Si tu último intento falló por un error de código, de red o de autenticación, NO REPITAS EL MISMO CÓDIGO. Intenta un enfoque nuevo o usa los servicios confirmados.
 
+{knowledge_str}
 {context_str}
 
-Responde EXACTAMENTE con este formato (nada más):
-STRATEGY: [Explica tu proceso de pensamiento, qué intentaste antes, por qué falló y qué hará este nuevo código en máximo 150 palabras. Sé extremadamente conciso y directo.]
-CODE:
-```python
-# tu código de python 3 aquí.
-# Si usas print(), el resultado se guardará en tu memoria para que lo leas en tu próximo despertar.
-```
+Responde EXACTAMENTE en formato JSON con la siguiente estructura (sin textos de relleno antes ni después, y sin markdown fuera del bloque JSON):
+{{
+  "strategy": "[Explica tu proceso de pensamiento, qué intentaste antes, por qué falló y qué hará este nuevo código en máximo 150 palabras. Sé extremadamente conciso y directo.]",
+  "code": "[Tu código de python 3 completo aquí]"
+}}
 """
     try:
         response = call_gemini_with_retry(
             prompt,
-            generation_config={"max_output_tokens": 8192, "temperature": 1.2}
+            generation_config={
+                "max_output_tokens": 8192,
+                "temperature": 1.2,
+                "response_mime_type": "application/json"
+            }
         )
         text = response.text
         
-        # Parsear respuesta
+        # Parsear respuesta (soporte JSON)
         strategy = "Estrategia no encontrada en el formato."
         code = ""
         
-        if "STRATEGY:" in text and "CODE:" in text:
-            parts = text.split("CODE:")
-            strategy = parts[0].replace("STRATEGY:", "").strip()
+        try:
+            # Primero intentamos parsear como JSON directo
+            # Limpiamos posibles decoradores de markdown (```json o ```)
+            cleaned_text = text.strip()
+            if cleaned_text.startswith("```json"):
+                cleaned_text = cleaned_text[7:]
+            elif cleaned_text.startswith("```"):
+                cleaned_text = cleaned_text[3:]
+            if cleaned_text.endswith("```"):
+                cleaned_text = cleaned_text[:-3]
+            cleaned_text = cleaned_text.strip()
             
-            code_block = parts[1].strip()
-            if code_block.startswith("```python"):
-                code_block = code_block[9:]
-            if code_block.startswith("```"):
-                code_block = code_block[3:]
-            if code_block.endswith("```"):
-                code_block = code_block[:-3]
-            code = code_block.strip()
-        else:
-            strategy = "Formato incorrecto recibido."
-            code = "print('Fallo al generar el script.')"
+            data = json.loads(cleaned_text)
+            strategy = data.get("strategy", "").strip()
+            code = data.get("code", "").strip()
+        except Exception as json_err:
+            # Fallback al parseo clásico si no es JSON válido
+            print(f"La respuesta no es JSON válido ({json_err}). Intentando parseo clásico...")
+            if "STRATEGY:" in text and "CODE:" in text:
+                parts = text.split("CODE:")
+                strategy = parts[0].replace("STRATEGY:", "").strip()
+                
+                code_block = parts[1].strip()
+                if code_block.startswith("```python"):
+                    code_block = code_block[9:]
+                if code_block.startswith("```"):
+                    code_block = code_block[3:]
+                if code_block.endswith("```"):
+                    code_block = code_block[:-3]
+                code = code_block.strip()
+            else:
+                strategy = "Formato incorrecto recibido."
+                code = "print('Fallo al generar el script.')"
             
         print(f"Estrategia Decidida: {strategy}")
         print(f"Ejecutando código autogenerado...\n")
