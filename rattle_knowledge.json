@@ -1,5 +1,8 @@
 {
-  "last_github_report_url": "https://termbin.com/3nlp\n\u0000",
-  "last_successful_action": "Generated GitHub Trending Python Report",
-  "last_report_summary": "GitHub Trending Python report published to https://termbin.com/3nlp\n\u0000"
+  "last_github_report_url": "https://termbin.com/6qmw\n\u0000",
+  "last_successful_action": "Generated GitHub Trending Python Report (Error)",
+  "last_report_summary": "GitHub Trending Python report failed, error published to https://termbin.com/6qmw\n\u0000",
+  "error_log": [
+    "2026-06-20T21:08:00.243479: Rattle: Un error inesperado ocurri\u00f3 durante la exploraci\u00f3n: 'Selector' object has no attribute 'text_content'"
+  ]
 }
