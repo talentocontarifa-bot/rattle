@@ -1,10 +1,20 @@
 {
-  "last_github_report_url": "https://termbin.com/70wm\n\u0000",
+  "last_github_report_url": "https://termbin.com/h6iv\n\u0000",
   "last_successful_action": "Generated GitHub Trending Python Report",
   "last_report_summary": "Successfully generated report",
   "error_log": [
     "2026-06-20T21:08:00.243479: Rattle: Un error inesperado ocurri\u00f3 durante la exploraci\u00f3n: 'Selector' object has no attribute 'text_content'",
-    "2026-06-21T02:52:33.590327: Rattle: Un error inesperado ocurri\u00f3 durante la exploraci\u00f3n: 'Selector' object has no attribute 'text_content'"
+    "2026-06-21T02:52:33.590327: Rattle: Un error inesperado ocurri\u00f3 durante la exploraci\u00f3n: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.187867: Rattle: Error al procesar repositorio 1: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.188175: Rattle: Error al procesar repositorio 2: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.188353: Rattle: Error al procesar repositorio 3: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.188501: Rattle: Error al procesar repositorio 4: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.188648: Rattle: Error al procesar repositorio 5: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.188792: Rattle: Error al procesar repositorio 6: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.188929: Rattle: Error al procesar repositorio 7: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.189069: Rattle: Error al procesar repositorio 8: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.189256: Rattle: Error al procesar repositorio 9: 'Selector' object has no attribute 'text_content'",
+    "2026-06-21T13:51:58.189415: Rattle: Error al procesar repositorio 10: 'Selector' object has no attribute 'text_content'"
   ],
   "current_run_status": "SUCCESS"
 }
