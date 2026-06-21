@@ -1,7 +1,8 @@
 {
   "last_github_report_url": "https://termbin.com/xek0\n\u0000",
-  "last_successful_action": "Generated GitHub Trending Python Report",
-  "last_report_summary": "Successfully generated report",
+  "last_successful_action": "Generated Hacker News Report",
+  "last_report_summary": "Successfully generated Hacker News report with 0 articles.",
   "error_log": [],
-  "current_run_status": "SUCCESS"
+  "current_run_status": "SUCCESS",
+  "last_hacker_news_report_url": "https://termbin.com/fuhs\n\u0000"
 }
