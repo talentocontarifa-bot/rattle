@@ -1,10 +1,9 @@
 {
   "last_github_report_url": "https://termbin.com/xek0\n\u0000",
-  "last_successful_action": "Failed Hacker News scrape due to: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"tr.athing .titlelink\") to be visible\n",
+  "last_successful_action": "Scraped r/AskReddit with StealthyFetcher, found 0 articles.",
   "last_report_summary": "Failed to generate Hacker News report (no articles found or error occurred).",
-  "error_log": [
-    "Error general durante la ejecuci\u00f3n: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"tr.athing .titlelink\") to be visible\n"
-  ],
-  "current_run_status": "FAILED",
-  "last_hacker_news_report_url": "https://termbin.com/sctt\n\u0000"
+  "error_log": [],
+  "current_run_status": "SUCCESS",
+  "last_hacker_news_report_url": "https://termbin.com/sctt\n\u0000",
+  "last_reddit_report_url": "https://termbin.com/7rac\n\u0000"
 }
