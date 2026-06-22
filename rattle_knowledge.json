@@ -1,9 +1,9 @@
 {
   "last_github_report_url": "https://termbin.com/xek0\n\u0000",
-  "last_successful_action": "Scraped r/AskReddit with StealthyFetcher, found 0 articles.",
-  "last_report_summary": "Failed to generate Hacker News report (no articles found or error occurred).",
+  "last_successful_action": "Scraped Hacker News and published report.",
+  "last_report_summary": "Hacker News report generated.",
   "error_log": [],
   "current_run_status": "SUCCESS",
-  "last_hacker_news_report_url": "https://termbin.com/sctt\n\u0000",
+  "last_hacker_news_report_url": "https://termbin.com/inc2\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000"
 }
