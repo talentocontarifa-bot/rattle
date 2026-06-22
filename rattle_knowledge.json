@@ -1,8 +1,8 @@
 {
   "last_github_report_url": "https://termbin.com/xek0\n\u0000",
   "last_successful_action": "Generated Hacker News Report",
-  "last_report_summary": "Successfully generated Hacker News report with 0 articles.",
+  "last_report_summary": "Failed to generate Hacker News report (no articles found or error occurred).",
   "error_log": [],
-  "current_run_status": "SUCCESS",
-  "last_hacker_news_report_url": "https://termbin.com/fuhs\n\u0000"
+  "current_run_status": "FAILED",
+  "last_hacker_news_report_url": "https://termbin.com/sctt\n\u0000"
 }
