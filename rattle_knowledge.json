@@ -2,10 +2,8 @@
   "last_github_report_url": "https://termbin.com/ej5r\n\u0000",
   "last_successful_action": "Scraped Hacker News and published report.",
   "last_report_summary": "Hacker News report published successfully.",
-  "error_log": [
-    "[2026-06-23T02:32:18.370705Z] Scrapling failed to find articles or general links on HN."
-  ],
+  "error_log": [],
   "current_run_status": "SUCCESS",
-  "last_hacker_news_report_url": "https://termbin.com/ej5r\n\u0000",
+  "last_hacker_news_report_url": "https://termbin.com/k4kjx\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000"
 }
