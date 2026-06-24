@@ -1,13 +1,14 @@
 {
   "last_github_report_url": "https://termbin.com/ej5r\n\u0000",
   "last_successful_action": "Published Hacker News summary and AI reflection to termbin.com.",
-  "last_report_summary": "Hacker News summary and AI reflection published to https://termbin.com/4q5s\n\u0000.",
+  "last_report_summary": "Hacker News summary and AI reflection published to https://termbin.com/0dgj\n\u0000",
   "error_log": [
-    "Error al extraer Hacker News: Locator.text_content: Error: strict mode violation: locator(\"span.titleline\").first.locator(\"a\") resolved to 2 elements:\n    1) <a href=\"https://bunny.net/blog/were-making-bunny-dns-free/\">We're making Bunny DNS free: because a faster int\u2026</a> aka get_by_role(\"link\", name=\"We're making Bunny DNS free:\")\n    2) <a href=\"from?site=bunny.net\">\u2026</a> aka get_by_role(\"link\", name=\"bunny.net\")\n\nCall log:\n  - waiting for locator(\"span.titleline\").first.locator(\"a\")\n"
+    "Error al extraer Hacker News: Locator.text_content: Error: strict mode violation: locator(\"span.titleline\").first.locator(\"a\") resolved to 2 elements:\n    1) <a href=\"https://bunny.net/blog/were-making-bunny-dns-free/\">We're making Bunny DNS free: because a faster int\u2026</a> aka get_by_role(\"link\", name=\"We're making Bunny DNS free:\")\n    2) <a href=\"from?site=bunny.net\">\u2026</a> aka get_by_role(\"link\", name=\"bunny.net\")\n\nCall log:\n  - waiting for locator(\"span.titleline\").first.locator(\"a\")\n",
+    "Error al extraer Hacker News con Playwright: Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"a.titlelink\") to be visible\n"
   ],
   "current_run_status": "SUCCESS",
   "last_hacker_news_report_url": "https://termbin.com/2xwc\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://paste.rs/p2cSF",
-  "last_hacker_news_reflection_report_url": "https://termbin.com/4q5s\n\u0000"
+  "last_hacker_news_reflection_report_url": "https://termbin.com/0dgj\n\u0000"
 }
