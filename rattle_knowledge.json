@@ -1,10 +1,12 @@
 {
   "last_github_report_url": "https://paste.rs/Wrovz",
-  "last_successful_action": "Scraped Lifehacker, published 'Rattle's Lifehack Digest'.",
+  "last_successful_action": "Scraped Hacker News, published 'Rattle's Tech Insights Digest'.",
   "last_report_summary": "Lifehacker analysis with AI reflections published to https://paste.rs/iIsBw",
-  "error_log": [],
-  "current_run_status": "SUCCESS",
-  "last_hacker_news_report_url": "https://paste.rs/pOJfa",
+  "error_log": [
+    "[2026-06-27] Error: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')) -> https://termbin.com/xlqs\n\u0000"
+  ],
+  "current_run_status": "FAILURE_GENERIC",
+  "last_hacker_news_report_url": "https://termbin.com/805m\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/zbf3\n\u0000",
