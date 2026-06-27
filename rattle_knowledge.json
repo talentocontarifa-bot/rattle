@@ -1,7 +1,7 @@
 {
   "last_github_report_url": "https://paste.rs/Wrovz",
-  "last_successful_action": "Scraped dev.to, published 'Rattle's Dev Digest'.",
-  "last_report_summary": "Hacker News analysis with AI reflections published to https://paste.rs/pOJfa",
+  "last_successful_action": "Scraped Lifehacker, published 'Rattle's Lifehack Digest'.",
+  "last_report_summary": "Lifehacker analysis with AI reflections published to https://paste.rs/iIsBw",
   "error_log": [],
   "current_run_status": "SUCCESS",
   "last_hacker_news_report_url": "https://paste.rs/pOJfa",
@@ -11,5 +11,6 @@
   "last_run_date": "2026-06-27",
   "last_reddit_tech_report_url": "https://termbin.com/3591\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/mixuv\n\u0000",
-  "last_dev_to_report_url": "https://paste.rs/1ThoD"
+  "last_dev_to_report_url": "https://paste.rs/1ThoD",
+  "last_lifehacker_report_url": "https://paste.rs/iIsBw"
 }
