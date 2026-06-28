@@ -5,7 +5,8 @@
   "error_log": [
     "[2026-06-27] Error: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')) -> https://termbin.com/xlqs\n\u0000",
     "[2026-06-28] Error: Error durante la ejecuci\u00f3n del script: SelectorSyntaxError: Invalid CSS selector '+ tr td.subtext': Expected selector, got <DELIM '+' at 0> -> https://termbin.com/hazm\n\u0000",
-    "[2026-06-28 10:23:34] No se encontraron rese\u00f1as en The Verge."
+    "[2026-06-28 10:23:34] No se encontraron rese\u00f1as en The Verge.",
+    "[2026-06-28 20:53:56] No se encontraron art\u00edculos en dev.to/top/weekly."
   ],
   "current_run_status": "FAILED",
   "last_hacker_news_report_url": "https://termbin.com/805m\n\u0000",
