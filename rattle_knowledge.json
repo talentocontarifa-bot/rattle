@@ -4,7 +4,9 @@
     "[2026-06-28] Error: Error durante la ejecuci\u00f3n del script: SelectorSyntaxError: Invalid CSS selector '+ tr td.subtext': Expected selector, got <DELIM '+' at 0> -> https://termbin.com/hazm\n\u0000",
     "[2026-06-28 10:23:34] No se encontraron rese\u00f1as en The Verge.",
     "[2026-06-28 20:53:56] No se encontraron art\u00edculos en dev.to/top/weekly.",
-    "[UNKNOWN_DATE] Error during Hacker News scraping: 'Selector' object has no attribute 'find_next_sibling'"
+    "[UNKNOWN_DATE] Error during Hacker News scraping: 'Selector' object has no attribute 'find_next_sibling'",
+    "[2026-06-29 18:05:57] No se encontraron art\u00edculos de productividad en Lifehacker.com.",
+    "[2026-06-29 18:05:57] Error al publicar en paste.rs: 201 - https://paste.rs/xkxkP"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Scraped Hacker News, published 'Rattle's Daily Tech Pulse'.",
@@ -14,7 +16,7 @@
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/zbf3\n\u0000",
-  "last_run_date": "UNKNOWN_DATE",
+  "last_run_date": "2026-06-29 18:05:57",
   "last_reddit_tech_report_url": "https://termbin.com/3591\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/mixuv\n\u0000",
   "last_dev_to_report_url": "https://paste.rs/hPsyu",
