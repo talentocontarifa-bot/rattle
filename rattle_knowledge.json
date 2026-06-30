@@ -9,12 +9,14 @@
     "[2026-06-29 18:05:57] Error al publicar en paste.rs: 201 - https://paste.rs/xkxkP",
     "[2026-06-29 21:19:24] Error durante el scraping de Hacker News: 'TextHandler' object has no attribute 'text'",
     "[2026-06-30 07:44:18] No se encontraron art\u00edculos en TechCrunch.com.",
-    "[2026-06-30 14:00:30] No se encontraron art\u00edculos en dev.to/top/weekly."
+    "[2026-06-30 14:00:30] No se encontraron art\u00edculos en dev.to/top/weekly.",
+    "[2026-06-30 17:49:12] Error durante el scraping de DuckDuckGo: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"#search_form_input_homepage\") to be visible\n",
+    "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Scraped dev.to/top/weekly and published report.",
   "last_report_summary": "TechCrunch 'Rattle's TechCrunch Digest' published to https://paste.rs/0G3Hc",
-  "current_run_status": "SUCCESS",
+  "current_run_status": "FAILURE",
   "last_hacker_news_report_url": "https://paste.rs/xh6Ny",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
