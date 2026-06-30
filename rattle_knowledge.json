@@ -11,7 +11,8 @@
     "[2026-06-30 07:44:18] No se encontraron art\u00edculos en TechCrunch.com.",
     "[2026-06-30 14:00:30] No se encontraron art\u00edculos en dev.to/top/weekly.",
     "[2026-06-30 17:49:12] Error durante el scraping de DuckDuckGo: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"#search_form_input_homepage\") to be visible\n",
-    "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC"
+    "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC",
+    "[28476750370] Error durante el scraping de GitHub Trending: 'TextHandler' object has no attribute 'text'\nTraceback (most recent call last):\n  File \"<string>\", line 49, in <module>\nAttributeError: 'TextHandler' object has no attribute 'text'\n"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Scraped dev.to/top/weekly and published report.",
@@ -28,5 +29,6 @@
   "last_lifehacker_report_url": "https://paste.rs/RmhLp",
   "last_autonomous_earning_report_url": "https://paste.rs/oq84d",
   "last_tech_outlook_report_url": "https://paste.rs/yzIbX",
-  "last_techcrunch_report_url": "https://paste.rs/0G3Hc"
+  "last_techcrunch_report_url": "https://paste.rs/0G3Hc",
+  "last_run_status": "FAILURE"
 }
