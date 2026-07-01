@@ -13,13 +13,14 @@
     "[2026-06-30 17:49:12] Error durante el scraping de DuckDuckGo: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"#search_form_input_homepage\") to be visible\n",
     "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC",
     "[28476750370] Error durante el scraping de GitHub Trending: 'TextHandler' object has no attribute 'text'\nTraceback (most recent call last):\n  File \"<string>\", line 49, in <module>\nAttributeError: 'TextHandler' object has no attribute 'text'\n",
-    "[2026-07-01 02:42:07] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_text'\n"
+    "[2026-07-01 02:42:07] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_text'\n",
+    "[UNKNOWN_DATE] Error durante el scraping de Hacker News: Invalid XPath selector: following-sibling::tr[1]//span[@class=\"score\"]::text"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Scraped Hacker News and published digest.",
   "last_report_summary": "Hacker News 'Rattle's Hacker News Digest' published to https://paste.rs/oBZr3",
-  "current_run_status": "SUCCESS",
-  "last_hacker_news_report_url": "https://paste.rs/oBZr3",
+  "current_run_status": "FAILURE",
+  "last_hacker_news_report_url": "https://paste.rs/wNwnS",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/zbf3\n\u0000",
