@@ -14,7 +14,8 @@
     "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC",
     "[28476750370] Error durante el scraping de GitHub Trending: 'TextHandler' object has no attribute 'text'\nTraceback (most recent call last):\n  File \"<string>\", line 49, in <module>\nAttributeError: 'TextHandler' object has no attribute 'text'\n",
     "[2026-07-01 02:42:07] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_text'\n",
-    "[UNKNOWN_DATE] Error durante el scraping de Hacker News: Invalid XPath selector: following-sibling::tr[1]//span[@class=\"score\"]::text"
+    "[UNKNOWN_DATE] Error durante el scraping de Hacker News: Invalid XPath selector: following-sibling::tr[1]//span[@class=\"score\"]::text",
+    "[2026-07-01 14:13:29] No se encontraron posts en r/technology."
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Scraped Hacker News and published digest.",
