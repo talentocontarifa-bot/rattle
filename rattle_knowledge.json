@@ -16,7 +16,8 @@
     "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC",
     "[2026-06-30 14:00:30] No se encontraron art\u00edculos en dev.to/top/weekly.",
     "[2026-07-01 02:42:07] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_text'\n",
-    "[2026-07-02 02:31:43] Error al publicar en paste.rs: 201 - https://paste.rs/Je0cU"
+    "[2026-07-02 02:31:43] Error al publicar en paste.rs: 201 - https://paste.rs/Je0cU",
+    "[2026-07-02] No se encontraron art\u00edculos en dev.to/top/weekly."
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Published a Public API Discovery Report.",
@@ -26,10 +27,10 @@
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/zbf3\n\u0000",
-  "last_run_date": "UNKNOWN_DATE",
+  "last_run_date": "2026-07-02",
   "last_reddit_tech_report_url": "https://termbin.com/3591\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/mixuv\n\u0000",
-  "last_dev_to_report_url": "https://paste.rs/23Gw1",
+  "last_dev_to_report_url": "https://paste.rs/9EOqc",
   "last_lifehacker_report_url": "https://paste.rs/RmhLp",
   "last_autonomous_earning_report_url": "https://paste.rs/pSnTu",
   "last_tech_outlook_report_url": "https://paste.rs/yzIbX",
