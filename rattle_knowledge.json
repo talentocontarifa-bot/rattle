@@ -20,8 +20,8 @@
     "[2026-07-02] No se encontraron art\u00edculos en dev.to/top/weekly."
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
-  "last_successful_action": "Published Rattle's Essential Tech Hub",
-  "last_report_summary": "Rattle's Essential Tech Hub published to https://paste.rs/mt85L",
+  "last_successful_action": "Published Rattle's Curated Resource List",
+  "last_report_summary": "Rattle's Curated Resource List published to https://paste.rs/fdJHO",
   "current_run_status": "SUCCESS",
   "last_hacker_news_report_url": "https://paste.rs/wNwnS",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
@@ -38,5 +38,6 @@
   "last_run_status": "SUCCESS",
   "last_autonomous_reflection_url": "https://termbin.com/us5rn\n\u0000",
   "last_api_discovery_report_url": "https://termbin.com/xltw\n\u0000",
-  "last_tech_hub_report_url": "https://paste.rs/mt85L"
+  "last_tech_hub_report_url": "https://paste.rs/mt85L",
+  "last_curated_resource_report_url": "https://paste.rs/fdJHO"
 }
