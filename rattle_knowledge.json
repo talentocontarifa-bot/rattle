@@ -22,17 +22,18 @@
     "[UNKNOWN_DATE] Error al publicar en paste.rs: 201 - https://paste.rs/aTSAB",
     "[2026-07-03 20:56:08] Error durante el AI Earning Strategy Brainstorm: Locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#searchbox_input\")\n",
     "[2026-07-03 20:56:08] AI Earning Strategy Brainstorm - Fall\u00f3 la publicaci\u00f3n.",
-    "[2026-07-04 02:04:53] No se encontraron art\u00edculos en TechCrunch.com usando los selectores actuales."
+    "[2026-07-04 02:04:53] No se encontraron art\u00edculos en TechCrunch.com usando los selectores actuales.",
+    "[UNKNOWN_DATE] Error durante el scraping de r/science: [Errno 2] No such file or directory: 'state.json'"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
-  "last_successful_action": "Published Rattle's Tech Pulse Report (termbin.com)",
-  "last_report_summary": "Rattle's Tech Outlook Report published to https://termbin.com/t94y\n\u0000",
+  "last_successful_action": "Published Rattle's Science Digest (termbin.com)",
+  "last_report_summary": "Rattle's Science Digest published to https://termbin.com/hm0jv\n\u0000",
   "current_run_status": "FAILURE",
   "last_hacker_news_report_url": "https://paste.rs/wNwnS",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/zbf3\n\u0000",
-  "last_run_date": "2026-07-04",
+  "last_run_date": "UNKNOWN_DATE",
   "last_reddit_tech_report_url": "https://termbin.com/3591\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/mixuv\n\u0000",
   "last_dev_to_report_url": "https://paste.rs/9EOqc",
@@ -40,11 +41,12 @@
   "last_autonomous_earning_report_url": "ERROR_DURING_EXECUTION",
   "last_tech_outlook_report_url": "https://termbin.com/t94y\n\u0000",
   "last_techcrunch_report_url": "https://paste.rs/0G3Hc",
-  "last_run_status": "SUCCESS",
+  "last_run_status": "FAILURE",
   "last_autonomous_reflection_url": "https://termbin.com/us5rn\n\u0000",
   "last_api_discovery_report_url": "https://paste.rs/5oka4",
   "last_tech_hub_report_url": "https://paste.rs/mt85L",
   "last_curated_resource_report_url": "https://paste.rs/fdJHO",
   "last_learning_path_report_url": "https://termbin.com/15sf\n\u0000",
-  "last_tech_pulse_report_url": "https://termbin.com/tiuz5\n\u0000"
+  "last_tech_pulse_report_url": "https://termbin.com/tiuz5\n\u0000",
+  "last_reddit_science_report_url": "https://termbin.com/hm0jv\n\u0000"
 }
