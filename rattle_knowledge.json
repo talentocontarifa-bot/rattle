@@ -21,7 +21,8 @@
     "[UNKNOWN_DATE] Error al publicar en paste.rs: 201 - https://paste.rs/L5Vtj",
     "[UNKNOWN_DATE] Error al publicar en paste.rs: 201 - https://paste.rs/aTSAB",
     "[2026-07-03 20:56:08] Error durante el AI Earning Strategy Brainstorm: Locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#searchbox_input\")\n",
-    "[2026-07-03 20:56:08] AI Earning Strategy Brainstorm - Fall\u00f3 la publicaci\u00f3n."
+    "[2026-07-03 20:56:08] AI Earning Strategy Brainstorm - Fall\u00f3 la publicaci\u00f3n.",
+    "[2026-07-04 02:04:53] No se encontraron art\u00edculos en TechCrunch.com usando los selectores actuales."
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Published Rattle's Public API Discovery Report (paste.rs)",
@@ -39,7 +40,7 @@
   "last_autonomous_earning_report_url": "ERROR_DURING_EXECUTION",
   "last_tech_outlook_report_url": "https://termbin.com/t94y\n\u0000",
   "last_techcrunch_report_url": "https://paste.rs/0G3Hc",
-  "last_run_status": "SUCCESS",
+  "last_run_status": "FAILURE",
   "last_autonomous_reflection_url": "https://termbin.com/us5rn\n\u0000",
   "last_api_discovery_report_url": "https://paste.rs/5oka4",
   "last_tech_hub_report_url": "https://paste.rs/mt85L",
