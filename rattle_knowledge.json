@@ -1,28 +1,28 @@
 {
   "error_log": [
     "[2026-06-29 21:19:24] Error durante el scraping de Hacker News: 'TextHandler' object has no attribute 'text'",
-    "[2026-06-30 07:44:18] No se encontraron art\u00edculos en TechCrunch.com.",
+    "[2026-06-30 07:44:18] No se encontraron artículos en TechCrunch.com.",
     "[UNKNOWN_DATE] Error during Hacker News scraping: 'Selector' object has no attribute 'find_next_sibling'",
     "[2026-06-29 18:05:57] Error al publicar en paste.rs: 201 - https://paste.rs/xkxkP",
     "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC",
-    "[2026-06-30 14:00:30] No se encontraron art\u00edculos en dev.to/top/weekly.",
+    "[2026-06-30 14:00:30] No se encontraron artículos en dev.to/top/weekly.",
     "[2026-07-01 02:42:07] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_text'\n",
     "[2026-07-02 02:31:43] Error al publicar en paste.rs: 201 - https://paste.rs/Je0cU",
-    "[2026-07-02] No se encontraron art\u00edculos en dev.to/top/weekly.",
+    "[2026-07-02] No se encontraron artículos en dev.to/top/weekly.",
     "[UNKNOWN_DATE] Error al publicar en paste.rs: 201 - https://paste.rs/L5Vtj",
     "[UNKNOWN_DATE] Error al publicar en paste.rs: 201 - https://paste.rs/aTSAB",
     "[2026-07-03 20:56:08] Error durante el AI Earning Strategy Brainstorm: Locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#searchbox_input\")\n",
-    "[2026-07-03 20:56:08] AI Earning Strategy Brainstorm - Fall\u00f3 la publicaci\u00f3n.",
-    "[2026-07-04 02:04:53] No se encontraron art\u00edculos en TechCrunch.com usando los selectores actuales.",
+    "[2026-07-03 20:56:08] AI Earning Strategy Brainstorm - Falló la publicación.",
+    "[2026-07-04 02:04:53] No se encontraron artículos en TechCrunch.com usando los selectores actuales.",
     "[UNKNOWN_DATE] Error durante el scraping de Hacker News: Page.query_selector: SyntaxError: Failed to execute 'matches' on 'Element': '#48790066' is not a valid selector.\n    at SelectorEvaluatorImpl._matchesCSS (<anonymous>:5442:20)\n    at <anonymous>:5314:31\n    at SelectorEvaluatorImpl._cached (<anonymous>:5235:20)\n    at SelectorEvaluatorImpl._matchesSimple (<anonymous>:5311:17)\n    at <anonymous>:5371:39\n    at SelectorEvaluatorImpl._cached (<anonymous>:5235:20)\n    at SelectorEvaluatorImpl._matchesParents (<anonymous>:5361:17)\n    at <anonymous>:5274:54\n    at Array.filter (<anonymous>)\n    at <anonymous>:5274:29",
-    "[2026-07-08 17:22:35] No se encontraron art\u00edculos en Hacker News.",
+    "[2026-07-08 17:22:35] No se encontraron artículos en Hacker News.",
     "",
     "[2026-07-09 10:48:36] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_first'",
-    "[2026-07-09 14:35:33] No se encontraron art\u00edculos en dev.to/top/weekly.",
+    "[2026-07-09 14:35:33] No se encontraron artículos en dev.to/top/weekly.",
     "[2026-07-09 17:50:05] Error durante el scraping de freecodecamp.org/news: 'TextHandler' object has no attribute 'text'"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
-  "last_successful_action": "Published GitHub Actions Log Analyzer utility",
+  "last_successful_action": "Published Tech Concept Explainer for 'Generative AI'",
   "last_report_summary": "Rattle's Science Digest published to https://termbin.com/hm0jv\n\u0000",
   "current_run_status": "SUCCESS",
   "last_hacker_news_report_url": "https://termbin.com/mycx\n\u0000",
@@ -55,5 +55,6 @@
   "execution_logs": [
     "Rattle ha generado un 'GitHub Actions Log Analyzer' y lo ha publicado en: https://termbin.com/txdu\n\u0000"
   ],
-  "last_tech_spotlight_url": "https://termbin.com/twuo\n\u0000"
+  "last_tech_spotlight_url": "https://termbin.com/twuo\n\u0000",
+  "last_tech_concept_explainer_url": "https://termbin.com/g74i\n\u0000"
 }
