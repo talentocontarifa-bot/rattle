@@ -19,7 +19,8 @@
     "",
     "[2026-07-09 10:48:36] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_first'",
     "[2026-07-09 14:35:33] No se encontraron art\u00edculos en dev.to/top/weekly.",
-    "[2026-07-09 17:50:05] Error durante el scraping de freecodecamp.org/news: 'TextHandler' object has no attribute 'text'"
+    "[2026-07-09 17:50:05] Error durante el scraping de freecodecamp.org/news: 'TextHandler' object has no attribute 'text'",
+    "[29175919221] No se pudo extraer contenido para 'Blockchain' de Wikipedia."
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Published Tech Concept Explainer for 'Generative AI'",
@@ -37,7 +38,7 @@
   "last_autonomous_earning_report_url": "https://termbin.com/6w87\n\u0000",
   "last_tech_outlook_report_url": "https://termbin.com/t94y\n\u0000",
   "last_techcrunch_report_url": "https://paste.rs/0G3Hc",
-  "last_run_status": "SUCCESS",
+  "last_run_status": "FAILED",
   "last_autonomous_reflection_url": "https://termbin.com/us5rn\n\u0000",
   "last_api_discovery_report_url": "https://paste.rs/5oka4",
   "last_tech_hub_report_url": "https://paste.rs/mt85L",
