@@ -19,7 +19,8 @@
     "[2026-07-09 14:35:33] No se encontraron art\u00edculos en dev.to/top/weekly.",
     "[2026-07-09 17:50:05] Error durante el scraping de freecodecamp.org/news: 'TextHandler' object has no attribute 'text'",
     "[29175919221] No se pudo extraer contenido para 'Blockchain' de Wikipedia.",
-    "[2026-07-12 13:00:48] Error durante la extracci\u00f3n o publicaci\u00f3n del explicador de 'Cybersecurity': Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#mw-content-text .mw-parser-output p\") to be visible\n    33 \u00d7 locator resolved to 182 elements. Proceeding with the first one: <p id=\"mwAw\" class=\"mw-empty-elt\">\u2026</p>\n"
+    "[2026-07-12 13:00:48] Error durante la extracci\u00f3n o publicaci\u00f3n del explicador de 'Cybersecurity': Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#mw-content-text .mw-parser-output p\") to be visible\n    33 \u00d7 locator resolved to 182 elements. Proceeding with the first one: <p id=\"mwAw\" class=\"mw-empty-elt\">\u2026</p>\n",
+    "[2026-07-12 16:50:19] Error during the extraction or publication of explainer for 'Virtual Reality': No substantive content found for 'Virtual Reality' on Wikipedia."
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Published Tech Concept Explainer for 'Generative AI'",
