@@ -1,7 +1,5 @@
 {
   "error_log": [
-    "[2026-06-29 21:19:24] Error durante el scraping de Hacker News: 'TextHandler' object has no attribute 'text'",
-    "[2026-06-30 07:44:18] No se encontraron art\u00edculos en TechCrunch.com.",
     "[UNKNOWN_DATE] Error during Hacker News scraping: 'Selector' object has no attribute 'find_next_sibling'",
     "[2026-06-29 18:05:57] Error al publicar en paste.rs: 201 - https://paste.rs/xkxkP",
     "[2026-06-30 17:49:12] Error al publicar en paste.rs: 201 - https://paste.rs/2XKRC",
@@ -20,7 +18,8 @@
     "[2026-07-09 10:48:36] Error durante el scraping de Hacker News: 'Selectors' object has no attribute 'get_first'",
     "[2026-07-09 14:35:33] No se encontraron art\u00edculos en dev.to/top/weekly.",
     "[2026-07-09 17:50:05] Error durante el scraping de freecodecamp.org/news: 'TextHandler' object has no attribute 'text'",
-    "[29175919221] No se pudo extraer contenido para 'Blockchain' de Wikipedia."
+    "[29175919221] No se pudo extraer contenido para 'Blockchain' de Wikipedia.",
+    "[2026-07-12 13:00:48] Error durante la extracci\u00f3n o publicaci\u00f3n del explicador de 'Cybersecurity': Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#mw-content-text .mw-parser-output p\") to be visible\n    33 \u00d7 locator resolved to 182 elements. Proceeding with the first one: <p id=\"mwAw\" class=\"mw-empty-elt\">\u2026</p>\n"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Published Tech Concept Explainer for 'Generative AI'",
