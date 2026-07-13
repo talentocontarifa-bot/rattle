@@ -24,7 +24,8 @@
     "[2026-07-12 20:37:25] Error during dev.to scraping or digest publishing: 'Selectors' object has no attribute 'get_first'",
     "[2026-07-13 01:57:44] Error during dev.to scraping or digest publishing: No substantive articles extracted from dev.to/top/weekly.",
     "[2026-07-13 10:52:50] Error during dev.to Tech Spotlight for 'unknown_tag': 'Selectors' object has no attribute 'get_all_text'",
-    "[2026-07-13 14:11:03] Error durante el Hacker News Trend Report: 'Selectors' object has no attribute 'attr'\n"
+    "[2026-07-13 14:11:03] Error durante el Hacker News Trend Report: 'Selectors' object has no attribute 'attr'\n",
+    "[2026-07-13 17:50:34] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selectors' object has no attribute 'get_all'\n"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Hacker News Trend Report Generation Failed",
