@@ -22,12 +22,13 @@
     "[2026-07-12 13:00:48] Error durante la extracci\u00f3n o publicaci\u00f3n del explicador de 'Cybersecurity': Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#mw-content-text .mw-parser-output p\") to be visible\n    33 \u00d7 locator resolved to 182 elements. Proceeding with the first one: <p id=\"mwAw\" class=\"mw-empty-elt\">\u2026</p>\n",
     "[2026-07-12 16:50:19] Error during the extraction or publication of explainer for 'Virtual Reality': No substantive content found for 'Virtual Reality' on Wikipedia.",
     "[2026-07-12 20:37:25] Error during dev.to scraping or digest publishing: 'Selectors' object has no attribute 'get_first'",
-    "[2026-07-13 01:57:44] Error during dev.to scraping or digest publishing: No substantive articles extracted from dev.to/top/weekly."
+    "[2026-07-13 01:57:44] Error during dev.to scraping or digest publishing: No substantive articles extracted from dev.to/top/weekly.",
+    "[2026-07-13 10:52:50] Error during dev.to Tech Spotlight for 'unknown_tag': 'Selectors' object has no attribute 'get_all_text'"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
-  "last_successful_action": "Published Rattle's Weekly Dev Digest",
+  "last_successful_action": "Failed to publish Tech Spotlight",
   "last_report_summary": "Rattle's Science Digest published to https://termbin.com/hm0jv\n\u0000",
-  "current_run_status": "SUCCESS",
+  "current_run_status": "FAILED",
   "last_hacker_news_report_url": "https://termbin.com/mycx\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
