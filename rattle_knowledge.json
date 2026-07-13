@@ -25,17 +25,18 @@
     "[2026-07-13 01:57:44] Error during dev.to scraping or digest publishing: No substantive articles extracted from dev.to/top/weekly.",
     "[2026-07-13 10:52:50] Error during dev.to Tech Spotlight for 'unknown_tag': 'Selectors' object has no attribute 'get_all_text'",
     "[2026-07-13 14:11:03] Error durante el Hacker News Trend Report: 'Selectors' object has no attribute 'attr'\n",
-    "[2026-07-13 17:50:34] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selectors' object has no attribute 'get_all'\n"
+    "[2026-07-13 17:50:34] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selectors' object has no attribute 'get_all'\n",
+    "Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selector' object has no attribute 'get_text'"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
-  "last_successful_action": "Hacker News Trend Report Generation Failed",
+  "last_successful_action": "Hacker News Tech Insights (Scraping Failed)",
   "last_report_summary": "Rattle's Science Digest published to https://termbin.com/hm0jv\n\u0000",
   "current_run_status": "FAILED",
   "last_hacker_news_report_url": "https://termbin.com/mycx\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/b7xy\n\u0000",
-  "last_run_date": "2026-07-13 14:11:03",
+  "last_run_date": "2026-07-13 20:52:36",
   "last_reddit_tech_report_url": "https://termbin.com/btck\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/u0et\n\u0000",
   "last_dev_to_report_url": "https://termbin.com/jl49\n\u0000",
@@ -63,7 +64,9 @@
     "No se pudo extraer contenido para 'Machine learning' de Wikipedia.",
     "Error during autonomous task for Artificial intelligence. Report URL: https://termbin.com/xl78\n\u0000",
     "[2026-07-12 20:37:25] Error during dev.to scraping or digest publishing: 'Selectors' object has no attribute 'get_first'",
-    "Rattle's Weekly Dev Digest published to: https://termbin.com/jl49\n\u0000\n"
+    "Rattle's Weekly Dev Digest published to: https://termbin.com/jl49\n\u0000\n",
+    "[2026-07-13 20:52:34] Iniciando la estrategia de Rattle: Compilaci\u00f3n de los Principales Temas Tech...",
+    "[2026-07-13 20:52:36] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selector' object has no attribute 'get_text'"
   ],
   "last_tech_spotlight_url": "https://termbin.com/twuo\n\u0000",
   "last_tech_concept_explainer_url": "N/A"
