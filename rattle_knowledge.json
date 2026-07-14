@@ -26,7 +26,8 @@
     "[2026-07-13 10:52:50] Error during dev.to Tech Spotlight for 'unknown_tag': 'Selectors' object has no attribute 'get_all_text'",
     "[2026-07-13 14:11:03] Error durante el Hacker News Trend Report: 'Selectors' object has no attribute 'attr'\n",
     "[2026-07-13 17:50:34] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selectors' object has no attribute 'get_all'\n",
-    "Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selector' object has no attribute 'get_text'"
+    "Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selector' object has no attribute 'get_text'",
+    "[2026-07-14 01:44:51] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'TextHandler' object has no attribute 'text'\n"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Hacker News Tech Insights (Scraping Failed)",
@@ -36,7 +37,7 @@
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/b7xy\n\u0000",
-  "last_run_date": "2026-07-13 20:52:36",
+  "last_run_date": "2026-07-14 01:44:51",
   "last_reddit_tech_report_url": "https://termbin.com/btck\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/u0et\n\u0000",
   "last_dev_to_report_url": "https://termbin.com/jl49\n\u0000",
@@ -66,7 +67,9 @@
     "[2026-07-12 20:37:25] Error during dev.to scraping or digest publishing: 'Selectors' object has no attribute 'get_first'",
     "Rattle's Weekly Dev Digest published to: https://termbin.com/jl49\n\u0000\n",
     "[2026-07-13 20:52:34] Iniciando la estrategia de Rattle: Compilaci\u00f3n de los Principales Temas Tech...",
-    "[2026-07-13 20:52:36] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selector' object has no attribute 'get_text'"
+    "[2026-07-13 20:52:36] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'Selector' object has no attribute 'get_text'",
+    "[2026-07-14 01:44:49] Iniciando la estrategia de Rattle: Compilaci\u00f3n de los Principales Temas Tech...",
+    "[2026-07-14 01:44:49] Scraping Hacker News en: https://news.ycombinator.com/"
   ],
   "last_tech_spotlight_url": "https://termbin.com/twuo\n\u0000",
   "last_tech_concept_explainer_url": "N/A"
