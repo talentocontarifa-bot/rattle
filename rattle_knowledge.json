@@ -10,7 +10,8 @@
     "[2026-07-14 01:44:51] Error durante la Compilaci\u00f3n de Temas Tech de Hacker News: 'TextHandler' object has no attribute 'text'\n",
     "[2026-07-14 06:06:08] Error durante la Extracci\u00f3n Robusta de Temas Tech de Hacker News: 'TextHandler' object is not callable",
     "[2026-07-14 09:49:29] Error durante la Extracci\u00f3n Robusta de Temas Tech de Hacker News: 'Response' object has no attribute 'html'",
-    "ERROR: Error durante la Extracci\u00f3n de Pulso Tecnol\u00f3gico de The Verge con Scrapling: No se extrajeron titulares sustantivos de theverge.com."
+    "ERROR: Error durante la Extracci\u00f3n de Pulso Tecnol\u00f3gico de The Verge con Scrapling: No se extrajeron titulares sustantivos de theverge.com.",
+    "ERROR: Error durante la extracci\u00f3n de tendencias tecnol\u00f3gicas: Page.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#search_form_input_homepage\")\n"
   ],
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_successful_action": "Generated Rattle's Visual Mission Image and Report.",
@@ -74,7 +75,8 @@
     "Rattle's TechCrunch Digest published to: https://paste.rs/mojEs",
     "INFO: Iniciando Rattle's Tech Pulse Report con Scrapling en theverge.com.",
     "ERROR: Error durante la Extracci\u00f3n de Pulso Tecnol\u00f3gico de The Verge con Scrapling: No se extrajeron titulares sustantivos de theverge.com.",
-    "[2026-07-16 10:02:24] Rattle ha generado un 'Visual Mission Image Report' y lo ha publicado en: https://termbin.com/yvadf\n\u0000\n"
+    "[2026-07-16 10:02:24] Rattle ha generado un 'Visual Mission Image Report' y lo ha publicado en: https://termbin.com/yvadf\n\u0000\n",
+    "ERROR: Error durante la extracci\u00f3n de tendencias tecnol\u00f3gicas: Page.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#search_form_input_homepage\")\n"
   ],
   "last_tech_spotlight_url": "https://termbin.com/twuo\n\u0000",
   "last_tech_concept_explainer_url": "N/A",
