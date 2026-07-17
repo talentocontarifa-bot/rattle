@@ -41,14 +41,14 @@
     "[2026-07-17T17:03:17] INFO: Rattle's 'Hacker News Deep Dive' publicado en: https://termbin.com/jpwo\n\u0000"
   ],
   "last_successful_action": "Generated Hacker News Deep Dive Report.",
-  "current_run_status": "SUCCESS",
+  "current_run_status": "FAILED",
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_report_summary": "Rattle's Science Digest published to https://termbin.com/hm0jv\n\u0000",
   "last_hacker_news_report_url": "https://termbin.com/16um\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/b7xy\n\u0000",
-  "last_run_date": "2026-07-17T17:03:17.804498",
+  "last_run_date": "2026-07-17T20:45:51.027909",
   "last_reddit_tech_report_url": "https://termbin.com/btck\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/u0et\n\u0000",
   "last_dev_to_report_url": "https://termbin.com/jl49\n\u0000",
@@ -78,7 +78,8 @@
   "last_generated_image_reflection_report_url": "https://termbin.com/yvadf\n\u0000",
   "last_hacker_news_discussion_report_url": "https://termbin.com/v7mtf\n\u0000",
   "error_logs": [
-    "[2026-07-17T09:50:21.596056+00:00] Error during Online Presence Search: Locator.wait_for: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input#search_form_input_homepage\") to be visible\n"
+    "[2026-07-17T09:50:21.596056+00:00] Error during Online Presence Search: Locator.wait_for: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input#search_form_input_homepage\") to be visible\n",
+    "[2026-07-17T20:45:19] ERROR: Error durante la b\u00fasqueda o publicaci\u00f3n de APIs: Page.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"input#query\")\n\n"
   ],
   "last_hacker_news_trend_report_url": "https://termbin.com/rqnr\n\u0000",
   "last_hacker_news_deep_dive_report_url": "https://termbin.com/jpwo\n\u0000"
