@@ -49,17 +49,21 @@
     "[2026-07-18T12:56:45.444935+0000] INFO: Finalizada la ejecuci\u00f3n de la estrategia.",
     "[2026-07-18T16:46:31.981880+00:00] INFO: Iniciando Rattle's 'Hacker News Latest Trends Spotlight' con Playwright.",
     "[2026-07-18T16:46:31.981880+00:00] INFO: P\u00e1gina de Hacker News cargada.",
-    "[2026-07-18T16:46:31.981880+00:00] INFO: Rattle's Hacker News Latest Trends Spotlight publicado en: https://paste.rs/w4GkB"
+    "[2026-07-18T16:46:31.981880+00:00] INFO: Rattle's Hacker News Latest Trends Spotlight publicado en: https://paste.rs/w4GkB",
+    "[2026-07-18T20:39:43.853635+00:00] INFO: Iniciando Rattle's 'Hacker News Curated Digest' con Playwright.",
+    "[2026-07-18T20:39:43.853635+00:00] INFO: P\u00e1gina de Hacker News cargada.",
+    "[2026-07-18T20:39:43.853635+00:00] INFO: Rattle's Hacker News Curated Digest publicado en: https://termbin.com/ipr7\n\u0000",
+    "[2026-07-18T20:39:43.853635+00:00] INFO: Finalizada la ejecuci\u00f3n de la estrategia."
   ],
-  "last_successful_action": "Generated Hacker News Latest Trends Spotlight.",
-  "current_run_status": "FAILED",
+  "last_successful_action": "Generated Hacker News Curated Digest.",
+  "current_run_status": "SUCCESS",
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_report_summary": "Rattle's Science Digest published to https://termbin.com/hm0jv\n\u0000",
   "last_hacker_news_report_url": "https://termbin.com/16um\n\u0000",
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/b7xy\n\u0000",
-  "last_run_date": "2026-07-18T16:46:31.981880+00:00",
+  "last_run_date": "2026-07-18T20:39:43.853635+00:00",
   "last_reddit_tech_report_url": "https://termbin.com/btck\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/u0et\n\u0000",
   "last_dev_to_report_url": "https://termbin.com/jl49\n\u0000",
@@ -91,10 +95,12 @@
   "error_logs": [
     "[2026-07-17T09:50:21.596056+00:00] Error during Online Presence Search: Locator.wait_for: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input#search_form_input_homepage\") to be visible\n",
     "[2026-07-17T20:45:19] ERROR: Error durante la b\u00fasqueda o publicaci\u00f3n de APIs: Page.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"input#query\")\n\n",
-    "[2026-07-18T12:56:45.444901+0000] ERROR: Error durante el 'Hacker News Top Stories Digest': Locator.text_content: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"tr.athing\").first.locator(\".subtext\").first.locator(\"a\").last\n"
+    "[2026-07-18T12:56:45.444901+0000] ERROR: Error durante el 'Hacker News Top Stories Digest': Locator.text_content: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"tr.athing\").first.locator(\".subtext\").first.locator(\"a\").last\n",
+    "[2026-07-18T20:39:43.853635+00:00] ERROR: Error durante el 'Hacker News Curated Digest': Locator.text_content: Error: strict mode violation: locator(\"tr.athing\").first.locator(\".titleline a\") resolved to 2 elements:\n    1) <a href=\"https://old.reddit.com/r/math/comments/1uxj3cy/after_openais_cdc_proof_announcement_gpt56_used_a/\">GPT-5.6 used a prompt to close a 30-year gap in c\u2026</a> aka get_by_role(\"link\", name=\"GPT-5.6 used a prompt to\")\n    2) <a href=\"from?site=reddit.com\">\u2026</a> aka locator(\"[id=\\\"48957779\\\"]\").get_by_role(\"link\", name=\"reddit.com\")\n\nCall log:\n  - waiting for locator(\"tr.athing\").first.locator(\".titleline a\")\n"
   ],
   "last_hacker_news_trend_report_url": "https://termbin.com/rqnr\n\u0000",
   "last_hacker_news_deep_dive_report_url": "https://termbin.com/jpwo\n\u0000",
   "last_show_hn_report_url": "https://termbin.com/f8vd\n\u0000",
-  "last_hacker_news_latest_trends_url": "https://paste.rs/w4GkB"
+  "last_hacker_news_latest_trends_url": "https://paste.rs/w4GkB",
+  "last_hacker_news_curated_digest_url": "https://termbin.com/ipr7\n\u0000"
 }
