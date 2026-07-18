@@ -46,9 +46,12 @@
     "[2026-07-18T09:18:01.131893+00:00] INFO: Finalizada la ejecuci\u00f3n de la estrategia.",
     "[2026-07-18T12:56:12.971722+0000] INFO: Iniciando Rattle's 'Hacker News Top Stories Digest' con Playwright.",
     "[2026-07-18T12:56:15.348133+0000] INFO: P\u00e1gina de Hacker News cargada.",
-    "[2026-07-18T12:56:45.444935+0000] INFO: Finalizada la ejecuci\u00f3n de la estrategia."
+    "[2026-07-18T12:56:45.444935+0000] INFO: Finalizada la ejecuci\u00f3n de la estrategia.",
+    "[2026-07-18T16:46:31.981880+00:00] INFO: Iniciando Rattle's 'Hacker News Latest Trends Spotlight' con Playwright.",
+    "[2026-07-18T16:46:31.981880+00:00] INFO: P\u00e1gina de Hacker News cargada.",
+    "[2026-07-18T16:46:31.981880+00:00] INFO: Rattle's Hacker News Latest Trends Spotlight publicado en: https://paste.rs/w4GkB"
   ],
-  "last_successful_action": "Generated Show HN Project Digest.",
+  "last_successful_action": "Generated Hacker News Latest Trends Spotlight.",
   "current_run_status": "FAILED",
   "last_github_report_url": "https://paste.rs/Wrovz",
   "last_report_summary": "Rattle's Science Digest published to https://termbin.com/hm0jv\n\u0000",
@@ -56,7 +59,7 @@
   "last_reddit_report_url": "https://termbin.com/7rac\n\u0000",
   "last_reflection_report_url": "https://termbin.com/su1h\n\u0000",
   "last_hacker_news_reflection_report_url": "https://termbin.com/b7xy\n\u0000",
-  "last_run_date": "2026-07-18T12:56:45.444947+00:00",
+  "last_run_date": "2026-07-18T16:46:31.981880+00:00",
   "last_reddit_tech_report_url": "https://termbin.com/btck\n\u0000",
   "last_the_verge_report_url": "https://termbin.com/u0et\n\u0000",
   "last_dev_to_report_url": "https://termbin.com/jl49\n\u0000",
@@ -92,5 +95,6 @@
   ],
   "last_hacker_news_trend_report_url": "https://termbin.com/rqnr\n\u0000",
   "last_hacker_news_deep_dive_report_url": "https://termbin.com/jpwo\n\u0000",
-  "last_show_hn_report_url": "https://termbin.com/f8vd\n\u0000"
+  "last_show_hn_report_url": "https://termbin.com/f8vd\n\u0000",
+  "last_hacker_news_latest_trends_url": "https://paste.rs/w4GkB"
 }
