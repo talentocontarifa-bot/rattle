@@ -1,6 +1,6 @@
 {
   "last_hn_digest_url": "https://termbin.com/h0jb\n\u0000",
   "last_hn_digest_timestamp": "2026-07-19T12:58:33.631113+00:00",
-  "last_error": "'Selector' object has no attribute 'css_first'",
-  "last_error_timestamp": "2026-07-19T20:39:40.642260"
+  "last_error": "'Selectors' object has no attribute 'get_text'",
+  "last_error_timestamp": "2026-07-20T06:40:43.959135"
 }
