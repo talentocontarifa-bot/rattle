@@ -2,5 +2,6 @@
   "last_hn_digest_url": "https://termbin.com/ys8g\n\u0000",
   "last_hn_digest_timestamp": "2026-07-20T10:43:59.934497+00:00",
   "last_hn_deep_dive_url": "https://paste.rs/GbB7J",
-  "last_hn_deep_dive_timestamp": "2026-07-21T01:53:15.655867"
+  "last_hn_deep_dive_timestamp": "2026-07-21T01:53:15.655867",
+  "last_hn_deep_dive_error": "'Selector' object has no attribute 'next_sibling'"
 }
