@@ -4,7 +4,7 @@
   "last_hn_deep_dive_url": "paste.rs error: 201 - https://paste.rs/SqW3T",
   "last_hn_deep_dive_timestamp": "2026-07-22T06:23:37.688512",
   "last_hn_deep_dive_error": "'Response' object has no attribute 'element'",
-  "last_microtask_scan_url": "https://termbin.com/4y9sb\n\u0000",
-  "last_microtask_scan_timestamp": "2026-07-22T13:25:04.929032",
+  "last_microtask_scan_url": "https://termbin.com/kxrk5\n\u0000",
+  "last_microtask_scan_timestamp": "2026-07-22T20:57:41.956706",
   "last_microtask_deep_dive_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"article.app-summary\") to be visible\n"
 }
