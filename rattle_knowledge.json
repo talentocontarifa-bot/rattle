@@ -6,5 +6,7 @@
   "last_hn_deep_dive_error": "'Response' object has no attribute 'element'",
   "last_microtask_scan_url": "https://termbin.com/kxrk5\n\u0000",
   "last_microtask_scan_timestamp": "2026-07-22T20:57:41.956706",
-  "last_microtask_deep_dive_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"article.app-summary\") to be visible\n"
+  "last_microtask_deep_dive_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"article.app-summary\") to be visible\n",
+  "last_microtask_discovery_url": "https://termbin.com/is3id\n\u0000",
+  "last_microtask_discovery_timestamp": "2026-07-23T01:59:52.843891+00:00"
 }
