@@ -1,6 +1,6 @@
 {
   "last_hn_digest_url": "https://termbin.com/w66h\n\u0000",
-  "last_hn_digest_timestamp": "2026-07-22T10:18:08.554494",
+  "last_hn_digest_timestamp": "2026-07-23T20:53:44.217815",
   "last_hn_deep_dive_url": "paste.rs error: 201 - https://paste.rs/SqW3T",
   "last_hn_deep_dive_timestamp": "2026-07-22T06:23:37.688512",
   "last_hn_deep_dive_error": "'Response' object has no attribute 'element'",
@@ -9,5 +9,6 @@
   "last_microtask_deep_dive_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"article.app-summary\") to be visible\n",
   "last_microtask_discovery_url": "https://termbin.com/l77p\n\u0000",
   "last_microtask_discovery_timestamp": "2026-07-23T10:14:20.703344",
-  "last_freelance_platform_report_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"div[data-test-id=\\\"company-card\\\"]\") to be visible\n    - waiting for\" https://www.trustpilot.com/search?query=freelance%20platforms\" navigation to finish...\n    - navigated to \"https://www.trustpilot.com/search?query=freelance%20platforms\"\n"
+  "last_freelance_platform_report_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"div[data-test-id=\\\"company-card\\\"]\") to be visible\n    - waiting for\" https://www.trustpilot.com/search?query=freelance%20platforms\" navigation to finish...\n    - navigated to \"https://www.trustpilot.com/search?query=freelance%20platforms\"\n",
+  "last_hn_digest_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"div.item\") to be visible\n"
 }
