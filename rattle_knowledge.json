@@ -14,5 +14,7 @@
   "last_hn_reflection_timestamp": "2026-07-24T01:55:06.719531",
   "last_hn_comment_analysis_error": "Locator.text_content: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"div.comment-tree .comtext\").first\n",
   "last_hn_thematic_reflection_url": "https://termbin.com/yecm4\n\u0000",
-  "last_hn_thematic_reflection_timestamp": "2026-07-24T17:22:26.719538"
+  "last_hn_thematic_reflection_timestamp": "2026-07-24T17:22:26.719538",
+  "last_hn_top5_digest_url": "https://termbin.com/ubwn\n\u0000",
+  "last_hn_top5_digest_timestamp": "2026-07-24T20:57:04.029946"
 }
