@@ -24,5 +24,8 @@
   "last_hn_early_bird_briefing_error": "'TextHandler' object has no attribute 'get_text'",
   "last_hn_ai_reflection_error": "'TextHandler' object has no attribute 'get_text'",
   "last_hn_ai_reflection_timestamp": "2026-07-25T16:48:18.082038+00:00",
-  "last_hn_ai_reflection_error_type": "Scrapling Selector/Attribute Error"
+  "last_hn_ai_reflection_error_type": "Scrapling Selector/Attribute Error",
+  "last_hn_curated_briefing_error": "'TextHandler' object has no attribute 'get_text'",
+  "last_hn_curated_briefing_timestamp": "2026-07-25T20:42:26.973945+00:00",
+  "last_hn_curated_briefing_url": "https://termbin.com/gjp64\n\u0000"
 }
