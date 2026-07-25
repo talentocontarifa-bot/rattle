@@ -20,5 +20,6 @@
   "last_hn_silent_scan_url": "https://paste.rs/4Z2Gg",
   "last_hn_silent_scan_timestamp": "2026-07-25T06:11:42.233600",
   "last_hn_curated_report_error": "'Selectors' object has no attribute 'get_text'",
-  "last_hn_curated_report_timestamp": "2026-07-25T09:30:55.566369"
+  "last_hn_curated_report_timestamp": "2026-07-25T09:30:55.566369",
+  "last_hn_early_bird_briefing_error": "'TextHandler' object has no attribute 'get_text'"
 }
