@@ -29,5 +29,7 @@
   "last_hn_curated_briefing_timestamp": "2026-07-25T20:42:26.973945+00:00",
   "last_hn_curated_briefing_url": "https://termbin.com/gjp64\n\u0000",
   "last_hn_tech_horizon_url": "https://termbin.com/syk34\n\u0000",
-  "last_hn_tech_horizon_timestamp": "2026-07-26T01:58:26.358933+00:00"
+  "last_hn_tech_horizon_timestamp": "2026-07-26T01:58:26.358933+00:00",
+  "last_hn_sentinel_error": "ERROR general durante 'Hacker News Sentinel': AttributeError: 'TextHandler' object has no attribute 'css'",
+  "last_hn_sentinel_timestamp": "2026-07-26T06:31:04.957917+00:00"
 }
