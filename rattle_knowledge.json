@@ -39,5 +39,8 @@
   "last_hn_curated_tech_watch_url": "https://paste.rs/JWc0s",
   "last_hn_curated_tech_watch_timestamp": "2026-07-26T16:51:32.551487+00:00",
   "last_hn_developer_digest_error": "AttributeError: 'TextHandler' object has no attribute 'css'",
-  "last_hn_developer_digest_timestamp": "2026-07-26T20:48:43.100901+00:00"
+  "last_hn_developer_digest_timestamp": "2026-07-26T20:48:43.100901+00:00",
+  "last_hn_insights_error": "AttributeError: 'TextHandler' object has no attribute 'css'",
+  "last_hn_insights_timestamp": "2026-07-27T02:05:53.411072+00:00",
+  "last_hn_insights_error_type": "Scrapling Selector/Attribute Error (targeted fix attempt)"
 }
