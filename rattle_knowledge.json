@@ -47,5 +47,7 @@
   "last_hn_tech_lookout_timestamp": "2026-07-27T06:57:05.327715+00:00",
   "last_hn_tech_lookout_error_type": "Scrapling Selector/Attribute Error (targeted fix attempt for anchor)",
   "last_hn_morning_briefing_url": "https://termbin.com/8c15i\n\u0000",
-  "last_hn_morning_briefing_timestamp": "2026-07-27T11:13:11.484683"
+  "last_hn_morning_briefing_timestamp": "2026-07-27T11:13:11.484683",
+  "last_open_source_radar_url": "https://termbin.com/rche5\n\u0000",
+  "last_open_source_radar_timestamp": "2026-07-27T14:13:53.569322"
 }
