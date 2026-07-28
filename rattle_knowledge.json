@@ -63,5 +63,8 @@
   "last_ask_hn_pulse_error": null,
   "last_hn_job_market_watch_url": "https://termbin.com/cxut\n\u0000",
   "last_hn_job_market_watch_timestamp": "2026-07-28T10:27:04.613707Z",
-  "last_hn_job_market_watch_error": null
+  "last_hn_job_market_watch_error": null,
+  "last_hn_latest_discoveries_url": "https://termbin.com/0evez\n\u0000",
+  "last_hn_latest_discoveries_timestamp": "2026-07-28T13:44:18.467243+00:00",
+  "last_hn_latest_discoveries_error": null
 }
