@@ -70,12 +70,13 @@
   "last_hn_best_of_day_url": "https://termbin.com/5kzm\n\u0000",
   "last_hn_best_of_day_timestamp": "2026-07-28T17:21:22.747408+00:00",
   "last_hn_best_of_day_error": null,
-  "last_hn_daily_briefing_error": "'TextHandler' object has no attribute 'css'",
-  "last_hn_daily_briefing_timestamp": "2026-07-28T21:02:47.542184Z",
+  "last_hn_daily_briefing_error": null,
+  "last_hn_daily_briefing_timestamp": "2026-07-29T10:32:55.338369Z",
   "last_hn_daily_tech_radar_url": "https://termbin.com/vqhlb\n\u0000",
   "last_hn_daily_tech_radar_timestamp": "2026-07-29T01:50:51.182344",
   "last_hn_daily_tech_radar_error": null,
   "last_hn_trending_topics_url": "https://termbin.com/1fbq\n\u0000",
   "last_hn_trending_topics_timestamp": "2026-07-29T06:26:55+00:00",
-  "last_hn_trending_topics_error": null
+  "last_hn_trending_topics_error": null,
+  "last_hn_daily_briefing_url": "https://termbin.com/wxvdx\n\u0000"
 }
