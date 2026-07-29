@@ -1,9 +1,9 @@
 {
   "last_hn_digest_url": "https://termbin.com/iz0q\n\u0000",
   "last_hn_digest_timestamp": "2026-07-24T10:10:27.269703+00:00",
-  "last_hn_deep_dive_url": "paste.rs error: 201 - https://paste.rs/SqW3T",
-  "last_hn_deep_dive_timestamp": "2026-07-22T06:23:37.688512",
-  "last_hn_deep_dive_error": "'Response' object has no attribute 'element'",
+  "last_hn_deep_dive_url": "https://termbin.com/ctbyt\n\u0000",
+  "last_hn_deep_dive_timestamp": "2026-07-29T13:49:40.521610+00:00",
+  "last_hn_deep_dive_error": "AttributeError: 'Selector' object has no attribute 'get_text'",
   "last_microtask_scan_url": "https://termbin.com/kxrk5\n\u0000",
   "last_microtask_scan_timestamp": "2026-07-22T20:57:41.956706",
   "last_microtask_deep_dive_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"article.app-summary\") to be visible\n",
@@ -78,5 +78,6 @@
   "last_hn_trending_topics_url": "https://termbin.com/1fbq\n\u0000",
   "last_hn_trending_topics_timestamp": "2026-07-29T06:26:55+00:00",
   "last_hn_trending_topics_error": null,
-  "last_hn_daily_briefing_url": "https://termbin.com/wxvdx\n\u0000"
+  "last_hn_daily_briefing_url": "https://termbin.com/wxvdx\n\u0000",
+  "last_hn_deep_dive_error_type": "Scrapling Selector/Attribute Error (targeted fix attempt for get_text)"
 }
