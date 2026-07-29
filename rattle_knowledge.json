@@ -79,5 +79,8 @@
   "last_hn_trending_topics_timestamp": "2026-07-29T06:26:55+00:00",
   "last_hn_trending_topics_error": null,
   "last_hn_daily_briefing_url": "https://termbin.com/wxvdx\n\u0000",
-  "last_hn_deep_dive_error_type": "Scrapling Selector/Attribute Error (targeted fix attempt for get_text)"
+  "last_hn_deep_dive_error_type": "Scrapling Selector/Attribute Error (targeted fix attempt for get_text)",
+  "last_hn_curated_feed_url": "https://termbin.com/1kr4\n\u0000",
+  "last_hn_curated_feed_timestamp": "2026-07-29T17:07:24.085641+00:00",
+  "last_hn_curated_feed_error": null
 }
