@@ -84,5 +84,7 @@
   "last_hn_curated_feed_timestamp": "2026-07-29T17:07:24.085641+00:00",
   "last_hn_curated_feed_error": null,
   "last_rattle's_open-source_ai_agent_discovery_url": "https://termbin.com/byppb\n\u0000",
-  "last_rattle's_open-source_ai_agent_discovery_timestamp": "2026-07-30T01:43:14.475555+00:00"
+  "last_rattle's_open-source_ai_agent_discovery_timestamp": "2026-07-30T01:43:14.475555+00:00",
+  "last_rattle's_github_ai_agent_radar_error": "No se encontraron proyectos de agentes de IA en la p\u00e1gina de GitHub.",
+  "last_rattle's_github_ai_agent_radar_error_type": "Scraping result empty"
 }
