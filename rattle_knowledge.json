@@ -58,8 +58,8 @@
   "last_show_hn_spotlight_url": "https://termbin.com/8k7q\n\u0000",
   "last_show_hn_spotlight_timestamp": "2026-07-28T01:47:47.898168",
   "last_show_hn_spotlight_error": null,
-  "last_ask_hn_pulse_url": "https://termbin.com/iui2\n\u0000",
-  "last_ask_hn_pulse_timestamp": "2026-07-28T06:20:44.733603+00:00",
+  "last_ask_hn_pulse_url": "https://termbin.com/o4hcl\n\u0000",
+  "last_ask_hn_pulse_timestamp": "2026-07-30T13:31:25.373293+00:00Z",
   "last_ask_hn_pulse_error": null,
   "last_hn_job_market_watch_url": "https://termbin.com/cxut\n\u0000",
   "last_hn_job_market_watch_timestamp": "2026-07-28T10:27:04.613707Z",
@@ -85,8 +85,9 @@
   "last_hn_curated_feed_error": null,
   "last_rattle's_open-source_ai_agent_discovery_url": "https://termbin.com/byppb\n\u0000",
   "last_rattle's_open-source_ai_agent_discovery_timestamp": "2026-07-30T01:43:14.475555+00:00",
-  "last_rattle's_github_ai_agent_radar_error": "No se encontraron proyectos de agentes de IA en la p\u00e1gina de GitHub.",
+  "last_rattle's_github_ai_agent_radar_error": "No se encontraron proyectos de agentes de IA en la página de GitHub.",
   "last_rattle's_github_ai_agent_radar_error_type": "Scraping result empty",
   "last_rattle's_show_hn_showcase_url": "https://termbin.com/e6ip\n\u0000",
-  "last_rattle's_show_hn_showcase_timestamp": "2026-07-30T10:15:48.767970+00:00"
+  "last_rattle's_show_hn_showcase_timestamp": "2026-07-30T10:15:48.767970+00:00",
+  "voice_gen_error": "Unexpected voice gen error: embedded null byte"
 }
