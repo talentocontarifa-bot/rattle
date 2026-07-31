@@ -104,5 +104,10 @@
   "last_hn_curated_horizons_report_timestamp": "2026-07-31T06:39:11.679198+00:00",
   "last_hn_curated_horizons_report_error": null,
   "last_generated_image_horizons": "rattle_horizons_image.png",
-  "last_generated_image_horizons_timestamp": "2026-07-31T06:39:11.679693+00:00"
+  "last_generated_image_horizons_timestamp": "2026-07-31T06:39:11.679693+00:00",
+  "last_ask_hn_insights_url": "https://paste.rs/D7BXx",
+  "last_ask_hn_insights_timestamp": "2026-07-31T13:44:47.783454",
+  "last_ask_hn_insights_error": null,
+  "last_generated_image_ask_hn": "rattle_ask_hn_insights_image.png",
+  "last_generated_image_ask_hn_timestamp": "2026-07-31T13:44:47.783792"
 }
