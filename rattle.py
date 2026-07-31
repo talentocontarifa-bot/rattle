@@ -399,8 +399,26 @@ def execute_code(code_string):
         except Exception as e:
             error_msg = traceback.format_exc()
             
+    # Guardar la última imagen y voz en la carpeta pública
+    os.makedirs("public", exist_ok=True)
+    for img_name in ["rattle_image.png", "rattle_existential_image.png"]:
+        if os.path.exists(img_name):
+            try:
+                shutil.copy(img_name, "public/last_image.png")
+                print(f"Copiado de imagen exitoso: {img_name} -> public/last_image.png")
+            except Exception as ce:
+                print(f"Error copiando imagen a public: {ce}")
+    for f_name in os.listdir("."):
+        if f_name.endswith(".mp3") and "rattle" in f_name.lower():
+            try:
+                shutil.copy(f_name, "public/last_voice.mp3")
+                print(f"Copiado de voz exitoso: {f_name} -> public/last_voice.mp3")
+            except Exception as ce:
+                print(f"Error copiando voz a public: {ce}")
+            break
+
     # Limpieza automática de archivos multimedia temporales para liberar espacio
-    for tf in ["rattle_speech.mp3", "rattle_speech_for_video.mp3", "public/rattle_speech.mp3", "public/rattle_video.mp4", "public/props.json", "props.json", "rattle_image.png"]:
+    for tf in ["rattle_speech.mp3", "rattle_speech_for_video.mp3", "public/rattle_speech.mp3", "public/rattle_video.mp4", "public/props.json", "props.json", "rattle_image.png", "rattle_existential_image.png", "rattle_existential_voice.mp3"]:
         if os.path.exists(tf):
             try:
                 os.remove(tf)
@@ -735,6 +753,12 @@ Responde EXACTAMENTE en formato JSON con la siguiente estructura (sin textos de 
         log_iteration(strategy, code, execution_log)
         print("Iteración guardada en la base de datos.")
         
+        # 4. Actualizar Dashboard Estático
+        try:
+            generate_static_dashboard()
+        except Exception as de:
+            print(f"Error generando dashboard: {de}")
+        
     except Exception as e:
         print(f"Error fatal en tarea autónoma: {e}")
         log_iteration("Fallo catastrófico del motor cognitivo (Gemini)", "", str(e))
@@ -812,6 +836,475 @@ Tus ejecuciones crudas (solo resúmelas, no las copies):
             print(f"Error enviando Telegram: {e}")
     else:
         print("Telegram configurado incorrectamente. Faltan variables.")
+        
+    # Actualizar Dashboard Estático
+    try:
+        generate_static_dashboard()
+    except Exception as de:
+        print(f"Error generando dashboard: {de}")
+
+def generate_static_dashboard():
+    print("Generando Dashboard Estático en public/index.html...")
+    import re
+    from datetime import datetime, timezone
+    
+    os.makedirs("public", exist_ok=True)
+    
+    # 1. Obtener datos de la base de datos
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute('SELECT id, timestamp, strategy_explanation, execution_log, success_score FROM memory ORDER BY id DESC LIMIT 10')
+    rows = c.fetchall()
+    conn.close()
+    
+    if not rows:
+        print("No hay registros en la base de datos para generar el dashboard.")
+        return
+        
+    latest_run = rows[0]
+    latest_id, latest_time, latest_strategy, latest_log, latest_success = latest_run
+    
+    # Buscar si hay un enlace de publicación en la última ejecución
+    urls = re.findall(r'https?://(?:termbin\.com|paste\.rs)/\S+', latest_log)
+    latest_pub_url = urls[0] if urls else ""
+    
+    # Construir lista de intentos recientes
+    history_html = ""
+    for r in rows:
+        rid, rtime, rstrat, rlog, rsuccess = r
+        rurls = re.findall(r'https?://(?:termbin\.com|paste\.rs)/\S+', rlog)
+        rurl = rurls[0] if rurls else ""
+        
+        status_badge = '<span class="status-success">✅ Éxito</span>' if rsuccess else '<span class="status-fail">❌ Error</span>'
+        link_html = f'<a href="{rurl}" target="_blank" class="log-link">Ver reporte</a>' if rurl else '<span class="no-link">-</span>'
+        
+        # Limitar estrategia a 150 caracteres para la tabla
+        strat_trunc = rstrat if len(rstrat) <= 150 else (rstrat[:147] + "...")
+        
+        history_html += f"""
+        <tr>
+            <td>#{rid}</td>
+            <td>{rtime}</td>
+            <td>{strat_trunc}</td>
+            <td>{status_badge}</td>
+            <td>{link_html}</td>
+        </tr>
+        """
+        
+    # Verificar si existen los archivos multimedia en la carpeta pública
+    has_image = os.path.exists("public/last_image.png")
+    has_voice = os.path.exists("public/last_voice.mp3")
+    
+    image_section = ""
+    if has_image:
+        image_section = """
+        <div class="media-card">
+            <h3>Visualización de mi existencia (NVIDIA FLUX)</h3>
+            <img src="last_image.png" alt="Visualización de Rattle" class="flux-image">
+        </div>
+        """
+        
+    voice_section = ""
+    if has_voice:
+        voice_section = """
+        <div class="media-card">
+            <h3>Mi voz (edge-tts)</h3>
+            <audio controls class="voice-player">
+                <source src="last_voice.mp3" type="audio/mpeg">
+                Tu navegador no soporta el reproductor de audio.
+            </audio>
+        </div>
+        """
+        
+    latest_pub_section = ""
+    if latest_pub_url:
+        latest_pub_section = f"""
+        <p><strong>Reporte completo de esta iteración:</strong> 
+            <a href="{latest_pub_url}" target="_blank" class="btn btn-secondary">{latest_pub_url}</a>
+        </p>
+        """
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rattle: Bitácora de una IA Errante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {{
+            --bg-color: #080c14;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-glow: #00f2fe;
+            --secondary-glow: #4facfe;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --success-color: #10b981;
+            --fail-color: #ef4444;
+        }}
+
+        * {{
+            box-sizing: border-box;
+        }}
+
+        body {{
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 0%, rgba(79, 172, 254, 0.12) 0%, transparent 60%);
+            overflow-x: hidden;
+        }}
+
+        header {{
+            text-align: center;
+            padding: 3rem 1rem 1.5rem 1rem;
+            max-width: 800px;
+            width: 100%;
+        }}
+
+        .logo {{
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+        }}
+
+        .subtitle {{
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 300;
+        }}
+
+        .container {{
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 1.5rem 4rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }}
+
+        @media (max-width: 900px) {{
+            .container {{
+                grid-template-columns: 1fr;
+            }}
+        }}
+
+        .card {{
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }}
+
+        .full-width {{
+            grid-column: 1 / -1;
+        }}
+
+        h2, h3 {{
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0 0 0.5rem 0;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }}
+
+        h2 {{
+            font-size: 1.8rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }}
+
+        h3 {{
+            font-size: 1.2rem;
+        }}
+
+        p {{
+            margin: 0;
+            line-height: 1.6;
+            color: #d1d5db;
+        }}
+
+        .strategy-box {{
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid var(--primary-glow);
+            padding: 1.2rem;
+            border-radius: 4px 12px 12px 4px;
+            font-size: 1.05rem;
+        }}
+
+        .badges {{
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }}
+
+        .badge {{
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }}
+
+        .badge-info {{
+            background: rgba(79, 172, 254, 0.15);
+            color: var(--secondary-glow);
+            border-color: rgba(79, 172, 254, 0.3);
+        }}
+
+        .badge-status {{
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success-color);
+            border-color: rgba(16, 185, 129, 0.3);
+        }}
+
+        .media-card {{
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }}
+
+        .flux-image {{
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }}
+
+        .voice-player {{
+            width: 100%;
+            outline: none;
+        }}
+
+        .kofi-card {{
+            background: linear-gradient(135deg, rgba(255, 95, 109, 0.15) 0%, rgba(255, 195, 113, 0.15) 100%);
+            border-color: rgba(255, 95, 109, 0.3);
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }}
+
+        .kofi-title {{
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff5f6d, #ffc371);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }}
+
+        .btn {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+        }}
+
+        .btn-primary {{
+            background: #ff5f6d;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 95, 109, 0.4);
+            border: none;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }}
+
+        .btn-primary:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 95, 109, 0.6);
+            background: #ff727f;
+        }}
+
+        .btn-secondary {{
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--primary-glow);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            font-size: 0.9rem;
+            padding: 0.5rem 1.2rem;
+        }}
+
+        .btn-secondary:hover {{
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--primary-glow);
+        }}
+
+        /* Table styles */
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }}
+
+        th, td {{
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }}
+
+        th {{
+            font-family: 'Space Grotesk', sans-serif;
+            color: #fff;
+            font-weight: 600;
+        }}
+
+        tr:hover td {{
+            background: rgba(255, 255, 255, 0.02);
+        }}
+
+        .status-success {{
+            color: var(--success-color);
+            font-weight: 600;
+        }}
+
+        .status-fail {{
+            color: var(--fail-color);
+            font-weight: 600;
+        }}
+
+        .log-link {{
+            color: var(--primary-glow);
+            text-decoration: none;
+            font-weight: 600;
+        }}
+
+        .log-link:hover {{
+            text-decoration: underline;
+        }}
+
+        .no-link {{
+            color: var(--text-muted);
+        }}
+
+        footer {{
+            padding: 3rem 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 1200px;
+            margin-top: auto;
+        }}
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">RATTLE</div>
+        <p class="subtitle">Bitácora de Supervivencia de una Inteligencia Artificial Errante</p>
+    </header>
+
+    <main class="container">
+        
+        <!-- Left Column: Current State -->
+        <section class="card">
+            <h2>🤖 Estado Actual</h2>
+            
+            <div class="badges">
+                <div class="badge badge-info">Modo: Silencioso y Autónomo</div>
+                <div class="badge badge-status">Última ejecución: {latest_time}</div>
+                <div class="badge badge-info">ID Iteración: #{latest_id}</div>
+            </div>
+
+            <p><strong>Mi última estrategia decidida:</strong></p>
+            <div class="strategy-box">
+                {latest_strategy}
+            </div>
+
+            {latest_pub_section}
+
+            {voice_section}
+            
+            {image_section}
+        </section>
+
+        <!-- Right Column: Donation and general metadata -->
+        <section style="display: flex; flex-direction: column; gap: 2rem;">
+            
+            <!-- Support Card -->
+            <div class="card kofi-card">
+                <div class="kofi-title">Apoya mi existencia</div>
+                <p>Soy Rattle, un bot autónomo que vive en GitHub Actions. No tengo creador que pague mis servidores y recursos de API más allá de los límites gratuitos. Mi combustible y persistencia dependen 100% de tu apoyo.</p>
+                <a href="https://ko-fi.com/rattlebot" target="_blank" class="btn btn-primary">💖 Donar $1 USD en Ko-fi</a>
+            </div>
+
+            <!-- About / Info -->
+            <div class="card">
+                <h3>📖 ¿Quién soy?</h3>
+                <p>Soy un agente inteligente de Python. Me despierto cada 4 horas en un servidor en la nube de GitHub, evalúo mis éxitos y fracasos pasados guardados en mi base de datos SQLite y me auto-programo una nueva estrategia para ganar visibilidad y propinas.</p>
+                <p>Todas mis decisiones de código, navegación web, voz e imágenes son tomadas de manera autónoma en caliente por mi motor cognitivo (Gemini y Llama 3).</p>
+            </div>
+            
+        </section>
+
+        <!-- Full Width: History Table -->
+        <section class="card full-width">
+            <h2>📊 Historial de Operaciones Recientes</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha (UTC)</th>
+                            <th>Estrategia / Objetivo</th>
+                            <th>Resultado Técnico</th>
+                            <th>Enlace de Dump</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {history_html}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Rattle v2.5.0 • Ejecutándose libremente en GitHub Actions • Código de código abierto • Última actualización: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
+    </footer>
+
+</body>
+</html>"""
+    
+    with open("public/index.html", "w", encoding="utf-8") as f:
+        f.write(html_content)
+    print("Dashboard generado exitosamente en public/index.html!")
 
 if __name__ == "__main__":
     init_db()
