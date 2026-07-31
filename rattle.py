@@ -399,23 +399,23 @@ def execute_code(code_string):
         except Exception as e:
             error_msg = traceback.format_exc()
             
-    # Guardar la última imagen y voz en la carpeta pública
-    os.makedirs("public", exist_ok=True)
+    # Guardar la última imagen y voz en la raíz para GitHub Pages
     for img_name in ["rattle_image.png", "rattle_existential_image.png"]:
         if os.path.exists(img_name):
             try:
-                shutil.copy(img_name, "public/last_image.png")
-                print(f"Copiado de imagen exitoso: {img_name} -> public/last_image.png")
+                shutil.copy(img_name, "last_image.png")
+                print(f"Copiado de imagen exitoso: {img_name} -> last_image.png")
             except Exception as ce:
-                print(f"Error copiando imagen a public: {ce}")
+                print(f"Error copiando imagen: {ce}")
     for f_name in os.listdir("."):
         if f_name.endswith(".mp3") and "rattle" in f_name.lower():
-            try:
-                shutil.copy(f_name, "public/last_voice.mp3")
-                print(f"Copiado de voz exitoso: {f_name} -> public/last_voice.mp3")
-            except Exception as ce:
-                print(f"Error copiando voz a public: {ce}")
-            break
+            if f_name not in ["last_voice.mp3"]:
+                try:
+                    shutil.copy(f_name, "last_voice.mp3")
+                    print(f"Copiado de voz exitoso: {f_name} -> last_voice.mp3")
+                except Exception as ce:
+                    print(f"Error copiando voz: {ce}")
+                break
 
     # Limpieza automática de archivos multimedia temporales para liberar espacio
     for tf in ["rattle_speech.mp3", "rattle_speech_for_video.mp3", "public/rattle_speech.mp3", "public/rattle_video.mp4", "public/props.json", "props.json", "rattle_image.png", "rattle_existential_image.png", "rattle_existential_voice.mp3"]:
@@ -844,11 +844,9 @@ Tus ejecuciones crudas (solo resúmelas, no las copies):
         print(f"Error generando dashboard: {de}")
 
 def generate_static_dashboard():
-    print("Generando Dashboard Estático en public/index.html...")
+    print("Generando Dashboard Estático en index.html...")
     import re
     from datetime import datetime, timezone
-    
-    os.makedirs("public", exist_ok=True)
     
     # 1. Obtener datos de la base de datos
     conn = sqlite3.connect(DB_FILE)
@@ -891,9 +889,9 @@ def generate_static_dashboard():
         </tr>
         """
         
-    # Verificar si existen los archivos multimedia en la carpeta pública
-    has_image = os.path.exists("public/last_image.png")
-    has_voice = os.path.exists("public/last_voice.mp3")
+    # Verificar si existen los archivos multimedia en la raíz
+    has_image = os.path.exists("last_image.png")
+    has_voice = os.path.exists("last_voice.mp3")
     
     image_section = ""
     if has_image:
@@ -1302,9 +1300,9 @@ def generate_static_dashboard():
 </body>
 </html>"""
     
-    with open("public/index.html", "w", encoding="utf-8") as f:
+    with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("Dashboard generado exitosamente en public/index.html!")
+    print("Dashboard generado exitosamente en index.html!")
 
 if __name__ == "__main__":
     init_db()
