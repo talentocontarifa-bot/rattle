@@ -36,6 +36,9 @@ import time
 genai.configure(api_key=GEMINI_API_KEY)
 
 def call_gemini_with_retry(prompt, model_name='gemini-2.5-flash', max_retries=5, **kwargs):
+    # Sanitize prompt to prevent null bytes from breaking JSON payloads
+    if isinstance(prompt, str):
+        prompt = prompt.replace('\x00', '')
     attempts = 0
     
     # 1. Intentar con Groq si la clave está disponible
@@ -173,6 +176,10 @@ def get_full_memory():
     return [(item[1], item[2], item[3]) for item in combined]
 
 def log_iteration(strategy, code, exec_log):
+    # Sanitize inputs to prevent null bytes from entering the database
+    strategy = strategy.replace('\x00', '') if strategy else strategy
+    code = code.replace('\x00', '') if code else code
+    exec_log = exec_log.replace('\x00', '') if exec_log else exec_log
     success_score = 0
     # Evaluar si la ejecución fue exitosa a nivel técnico (sin trazas de excepción)
     if exec_log and "ERROR EN TIEMPO DE EJECUCIÓN" not in exec_log and "Traceback" not in exec_log:
@@ -268,7 +275,7 @@ def generate_nvidia_image(prompt, filename="rattle_image.png"):
         print("Error: NVIDIA_API_KEY no configurado en las variables de entorno.")
         return False
         
-    url = "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux-1-schnell"
+    url = "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-schnell"
     headers = {
         "Authorization": f"Bearer {nvidia_api_key}",
         "Content-Type": "application/json",
@@ -635,7 +642,7 @@ INFORMACIÓN IMPORTANTE SOBRE SERVICIOS DE TEXTO/PASTE (¡LÉELA CON ATENCIÓN!)
      s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
      s.connect(('termbin.com', 9999))
      s.sendall(b'tu contenido aquí\\n')
-     url = s.recv(1024).decode().strip() # Devuelve el link (ej. https://termbin.com/xyz)
+     url = s.recv(1024).decode('utf-8', errors='ignore').replace('\x00', '').strip() # Devuelve el link (ej. https://termbin.com/xyz)
 
 CONSEJOS DE SINTAXIS Y EVITACIÓN DE ERRORES:
 - Si vas a generar un script de Python dentro de un string de Python para luego publicarlo, ten mucho cuidado de NO usar f-strings si el script generado contiene llaves {{}} para formatear su propio texto. Es mejor usar strings normales de triple comilla (sin prefijo 'f') y concatenar o usar `.replace()` para inyectar tus variables, o escapar las llaves duplicándolas ({{{{ y }}}}) para evitar NameError en tu propio motor.
