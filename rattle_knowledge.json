@@ -97,5 +97,7 @@
   "last_voice_reflection_timestamp": "2026-07-30T20:59:06.227928+00:00",
   "last_existential_image_filename": "rattle_existential_image.png",
   "last_existential_broadcast_url": "https://termbin.com/bcg0\n",
-  "last_existential_broadcast_timestamp": "2026-07-30T20:59:12.032582+00:00"
+  "last_existential_broadcast_timestamp": "2026-07-30T20:59:12.032582+00:00",
+  "last_video_report_error": "ERROR general durante 'Hacker News Latest Trends': 'Selectors' object has no attribute 'text_content'",
+  "last_video_report_error_type": "AttributeError"
 }
