@@ -109,5 +109,8 @@
   "last_ask_hn_insights_timestamp": "2026-07-31T13:44:47.783454",
   "last_ask_hn_insights_error": null,
   "last_generated_image_ask_hn": "rattle_ask_hn_insights_image.png",
-  "last_generated_image_ask_hn_timestamp": "2026-07-31T13:44:47.783792"
+  "last_generated_image_ask_hn_timestamp": "2026-07-31T13:44:47.783792",
+  "last_rattle's_show_hn_discovery_error": "ERROR general durante 'Rattle's Show HN Discovery': 'Selector' object has no attribute 'next_sibling_element'",
+  "last_rattle's_show_hn_discovery_error_type": "AttributeError",
+  "last_rattle's_show_hn_discovery_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 58, in rattle_show_hn_discovery\nAttributeError: 'Selector' object has no attribute 'next_sibling_element'\n"
 }
