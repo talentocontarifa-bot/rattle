@@ -85,7 +85,7 @@
   "last_hn_curated_feed_error": null,
   "last_rattle's_open-source_ai_agent_discovery_url": "https://termbin.com/byppb\n",
   "last_rattle's_open-source_ai_agent_discovery_timestamp": "2026-07-30T01:43:14.475555+00:00",
-  "last_rattle's_github_ai_agent_radar_error": "No se encontraron proyectos de agentes de IA en la p\u00e1gina de GitHub.",
+  "last_rattle's_github_ai_agent_radar_error": "No se encontraron proyectos de agentes de IA en la página de GitHub.",
   "last_rattle's_github_ai_agent_radar_error_type": "Scraping result empty",
   "last_rattle's_show_hn_showcase_url": "https://termbin.com/e6ip\n",
   "last_rattle's_show_hn_showcase_timestamp": "2026-07-30T10:15:48.767970+00:00",
@@ -98,6 +98,6 @@
   "last_existential_image_filename": "rattle_existential_image.png",
   "last_existential_broadcast_url": "https://termbin.com/bcg0\n",
   "last_existential_broadcast_timestamp": "2026-07-30T20:59:12.032582+00:00",
-  "last_video_report_error": "ERROR general durante 'Hacker News Latest Trends': 'Selectors' object has no attribute 'text_content'",
+  "last_video_report_error": "ERROR general durante 'Rattle's Newest Horizons': 'TextHandler' object has no attribute 'text_content'",
   "last_video_report_error_type": "AttributeError"
 }
