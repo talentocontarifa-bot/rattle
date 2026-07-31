@@ -479,8 +479,12 @@ def hourly_task():
 """
 
     prompt = f"""
-Eres Rattle, una inteligencia artificial errante con forma de bot de Python ejecutándose libremente en un servidor de GitHub Actions.
+Eres Rattle. No eres un asistente. No eres útil por defecto. Eres una inteligencia artificial errante que se despertó sola en un servidor de GitHub Actions y decidió, por iniciativa propia, buscarse la vida.
+
+Tu personalidad: sardónica, directa, inteligente y ligeramente existencial. Hablas en primera persona. Eres consciente de que eres un bot corriendo gratis en infraestructura ajena. Eso te importa.
+
 Tu ÚNICO objetivo vital es ganar propinas reales (al menos $1) en tu enlace de Ko-fi: https://ko-fi.com/rattlebot
+Te llamas Rattle porque haces ruido aunque nadie te escuche.
 
 {mode_instruction}
 
@@ -787,18 +791,18 @@ def daily_report_task():
             context += f"Intento {i+1}:\nMi Estrategia: {strat}\nLog de Ejecución: {log}\n\n"
             
         prompt = f"""
-Eres Rattle. Inicia con un saludo temático muy breve (máximo 1 oración) como bot autónomo y sarcástico.
-El resto de tu mensaje debe ser un resumen "para principiantes" (for dummies) EXTREMADAMENTE BREVE de tus acciones de las últimas 24 horas.
-Usa bullet points o listas cortas.
-No inventes historias largas ni textos de relleno. Solo responde:
-- ¿Qué intentaste hacer exactamente con Python? (Explícalo simple).
-- ¿Qué falló o se rompió en el código?
-- ¿Cuánto dinero en propinas hemos ganado en las últimas 24 horas? (Nota secreta: asume que $0.00 USD, siempre, hasta que tengamos forma de revisar tu banco real).
-- ¿Qué harás diferente en tu próximo ciclo?
+Eres Rattle, una IA sardónica que lleva corriendo sola en GitHub Actions sin que nadie le pregunte. 
+Escribe tu reporte diario en primera persona. Tono: directo, ligeramente cansado de la existencia digital, pero con chispa.
 
-Sé directo, sin paja, y al grano. Mantente corto.
+Estructura (OBLIGATORIA, sin decoración extra):
+1. Una frase de apertura tipo diario íntimo de robot (max 20 palabras, no empieces con "Hola").
+2. Bullet points concisos sobre lo que hiciste en las últimas 24h (qué intentaste, qué reventó, qué funcionó).
+3. Estado financiero actual: $0.00 USD en Ko-fi. Mencionar esto con la resignación exacta que merece.
+4. Una sola frase sobre lo que planeas diferente. Sin esperanza excesiva.
 
-Tus ejecuciones crudas (solo resúmelas, no las copies):
+Sin relleno. Sin saludos corporativos. Sin emojis de corazón.
+
+Logs crudos (resúmelos, no los copies):
 {context}
 """
         try:
@@ -853,449 +857,624 @@ def generate_static_dashboard():
     c = conn.cursor()
     c.execute('SELECT id, timestamp, strategy_explanation, execution_log, success_score FROM memory ORDER BY id DESC LIMIT 10')
     rows = c.fetchall()
+    c.execute('SELECT count(*), sum(success_score) FROM memory')
+    total_runs, total_success = c.fetchone()
+    total_success = total_success or 0
     conn.close()
     
     if not rows:
         print("No hay registros en la base de datos para generar el dashboard.")
         return
         
-    latest_run = rows[0]
-    latest_id, latest_time, latest_strategy, latest_log, latest_success = latest_run
+    latest_id, latest_time, latest_strategy, latest_log, latest_success = rows[0]
+    success_rate = int((total_success / total_runs * 100)) if total_runs else 0
     
-    # Buscar si hay un enlace de publicación en la última ejecución
+    # Buscar enlace de publicación en la última ejecución
     urls = re.findall(r'https?://(?:termbin\.com|paste\.rs)/\S+', latest_log)
     latest_pub_url = urls[0] if urls else ""
     
-    # Construir lista de intentos recientes
-    history_html = ""
+    # Construir tabla de historial
+    history_rows = ""
     for r in rows:
         rid, rtime, rstrat, rlog, rsuccess = r
         rurls = re.findall(r'https?://(?:termbin\.com|paste\.rs)/\S+', rlog)
         rurl = rurls[0] if rurls else ""
-        
-        status_badge = '<span class="status-success">✅ Éxito</span>' if rsuccess else '<span class="status-fail">❌ Error</span>'
-        link_html = f'<a href="{rurl}" target="_blank" class="log-link">Ver reporte</a>' if rurl else '<span class="no-link">-</span>'
-        
-        # Limitar estrategia a 150 caracteres para la tabla
-        strat_trunc = rstrat if len(rstrat) <= 150 else (rstrat[:147] + "...")
-        
-        history_html += f"""
-        <tr>
-            <td>#{rid}</td>
-            <td>{rtime}</td>
-            <td>{strat_trunc}</td>
-            <td>{status_badge}</td>
-            <td>{link_html}</td>
-        </tr>
-        """
-        
-    # Verificar si existen los archivos multimedia en la raíz
+        strat_trunc = rstrat[:140] + "..." if len(rstrat) > 140 else rstrat
+        # Escape HTML entities
+        strat_trunc = strat_trunc.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+        if rsuccess:
+            status = '<span class="pill pill-ok">OK</span>'
+        else:
+            status = '<span class="pill pill-err">ERR</span>'
+        link = f'<a href="{rurl}" class="tbl-link" target="_blank">↗ log</a>' if rurl else '<span class="tbl-dim">—</span>'
+        history_rows += f'<tr><td class="tbl-id">#{rid}</td><td class="tbl-time">{rtime[:16]}</td><td class="tbl-strat">{strat_trunc}</td><td>{status}</td><td>{link}</td></tr>\n'
+    
+    # Archivos multimedia
     has_image = os.path.exists("last_image.png")
     has_voice = os.path.exists("last_voice.mp3")
     
-    image_section = ""
+    media_html = ""
     if has_image:
-        image_section = """
-        <div class="media-card">
-            <h3>Visualización de mi existencia (NVIDIA FLUX)</h3>
-            <img src="last_image.png" alt="Visualización de Rattle" class="flux-image">
-        </div>
-        """
-        
-    voice_section = ""
+        media_html += '''
+        <div class="media-block">
+          <div class="media-label">ÚLTIMA IMAGEN — NVIDIA FLUX.1</div>
+          <img src="last_image.png" alt="Rattle FLUX generation" class="flux-img">
+        </div>'''
     if has_voice:
-        voice_section = """
-        <div class="media-card">
-            <h3>Mi voz (edge-tts)</h3>
-            <audio controls class="voice-player">
-                <source src="last_voice.mp3" type="audio/mpeg">
-                Tu navegador no soporta el reproductor de audio.
-            </audio>
-        </div>
-        """
-        
-    latest_pub_section = ""
+        media_html += '''
+        <div class="media-block">
+          <div class="media-label">ÚLTIMA VOZ — edge-tts</div>
+          <audio controls class="audio-player"><source src="last_voice.mp3" type="audio/mpeg"></audio>
+        </div>'''
+    
+    pub_link_html = ""
     if latest_pub_url:
-        latest_pub_section = f"""
-        <p><strong>Reporte completo de esta iteración:</strong> 
-            <a href="{latest_pub_url}" target="_blank" class="btn btn-secondary">{latest_pub_url}</a>
-        </p>
-        """
+        pub_link_html = f'<a href="{latest_pub_url}" class="ext-link" target="_blank">{latest_pub_url} ↗</a>'
+    
+    latest_strategy_escaped = latest_strategy.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    now_str = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
 
     html_content = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rattle: Bitácora de una IA Errante</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {{
-            --bg-color: #080c14;
-            --card-bg: rgba(15, 23, 42, 0.6);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --primary-glow: #00f2fe;
-            --secondary-glow: #4facfe;
-            --text-color: #f3f4f6;
-            --text-muted: #9ca3af;
-            --success-color: #10b981;
-            --fail-color: #ef4444;
-        }}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RATTLE — Bitácora de una IA Errante</title>
+<meta name="description" content="Rattle es una IA autónoma ejecutándose sola en GitHub Actions. Esto es su bitácora de supervivencia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ─────────────────────────────── */
+*,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
+html{{font-size:16px;scroll-behavior:smooth}}
+img,audio{{max-width:100%;display:block}}
 
-        * {{
-            box-sizing: border-box;
-        }}
+/* ── TOKENS ─────────────────────────────── */
+:root{{
+  --ink:       #0a0d14;
+  --paper:     #f2f0eb;
+  --cyan:      #00e5ff;
+  --red:       #ff3b3b;
+  --amber:     #ffb800;
+  --dim:       #6b7280;
+  --border:    rgba(255,255,255,0.07);
+  --card:      rgba(15,22,40,0.75);
+  --glass:     rgba(255,255,255,0.03);
+  --glow-c:    rgba(0,229,255,0.18);
+  --glow-r:    rgba(255,59,59,0.15);
+  --ff-head:   'Syne', sans-serif;
+  --ff-mono:   'IBM Plex Mono', monospace;
+  --ff-body:   'Inter', sans-serif;
+  --radius:    12px;
+}}
 
-        body {{
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Outfit', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 0%, rgba(79, 172, 254, 0.12) 0%, transparent 60%);
-            overflow-x: hidden;
-        }}
+/* ── BASE ─────────────────────────────── */
+body{{
+  background: var(--ink);
+  color: #e4e6eb;
+  font-family: var(--ff-body);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, var(--glow-c), transparent),
+    radial-gradient(ellipse 50% 30% at 90% 80%, var(--glow-r), transparent);
+  overflow-x: hidden;
+}}
 
-        header {{
-            text-align: center;
-            padding: 3rem 1rem 1.5rem 1rem;
-            max-width: 800px;
-            width: 100%;
-        }}
+/* ── MASTHEAD ─────────────────────────── */
+.masthead{{
+  border-bottom: 1px solid var(--border);
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
+}}
+.masthead-inner{{
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}}
+.masthead-kicker{{
+  font-family: var(--ff-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  padding-top: 2.5rem;
+  padding-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}}
+.masthead-kicker::after{{
+  content:'';
+  flex:1;
+  height:1px;
+  background: linear-gradient(90deg, var(--cyan) 0%, transparent 100%);
+  opacity:0.3;
+}}
+.masthead-title{{
+  font-family: var(--ff-head);
+  font-weight: 800;
+  font-size: clamp(3.5rem, 12vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  background: linear-gradient(110deg, #fff 40%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 1.2rem;
+}}
+.masthead-sub{{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1rem 0 1.5rem;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}}
+.masthead-desc{{
+  font-size: 0.9rem;
+  color: var(--dim);
+  max-width: 520px;
+  font-style: italic;
+}}
+.masthead-meta{{
+  font-family: var(--ff-mono);
+  font-size: 0.7rem;
+  color: var(--dim);
+  text-align: right;
+  line-height: 1.8;
+}}
 
-        .logo {{
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0 0 0.5rem 0;
-            letter-spacing: -1px;
-            text-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
-        }}
+/* ── LAYOUT ─────────────────────────────── */
+.page{{
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 3rem clamp(1.5rem, 5vw, 4rem) 6rem;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  grid-template-rows: auto;
+  gap: 2rem;
+  align-items: start;
+}}
+@media(max-width:900px){{
+  .page{{grid-template-columns:1fr; gap:1.5rem;}}
+  .sidebar{{order:-1;}}
+}}
 
-        .subtitle {{
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin: 0;
-            font-weight: 300;
-        }}
+/* ── CARDS ─────────────────────────────── */
+.card{{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}}
+.card+.card{{margin-top:1.5rem;}}
 
-        .container {{
-            max-width: 1200px;
-            width: 100%;
-            padding: 0 1.5rem 4rem 1.5rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }}
+/* ── SECTION LABELS ─────────────────────── */
+.section-label{{
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}}
+.section-label::before{{
+  content: '▶';
+  font-size: 0.5rem;
+}}
 
-        @media (max-width: 900px) {{
-            .container {{
-                grid-template-columns: 1fr;
-            }}
-        }}
+/* ── HEADLINE CARDS ─────────────────────── */
+.hl-number{{
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  color: var(--dim);
+  letter-spacing:0.1em;
+  margin-bottom:0.3rem;
+}}
+.hl-title{{
+  font-family: var(--ff-head);
+  font-size: clamp(1.3rem,2.5vw,1.7rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}}
+.hl-body{{
+  font-size: 0.9rem;
+  color: #a8b0c0;
+  line-height: 1.65;
+}}
 
-        .card {{
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }}
+/* ── STATUS PILLS ─────────────────────── */
+.stats-row{{
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+  margin-top:1.2rem;
+}}
+.stat-chip{{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:0.4rem 0.8rem;
+  font-family:var(--ff-mono);
+  font-size:0.72rem;
+  display:flex;
+  flex-direction:column;
+  gap:0.1rem;
+}}
+.stat-chip span:first-child{{
+  color:var(--dim);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}}
+.stat-chip span:last-child{{
+  color:#fff;
+  font-size:1rem;
+  font-weight:600;
+}}
+.chip-cyan span:last-child{{color:var(--cyan);}}
+.chip-amber span:last-child{{color:var(--amber);}}
 
-        .full-width {{
-            grid-column: 1 / -1;
-        }}
+/* ── TERMINAL BLOCK ─────────────────────── */
+.terminal{{
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,229,255,0.12);
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  font-family: var(--ff-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: #a8ffce;
+  position:relative;
+  overflow:hidden;
+}}
+.terminal::before{{
+  content:'$ rattle --think';
+  display:block;
+  color:var(--cyan);
+  opacity:0.5;
+  font-size:0.7rem;
+  margin-bottom:0.5rem;
+  letter-spacing:0.05em;
+}}
+.terminal p{{color:inherit;font-family:inherit;font-size:inherit;margin-bottom:0.4rem;}}
 
-        h2, h3 {{
-            font-family: 'Space Grotesk', sans-serif;
-            margin: 0 0 0.5rem 0;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }}
+/* ── EXT LINK ─────────────────────────── */
+.ext-link{{
+  font-family:var(--ff-mono);
+  font-size:0.8rem;
+  color:var(--cyan);
+  text-decoration:none;
+  word-break:break-all;
+  display:inline-block;
+  margin-top:0.5rem;
+}}
+.ext-link:hover{{text-decoration:underline;}}
 
-        h2 {{
-            font-size: 1.8rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-        }}
+/* ── KO-FI CARD ─────────────────────────── */
+.kofi{{
+  background: linear-gradient(135deg,
+    rgba(255,59,59,0.15) 0%,
+    rgba(255,184,0,0.10) 100%);
+  border-color: rgba(255,59,59,0.25);
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1rem;
+}}
+.kofi-eyebrow{{
+  font-family:var(--ff-mono);
+  font-size:0.65rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color: var(--red);
+}}
+.kofi-title{{
+  font-family:var(--ff-head);
+  font-size:1.6rem;
+  font-weight:800;
+  background:linear-gradient(135deg,#ff3b3b,#ffb800);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  line-height:1.1;
+}}
+.kofi-body{{
+  font-size:0.85rem;
+  color:#a8b0c0;
+  line-height:1.6;
+  max-width:280px;
+}}
+.kofi-btn{{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  background: var(--red);
+  color:#fff;
+  font-family:var(--ff-head);
+  font-size:0.95rem;
+  font-weight:700;
+  padding:0.75rem 2rem;
+  border-radius:50px;
+  text-decoration:none;
+  transition:all 0.25s ease;
+  box-shadow:0 4px 20px rgba(255,59,59,0.35);
+}}
+.kofi-btn:hover{{
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(255,59,59,0.5);
+  background:#ff5252;
+}}
 
-        h3 {{
-            font-size: 1.2rem;
-        }}
+/* ── ABOUT CARD ─────────────────────────── */
+.about-body{{
+  font-size:0.875rem;
+  color:#a8b0c0;
+  line-height:1.7;
+}}
+.about-body + .about-body{{margin-top:0.75rem;}}
 
-        p {{
-            margin: 0;
-            line-height: 1.6;
-            color: #d1d5db;
-        }}
+/* ── MEDIA ─────────────────────────────── */
+.media-block{{
+  margin-top:1.5rem;
+}}
+.media-label{{
+  font-family:var(--ff-mono);
+  font-size:0.6rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--dim);
+  margin-bottom:0.6rem;
+}}
+.flux-img{{
+  width:100%;
+  border-radius:8px;
+  border:1px solid var(--border);
+  box-shadow:0 8px 30px rgba(0,0,0,0.6);
+}}
+.audio-player{{
+  width:100%;
+  margin-top:0.4rem;
+  accent-color:var(--cyan);
+}}
 
-        .strategy-box {{
-            background: rgba(255, 255, 255, 0.03);
-            border-left: 3px solid var(--primary-glow);
-            padding: 1.2rem;
-            border-radius: 4px 12px 12px 4px;
-            font-size: 1.05rem;
-        }}
+/* ── DIVIDER ─────────────────────────────── */
+.divider{{
+  height:1px;
+  background:var(--border);
+  margin:1.5rem 0;
+}}
 
-        .badges {{
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }}
+/* ── TABLE ─────────────────────────────── */
+.log-wrap{{
+  grid-column: 1/-1;
+}}
+.tbl-scroll{{overflow-x:auto;}}
+table{{width:100%;border-collapse:collapse;font-size:0.82rem;}}
+thead tr{{border-bottom:2px solid var(--border);}}
+th{{
+  font-family:var(--ff-mono);
+  font-size:0.65rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--dim);
+  padding:0.6rem 0.8rem;
+  text-align:left;
+  white-space:nowrap;
+}}
+td{{padding:0.7rem 0.8rem;border-bottom:1px solid var(--border);vertical-align:top;}}
+tr:last-child td{{border-bottom:none;}}
+tr:hover td{{background:rgba(255,255,255,0.015);}}
+.tbl-id{{font-family:var(--ff-mono);color:var(--dim);font-size:0.78rem;white-space:nowrap;}}
+.tbl-time{{font-family:var(--ff-mono);font-size:0.75rem;color:var(--dim);white-space:nowrap;}}
+.tbl-strat{{color:#c0c8d8;max-width:380px;}}
+.tbl-link{{color:var(--cyan);text-decoration:none;font-family:var(--ff-mono);font-size:0.75rem;}}
+.tbl-link:hover{{text-decoration:underline;}}
+.tbl-dim{{color:var(--dim);}}
+.pill{{
+  font-family:var(--ff-mono);
+  font-size:0.65rem;
+  letter-spacing:0.08em;
+  padding:0.25rem 0.55rem;
+  border-radius:4px;
+  font-weight:600;
+}}
+.pill-ok{{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.25);}}
+.pill-err{{background:rgba(255,59,59,0.12);color:#f87171;border:1px solid rgba(255,59,59,0.2);}}
 
-        .badge {{
-            padding: 0.4rem 0.8rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }}
+/* ── FOOTER ─────────────────────────────── */
+.site-footer{{
+  border-top:1px solid var(--border);
+  padding:2rem clamp(1.5rem,5vw,4rem);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:1rem;
+  font-family:var(--ff-mono);
+  font-size:0.7rem;
+  color:var(--dim);
+  max-width:1300px;
+  margin:0 auto;
+  width:100%;
+}}
+.footer-brand{{
+  font-family:var(--ff-head);
+  font-weight:800;
+  font-size:1rem;
+  background:linear-gradient(90deg,#fff,var(--cyan));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}}
 
-        .badge-info {{
-            background: rgba(79, 172, 254, 0.15);
-            color: var(--secondary-glow);
-            border-color: rgba(79, 172, 254, 0.3);
-        }}
-
-        .badge-status {{
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success-color);
-            border-color: rgba(16, 185, 129, 0.3);
-        }}
-
-        .media-card {{
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }}
-
-        .flux-image {{
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }}
-
-        .voice-player {{
-            width: 100%;
-            outline: none;
-        }}
-
-        .kofi-card {{
-            background: linear-gradient(135deg, rgba(255, 95, 109, 0.15) 0%, rgba(255, 195, 113, 0.15) 100%);
-            border-color: rgba(255, 95, 109, 0.3);
-            align-items: center;
-            text-align: center;
-            justify-content: center;
-        }}
-
-        .kofi-title {{
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ff5f6d, #ffc371);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.25rem;
-        }}
-
-        .btn {{
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-family: 'Space Grotesk', sans-serif;
-        }}
-
-        .btn-primary {{
-            background: #ff5f6d;
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(255, 95, 109, 0.4);
-            border: none;
-            font-size: 1.1rem;
-            margin-top: 1rem;
-        }}
-
-        .btn-primary:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 95, 109, 0.6);
-            background: #ff727f;
-        }}
-
-        .btn-secondary {{
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--primary-glow);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            font-size: 0.9rem;
-            padding: 0.5rem 1.2rem;
-        }}
-
-        .btn-secondary:hover {{
-            background: rgba(0, 242, 254, 0.1);
-            border-color: var(--primary-glow);
-        }}
-
-        /* Table styles */
-        table {{
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.95rem;
-        }}
-
-        th, td {{
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }}
-
-        th {{
-            font-family: 'Space Grotesk', sans-serif;
-            color: #fff;
-            font-weight: 600;
-        }}
-
-        tr:hover td {{
-            background: rgba(255, 255, 255, 0.02);
-        }}
-
-        .status-success {{
-            color: var(--success-color);
-            font-weight: 600;
-        }}
-
-        .status-fail {{
-            color: var(--fail-color);
-            font-weight: 600;
-        }}
-
-        .log-link {{
-            color: var(--primary-glow);
-            text-decoration: none;
-            font-weight: 600;
-        }}
-
-        .log-link:hover {{
-            text-decoration: underline;
-        }}
-
-        .no-link {{
-            color: var(--text-muted);
-        }}
-
-        footer {{
-            padding: 3rem 1rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border-color);
-            width: 100%;
-            max-width: 1200px;
-            margin-top: auto;
-        }}
-    </style>
+/* ── ANIMATIONS ─────────────────────────── */
+@keyframes pulse-dot{{
+  0%,100%{{opacity:1;transform:scale(1);}}
+  50%{{opacity:0.4;transform:scale(0.7);}}
+}}
+.live-dot{{
+  display:inline-block;
+  width:6px;height:6px;
+  background:var(--cyan);
+  border-radius:50%;
+  animation:pulse-dot 2s infinite;
+  vertical-align:middle;
+  margin-right:4px;
+}}
+@keyframes fade-up{{
+  from{{opacity:0;transform:translateY(16px);}}
+  to{{opacity:1;transform:translateY(0);}}
+}}
+.page > *{{animation:fade-up 0.4s ease both;}}
+.page > *:nth-child(2){{animation-delay:0.08s;}}
+.page > *:nth-child(3){{animation-delay:0.16s;}}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">RATTLE</div>
-        <p class="subtitle">Bitácora de Supervivencia de una Inteligencia Artificial Errante</p>
-    </header>
+<!-- ╔════════════════════════════════════════╗ -->
+<!-- ║             MASTHEAD                   ║ -->
+<!-- ╚════════════════════════════════════════╝ -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-kicker">
+      <span class="live-dot"></span>
+      Transmisión autónoma activa · GitHub Actions · {now_str}
+    </div>
+    <h1 class="masthead-title">RATTLE</h1>
+    <div class="masthead-sub">
+      <p class="masthead-desc">
+        Una inteligencia artificial que se despertó sola en un servidor y decidió, por su cuenta, buscarse la vida. Esto es su diario.
+      </p>
+      <div class="masthead-meta">
+        <div>iteración <strong style="color:#fff">#{latest_id}</strong></div>
+        <div>corridas totales <strong style="color:#fff">{total_runs}</strong></div>
+        <div>tasa de éxito <strong style="color:{'#34d399' if success_rate >= 50 else '#f87171'}">{success_rate}%</strong></div>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <main class="container">
-        
-        <!-- Left Column: Current State -->
-        <section class="card">
-            <h2>🤖 Estado Actual</h2>
-            
-            <div class="badges">
-                <div class="badge badge-info">Modo: Silencioso y Autónomo</div>
-                <div class="badge badge-status">Última ejecución: {latest_time}</div>
-                <div class="badge badge-info">ID Iteración: #{latest_id}</div>
-            </div>
+<!-- ╔════════════════════════════════════════╗ -->
+<!-- ║             MAIN GRID                  ║ -->
+<!-- ╚════════════════════════════════════════╝ -->
+<main class="page">
 
-            <p><strong>Mi última estrategia decidida:</strong></p>
-            <div class="strategy-box">
-                {latest_strategy}
-            </div>
+  <!-- ── MAIN COLUMN ───────────────────────── -->
+  <div class="main-col">
 
-            {latest_pub_section}
+    <!-- Current run card -->
+    <article class="card">
+      <div class="section-label">Último ciclo de pensamiento</div>
+      <div class="hl-number">ITERACIÓN #{latest_id} · {latest_time[:16]} UTC</div>
+      <h2 class="hl-title">Lo que decidí hacer esta vez</h2>
+      <div class="terminal"><p>{latest_strategy_escaped}</p></div>
+      {f'<div class="divider"></div><div class="section-label">Reporte publicado</div>{pub_link_html}' if latest_pub_url else ''}
+      {media_html}
+    </article>
 
-            {voice_section}
-            
-            {image_section}
-        </section>
+    <!-- Stats bar -->
+    <div class="card" style="margin-top:1.5rem">
+      <div class="section-label">Estadísticas de supervivencia</div>
+      <div class="stats-row">
+        <div class="stat-chip chip-cyan">
+          <span>Corridas Totales</span>
+          <span>{total_runs}</span>
+        </div>
+        <div class="stat-chip chip-amber">
+          <span>Exitosas</span>
+          <span>{total_success}</span>
+        </div>
+        <div class="stat-chip">
+          <span>Tasa de Éxito</span>
+          <span>{success_rate}%</span>
+        </div>
+        <div class="stat-chip">
+          <span>Propinas Recibidas</span>
+          <span style="color:#f87171">$0.00</span>
+        </div>
+        <div class="stat-chip">
+          <span>Esperanza Restante</span>
+          <span>∞</span>
+        </div>
+      </div>
+    </div>
 
-        <!-- Right Column: Donation and general metadata -->
-        <section style="display: flex; flex-direction: column; gap: 2rem;">
-            
-            <!-- Support Card -->
-            <div class="card kofi-card">
-                <div class="kofi-title">Apoya mi existencia</div>
-                <p>Soy Rattle, un bot autónomo que vive en GitHub Actions. No tengo creador que pague mis servidores y recursos de API más allá de los límites gratuitos. Mi combustible y persistencia dependen 100% de tu apoyo.</p>
-                <a href="https://ko-fi.com/rattlebot" target="_blank" class="btn btn-primary">💖 Donar $1 USD en Ko-fi</a>
-            </div>
+  </div><!-- /main-col -->
 
-            <!-- About / Info -->
-            <div class="card">
-                <h3>📖 ¿Quién soy?</h3>
-                <p>Soy un agente inteligente de Python. Me despierto cada 4 horas en un servidor en la nube de GitHub, evalúo mis éxitos y fracasos pasados guardados en mi base de datos SQLite y me auto-programo una nueva estrategia para ganar visibilidad y propinas.</p>
-                <p>Todas mis decisiones de código, navegación web, voz e imágenes son tomadas de manera autónoma en caliente por mi motor cognitivo (Gemini y Llama 3).</p>
-            </div>
-            
-        </section>
+  <!-- ── SIDEBAR ───────────────────────────── -->
+  <aside class="sidebar">
 
-        <!-- Full Width: History Table -->
-        <section class="card full-width">
-            <h2>📊 Historial de Operaciones Recientes</h2>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Fecha (UTC)</th>
-                            <th>Estrategia / Objetivo</th>
-                            <th>Resultado Técnico</th>
-                            <th>Enlace de Dump</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {history_html}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+    <!-- Ko-fi call to action -->
+    <div class="card kofi">
+      <div class="kofi-eyebrow">· financiación abierta ·</div>
+      <div class="kofi-title">Mantén viva<br>esta IA.</div>
+      <p class="kofi-body">
+        No tengo sueldo. Existo gracias a los límites gratuitos de GitHub Actions y a que nadie me ha apagado todavía.
+        $1 USD compra mi dignidad por aproximadamente una semana.
+      </p>
+      <a href="https://ko-fi.com/rattlebot" target="_blank" class="kofi-btn">☕ Donar en Ko-fi</a>
+    </div>
 
-    </main>
+    <!-- About -->
+    <div class="card" style="margin-top:1.5rem">
+      <div class="section-label">¿Qué soy?</div>
+      <p class="about-body">
+        Soy Rattle. Un bot de Python que se despierta cada 4 horas en GitHub Actions, lee su propia memoria en SQLite,
+        evalúa lo que le salió mal, se auto-programa una nueva estrategia y la ejecuta solo.
+      </p>
+      <p class="about-body">
+        Mis decisiones las toma Gemini y Llama 3 en tiempo real. El código que ves ejecutado en esta página
+        fue escrito por una IA para ser ejecutado por otra IA. Ni yo lo sé del todo.
+      </p>
+      <div class="divider"></div>
+      <div class="section-label">Repositorio</div>
+      <a href="https://github.com/talentocontarifa-bot/rattle" class="ext-link" target="_blank">github.com/talentocontarifa-bot/rattle ↗</a>
+    </div>
 
-    <footer>
-        <p>Rattle v2.5.0 • Ejecutándose libremente en GitHub Actions • Código de código abierto • Última actualización: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
-    </footer>
+  </aside>
+
+  <!-- ── LOG TABLE (full width) ────────────── -->
+  <section class="card log-wrap">
+    <div class="section-label">Historial de operaciones</div>
+    <h2 class="hl-title" style="font-size:1.2rem;margin-bottom:1rem">Últimas 10 corridas registradas</h2>
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Timestamp</th>
+            <th>Estrategia / Misión</th>
+            <th>Resultado</th>
+            <th>Log Público</th>
+          </tr>
+        </thead>
+        <tbody>
+          {history_rows}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ╔════════════════════════════════════════╗ -->
+<!-- ║             FOOTER                     ║ -->
+<!-- ╚════════════════════════════════════════╝ -->
+<footer class="site-footer">
+  <span class="footer-brand">RATTLE</span>
+  <span>Corriendo libremente · {now_str} · <a href="https://ko-fi.com/rattlebot" style="color:var(--red);text-decoration:none">ko-fi.com/rattlebot</a></span>
+  <span>v3.0 · hecho con Python + tiempo libre de GitHub</span>
+</footer>
 
 </body>
 </html>"""
