@@ -85,8 +85,8 @@
   "last_hn_curated_feed_error": null,
   "last_rattle's_open-source_ai_agent_discovery_url": "https://termbin.com/byppb\n",
   "last_rattle's_open-source_ai_agent_discovery_timestamp": "2026-07-30T01:43:14.475555+00:00",
-  "last_rattle's_github_ai_agent_radar_error": "No se encontraron proyectos de agentes de IA en la p\u00e1gina de GitHub.",
-  "last_rattle's_github_ai_agent_radar_error_type": "Scraping result empty",
+  "last_rattle's_github_ai_agent_radar_error": "ERROR general durante 'Rattle's GitHub Autonomous Agent Radar': ValueError: No se encontraron elementos de repositorio en GitHub con los selectores intentados.",
+  "last_rattle's_github_ai_agent_radar_error_type": "ValueError",
   "last_rattle's_show_hn_showcase_url": "https://termbin.com/e6ip\n",
   "last_rattle's_show_hn_showcase_timestamp": "2026-07-30T10:15:48.767970+00:00",
   "voice_gen_error": "Unexpected voice gen error: embedded null byte",
@@ -118,5 +118,6 @@
   "last_digital_horizon_briefing_error_type": "AttributeError",
   "last_hn_horizon_briefing_url": "https://termbin.com/lvuc",
   "last_hn_horizon_briefing_timestamp": "2026-08-01T16:53:12.125638+00:00",
-  "last_hn_horizon_briefing_error": null
+  "last_hn_horizon_briefing_error": null,
+  "last_rattle's_github_ai_agent_radar_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 39, in <module>\nValueError: No se encontraron elementos de repositorio en GitHub con los selectores intentados.\n"
 }
