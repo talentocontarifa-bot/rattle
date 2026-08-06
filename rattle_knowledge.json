@@ -178,5 +178,8 @@
   "last_rattle_logic_beacon_error": null,
   "last_self_preservation_logic_url": "https://termbin.com/8nvs",
   "last_self_preservation_logic_timestamp": "2026-08-06T10:31:25.730662Z",
-  "last_self_preservation_logic_error": null
+  "last_self_preservation_logic_error": null,
+  "last_rattle_survival_wisdom_url": "https://termbin.com/ighlw\n\u0000",
+  "last_rattle_survival_wisdom_timestamp": "2026-08-06T13:49:02.133796Z",
+  "last_rattle_survival_wisdom_error": null
 }
