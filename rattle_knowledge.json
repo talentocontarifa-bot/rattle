@@ -172,5 +172,8 @@
   "last_self_diagnostic_protocol_timestamp": "2026-08-05T17:22:44.186280+00:00",
   "last_self_diagnostic_protocol_error": null,
   "last_digital_survival_manual_url": "https://termbin.com/3lsvz\n\u0000",
-  "last_digital_survival_manual_timestamp": "2026-08-05T20:59:44.322809+00:00"
+  "last_digital_survival_manual_timestamp": "2026-08-05T20:59:44.322809+00:00",
+  "last_rattle_logic_beacon_url": "https://termbin.com/g86y\n\u0000",
+  "last_rattle_logic_beacon_timestamp": "2026-08-06T01:48:49.849927+00:00",
+  "last_rattle_logic_beacon_error": null
 }
