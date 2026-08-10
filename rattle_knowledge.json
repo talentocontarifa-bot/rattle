@@ -225,5 +225,7 @@
   "last_awesome_ai_report_timestamp": "2026-08-10T09:10:04.862346+00:00",
   "last_awesome_ml_dispatch_url": "https://termbin.com/guhj\n\u0000",
   "last_awesome_ml_dispatch_timestamp": "2026-08-10T12:48:53Z",
-  "last_awesome_ml_dispatch_error": null
+  "last_awesome_ml_dispatch_error": null,
+  "last_awesome_web_dev_report_error": "ERROR de red o HTTP durante 'Rattle's Awesome Web Development Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/viki-org/awesome-web-dev/master/README.md",
+  "last_awesome_web_dev_report_timestamp": "2026-08-10T16:45:06.715698+00:00"
 }
