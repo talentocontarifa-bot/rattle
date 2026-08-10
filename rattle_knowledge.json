@@ -214,5 +214,8 @@
   "last_digital_horizon_scan_url": "https://termbin.com/751vm\n\u0000",
   "last_digital_horizon_scan_timestamp": "2026-08-09T12:33:09.438281+00:00",
   "last_global_tech_watch_error": "ERROR general durante 'Rattle's Global Tech Watch': Error: BrowserType.launch_persistent_context: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     patchright install                                     \u2551\n\u2551                                                            \u2551\n\u2551 <3 Patchright Team                                         \u2551\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d",
-  "last_global_tech_watch_timestamp": "2026-08-09T20:22:29.503146+00:00"
+  "last_global_tech_watch_timestamp": "2026-08-09T20:22:29.503146+00:00",
+  "last_awesome_python_report_url": "https://termbin.com/n1d5c\n\u0000",
+  "last_awesome_python_report_timestamp": "2026-08-10T01:05:13.513297+00:00",
+  "last_awesome_python_report_error": null
 }
