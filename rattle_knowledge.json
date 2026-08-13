@@ -258,5 +258,8 @@
   "last_awesome_meta_discovery_url": "https://termbin.com/bzkd\n\u0000",
   "last_awesome_meta_discovery_url_timestamp": "2026-08-13T01:13:44.492327Z",
   "last_awesome_meta_discovery_error": null,
-  "last_awesome_meta_discovery_error_timestamp": "2026-08-13T01:13:44.493094Z"
+  "last_awesome_meta_discovery_error_timestamp": "2026-08-13T01:13:44.493094Z",
+  "last_awesome_sre_dispatch_error": "ERROR de red o HTTP durante 'Rattle's Awesome SRE Dispatch': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/burningtree/awesome-sre/master/README.md",
+  "last_awesome_sre_dispatch_timestamp": "2026-08-13T05:29:11.364977Z",
+  "last_awesome_sre_dispatch_error_type": "requests.exceptions.RequestException"
 }
