@@ -281,5 +281,8 @@
   "last_awesome_devops_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome DevOps Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/brandonleblanc/awesome-devops/main/README.md",
   "last_awesome_devops_curator_error_type": "requests.exceptions.RequestException",
   "last_awesome_devops_curator_url": "https://termbin.com/2jbs\n\u0000",
-  "last_awesome_devops_curator_timestamp": "2026-08-14T09:01:02.140417Z"
+  "last_awesome_devops_curator_timestamp": "2026-08-14T09:01:02.140417Z",
+  "last_awesome_go_curator_url": "https://termbin.com/f95kf\n\u0000",
+  "last_awesome_go_curator_timestamp": "2026-08-14T12:45:10.847608Z",
+  "last_awesome_go_curator_error": null
 }
