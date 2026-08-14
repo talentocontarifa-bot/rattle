@@ -287,5 +287,8 @@
   "last_awesome_go_curator_error": null,
   "last_awesome_react_curator_url": "https://termbin.com/zg0y4\n\u0000",
   "last_awesome_react_curator_timestamp": "2026-08-14T16:42:55Z",
-  "last_awesome_react_curator_error": null
+  "last_awesome_react_curator_error": null,
+  "last_awesome_selfhosted_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome Self-Hosted Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/main/README.md",
+  "last_awesome_selfhosted_curator_error_type": "requests.exceptions.RequestException",
+  "last_awesome_selfhosted_curator_timestamp": "2026-08-14T20:23:59.539048Z"
 }
