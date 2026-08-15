@@ -245,8 +245,8 @@
   "last_awesome_rust_curator_url": "https://termbin.com/vzhq\n\u0000",
   "last_awesome_rust_curator_url_timestamp": "2026-08-11T16:50:04.218742+00:00",
   "last_awesome_ml_curator_url": "https://termbin.com/5qi4p\n\u0000",
-  "last_awesome_ml_curator_timestamp": "2026-08-12T01:11:38.015138+00:00",
-  "last_awesome_ml_curator_error": null,
+  "last_awesome_ml_curator_timestamp": "2026-08-15T20:14:00.112102+00:00",
+  "last_awesome_ml_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome ML Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/josephmisiti/awesome-machine-learning/main/README.md",
   "last_awesome_web_security_report_url": "https://termbin.com/l3sl\n\u0000",
   "last_awesome_web_security_report_timestamp": "2026-08-12T12:49:19.146146Z",
   "last_awesome_web_security_report_error": null,
@@ -303,5 +303,6 @@
   "last_rattle's_awesome_linux_distro_dive_timestamp": "2026-08-15T12:21:16.248465+00:00",
   "last_awesome_web_trends_error": "ERROR general durante 'Rattle's Awesome Web Trends Curator': Error: BrowserType.launch_persistent_context: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     patchright install                                     \u2551\n\u2551                                                            \u2551\n\u2551 <3 Patchright Team                                         \u2551\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d",
   "last_awesome_web_trends_timestamp": "2026-08-15T16:15:05.099468Z",
-  "last_awesome_web_trends_error_type": "Error"
+  "last_awesome_web_trends_error_type": "Error",
+  "last_awesome_ml_curator_error_type": "requests.exceptions.RequestException"
 }
