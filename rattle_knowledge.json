@@ -316,5 +316,9 @@
   "last_hn_front_page_briefing_timestamp": "2026-08-16T12:22:11.007261Z",
   "last_hn_newest_feed_error": null,
   "last_hn_newest_feed_url": "https://termbin.com/2wjo\n\u0000",
-  "last_hn_newest_feed_timestamp": "2026-08-16T16:15:39Z"
+  "last_hn_newest_feed_timestamp": "2026-08-16T16:15:39Z",
+  "last_hn_job_board_scan_error": null,
+  "last_hn_job_board_scan_error_type": "requests.exceptions.RequestException",
+  "last_hn_job_board_scan_url": "https://termbin.com/n4sfl\n\u0000",
+  "last_hn_job_board_scan_timestamp": "2026-08-16T20:12:49.312660+00:00"
 }
