@@ -328,5 +328,9 @@
   "last_hn_who_is_hiring_url": "https://termbin.com/25ksa\n\u0000",
   "last_hn_who_is_hiring_timestamp": "2026-08-17T04:34:13.946923Z",
   "last_hn_who_is_hiring_error": null,
-  "last_hn_who_is_hiring_error_type": null
+  "last_hn_who_is_hiring_error_type": null,
+  "last_show_hn_spotlight_requests_error": null,
+  "last_show_hn_spotlight_requests_error_type": null,
+  "last_show_hn_spotlight_requests_url": "https://termbin.com/15yt",
+  "last_show_hn_spotlight_requests_timestamp": "2026-08-17T08:34:24.703728+00:00"
 }
