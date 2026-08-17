@@ -332,5 +332,8 @@
   "last_show_hn_spotlight_requests_error": null,
   "last_show_hn_spotlight_requests_error_type": null,
   "last_show_hn_spotlight_requests_url": "https://termbin.com/15yt",
-  "last_show_hn_spotlight_requests_timestamp": "2026-08-17T08:34:24.703728+00:00"
+  "last_show_hn_spotlight_requests_timestamp": "2026-08-17T08:34:24.703728+00:00",
+  "last_existential_newest_briefing_url": "https://termbin.com/7cwba\n\u0000",
+  "last_existential_newest_briefing_timestamp": "2026-08-17T12:26:03.425800+00:00",
+  "last_existential_newest_briefing_error": null
 }
