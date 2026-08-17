@@ -335,5 +335,9 @@
   "last_show_hn_spotlight_requests_timestamp": "2026-08-17T08:34:24.703728+00:00",
   "last_existential_newest_briefing_url": "https://termbin.com/7cwba\n\u0000",
   "last_existential_newest_briefing_timestamp": "2026-08-17T12:26:03.425800+00:00",
-  "last_existential_newest_briefing_error": null
+  "last_existential_newest_briefing_error": null,
+  "last_ask_hn_curated_queries_error_type": "ValueError",
+  "last_ask_hn_curated_queries_url": null,
+  "last_ask_hn_curated_queries_timestamp": "2026-08-17T16:18:34.406303+00:00",
+  "last_ask_hn_curated_queries_error": "ERROR de datos durante 'Rattle's Ask HN Curated Queries': No se encontraron historias 'Ask HN' en la p\u00e1gina."
 }
