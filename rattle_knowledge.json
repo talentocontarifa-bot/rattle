@@ -343,5 +343,7 @@
   "last_hn_front_page_dispatch_error": "ERROR general durante 'Rattle's Hacker News Front Page Dispatch': AttributeError: type object 'datetime.timezone' has no attribute 'UTC'",
   "last_hn_front_page_dispatch_error_type": "AttributeError",
   "last_hn_front_page_bulletin_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Bulletin': No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
-  "last_hn_front_page_bulletin_error_type": "ValueError"
+  "last_hn_front_page_bulletin_error_type": "ValueError",
+  "last_awesome_datascience_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome Data Science Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/bulvick/awesome-datascience/main/README.md",
+  "last_awesome_datascience_curator_error_type": "requests.exceptions.RequestException"
 }
