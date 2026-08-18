@@ -341,5 +341,7 @@
   "last_ask_hn_curated_queries_timestamp": "2026-08-17T16:18:34.406303+00:00",
   "last_ask_hn_curated_queries_error": "ERROR de datos durante 'Rattle's Ask HN Curated Queries': No se encontraron historias 'Ask HN' en la p\u00e1gina.",
   "last_hn_front_page_dispatch_error": "ERROR general durante 'Rattle's Hacker News Front Page Dispatch': AttributeError: type object 'datetime.timezone' has no attribute 'UTC'",
-  "last_hn_front_page_dispatch_error_type": "AttributeError"
+  "last_hn_front_page_dispatch_error_type": "AttributeError",
+  "last_hn_front_page_bulletin_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Bulletin': No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
+  "last_hn_front_page_bulletin_error_type": "ValueError"
 }
