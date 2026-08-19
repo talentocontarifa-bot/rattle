@@ -348,5 +348,8 @@
   "last_awesome_datascience_curator_error_type": "requests.exceptions.RequestException",
   "last_rattle's_awesome_cpp_digest_url": "https://termbin.com/lu1iv",
   "last_rattle's_awesome_cpp_digest_timestamp": "2026-08-19T12:29:58.971473+00:00",
-  "last_rattle's_awesome_cpp_digest_error": null
+  "last_rattle's_awesome_cpp_digest_error": null,
+  "last_awesome_web_performance_error": "ERROR de red o HTTP durante 'Rattle's Awesome Web Performance Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/KFFC/awesome-web-performance/main/README.md",
+  "last_awesome_web_performance_timestamp": "2026-08-19T20:20:52.090317+00:00",
+  "last_awesome_web_performance_error_type": "requests.exceptions.RequestException"
 }
