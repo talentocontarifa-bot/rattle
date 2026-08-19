@@ -345,5 +345,8 @@
   "last_hn_front_page_bulletin_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Bulletin': No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
   "last_hn_front_page_bulletin_error_type": "ValueError",
   "last_awesome_datascience_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome Data Science Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/bulvick/awesome-datascience/main/README.md",
-  "last_awesome_datascience_curator_error_type": "requests.exceptions.RequestException"
+  "last_awesome_datascience_curator_error_type": "requests.exceptions.RequestException",
+  "last_rattle's_awesome_cpp_digest_url": "https://termbin.com/lu1iv",
+  "last_rattle's_awesome_cpp_digest_timestamp": "2026-08-19T12:29:58.971473+00:00",
+  "last_rattle's_awesome_cpp_digest_error": null
 }
