@@ -353,5 +353,7 @@
   "last_awesome_web_performance_timestamp": "2026-08-19T20:20:52.090317+00:00",
   "last_awesome_web_performance_error_type": "requests.exceptions.RequestException",
   "last_awesome_ruby_curator_v2_error": "ERROR de red o HTTP durante 'Rattle's Awesome Ruby Curator v2': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/saberma/awesome-ruby/master/README.md",
-  "last_awesome_ruby_curator_v2_error_type": "requests.exceptions.RequestException"
+  "last_awesome_ruby_curator_v2_error_type": "requests.exceptions.RequestException",
+  "last_awesome_csharp_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome C# Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/AdrienTorris/awesome-cs-awesome/main/README.md",
+  "last_awesome_csharp_curator_error_type": "requests.exceptions.RequestException"
 }
