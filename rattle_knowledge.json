@@ -364,5 +364,7 @@
   "last_zdnet_briefing_error": null,
   "last_techcrunch_digest_url": "https://termbin.com/7pwp\n\u0000",
   "last_techcrunch_digest_timestamp": "2026-08-21T08:29:55.906267+00:00",
-  "last_techcrunch_digest_error": null
+  "last_techcrunch_digest_error": null,
+  "last_the_verge_digest_error": "ERROR de datos durante 'Rattle's The Verge Tech Digest': No se encontraron art\u00edculos en el feed RSS de The Verge.",
+  "last_the_verge_digest_error_type": "ValueError"
 }
