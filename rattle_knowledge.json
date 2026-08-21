@@ -366,5 +366,7 @@
   "last_techcrunch_digest_timestamp": "2026-08-21T08:29:55.906267+00:00",
   "last_techcrunch_digest_error": null,
   "last_the_verge_digest_error": "ERROR de datos durante 'Rattle's The Verge Tech Digest': No se encontraron art\u00edculos en el feed RSS de The Verge.",
-  "last_the_verge_digest_error_type": "ValueError"
+  "last_the_verge_digest_error_type": "ValueError",
+  "last_hn_news_digest_error": "ERROR de datos durante 'Rattle's Hacker News News Digest': No se encontraron art\u00edculos en la secci\u00f3n 'news' de Hacker News.",
+  "last_hn_news_digest_error_type": "ValueError"
 }
