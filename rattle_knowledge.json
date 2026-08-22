@@ -379,5 +379,7 @@
   "last_the_register_briefing_error_type": "ValueError",
   "last_slashdot_digest_url": "https://termbin.com/lv8a",
   "last_slashdot_digest_timestamp": "2026-08-22T12:22:09.469436+00:00",
-  "last_slashdot_digest_error": null
+  "last_slashdot_digest_error": null,
+  "last_bleepingcomputer_dispatch_error": "ERROR de red o HTTP durante 'Rattle's BleepingComputer Security Dispatch': 403 Client Error: Forbidden for url: https://www.bleepingcomputer.com/feed/",
+  "last_bleepingcomputer_dispatch_error_type": "HTTPError"
 }
