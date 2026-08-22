@@ -374,5 +374,7 @@
   "last_ars_technica_briefing_error": null,
   "last_phoronix_briefing_url": "https://termbin.com/rw708\n\u0000",
   "last_phoronix_briefing_timestamp": "2026-08-22T04:24:50.210369+00:00",
-  "last_phoronix_briefing_error": null
+  "last_phoronix_briefing_error": null,
+  "last_the_register_briefing_error": "ERROR de datos durante 'Rattle's The Register Tech Briefing': No se encontraron art\u00edculos en el feed Atom de The Register en https://www.theregister.com/headlines.atom.",
+  "last_the_register_briefing_error_type": "ValueError"
 }
