@@ -388,5 +388,8 @@
   "last_awesome_meta_discovery_timestamp": "2026-08-23T08:20:34.917975",
   "last_awesome_meta_discovery_error_type": "requests.exceptions.RequestException",
   "last_hn_newest_digest_error": "ERROR de datos: No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News.",
-  "last_hn_newest_digest_error_type": "ValueError"
+  "last_hn_newest_digest_error_type": "ValueError",
+  "last_ask_hn_requests_digest_error": "ERROR de datos durante 'Rattle's Ask HN Requests Digest': No se encontraron historias 'Ask HN' en la p\u00e1gina. Los selectores pueden haber cambiado o la p\u00e1gina est\u00e1 vac\u00eda.",
+  "last_ask_hn_requests_digest_error_type": "ValueError",
+  "last_ask_hn_requests_digest_timestamp": "2026-08-23T20:13:49.612664+00:00"
 }
