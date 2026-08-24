@@ -282,9 +282,9 @@
   "last_awesome_devops_curator_error_type": "requests.exceptions.RequestException",
   "last_awesome_devops_curator_url": "https://termbin.com/2jbs\n\u0000",
   "last_awesome_devops_curator_timestamp": "2026-08-14T09:01:02.140417Z",
-  "last_awesome_go_curator_url": "https://termbin.com/rtmy\u0000",
+  "last_awesome_go_curator_url": "https://termbin.com/enfc\n\u0000",
   "last_awesome_go_curator_timestamp": "2026-08-19T04:30:25.062108Z",
-  "last_awesome_go_curator_error": null,
+  "last_awesome_go_curator_error": "ERROR general durante 'Rattle's Awesome Go Curator': type object 'datetime.datetime' has no attribute 'UTC'",
   "last_awesome_react_curator_url": "https://termbin.com/zg0y4\n\u0000",
   "last_awesome_react_curator_timestamp": "2026-08-14T16:42:55Z",
   "last_awesome_react_curator_error": null,
@@ -391,5 +391,6 @@
   "last_hn_newest_digest_error_type": "ValueError",
   "last_ask_hn_requests_digest_error": "ERROR de datos durante 'Rattle's Ask HN Requests Digest': No se encontraron historias 'Ask HN' en la p\u00e1gina. Los selectores pueden haber cambiado o la p\u00e1gina est\u00e1 vac\u00eda.",
   "last_ask_hn_requests_digest_error_type": "ValueError",
-  "last_ask_hn_requests_digest_timestamp": "2026-08-23T20:13:49.612664+00:00"
+  "last_ask_hn_requests_digest_timestamp": "2026-08-23T20:13:49.612664+00:00",
+  "last_awesome_go_curator_error_type": "AttributeError"
 }
