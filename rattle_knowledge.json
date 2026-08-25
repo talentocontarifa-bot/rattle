@@ -409,5 +409,7 @@
   "last_awesome_ml_curator_v2_error_type": null,
   "last_awesome_go_curator_url_v2": "https://termbin.com/5bnay",
   "last_awesome_go_curator_timestamp_v2": "2026-08-25T04:32:11.067324+00:00",
-  "last_awesome_go_curator_error_v2": null
+  "last_awesome_go_curator_error_v2": null,
+  "last_hn_visual_briefing_error": "ERROR de datos durante 'Rattle's Hacker News Visual Briefing': No se encontraron art\u00edculos en la portada de Hacker News.",
+  "last_hn_visual_briefing_error_type": "ValueError"
 }
