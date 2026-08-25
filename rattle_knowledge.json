@@ -411,5 +411,7 @@
   "last_awesome_go_curator_timestamp_v2": "2026-08-25T04:32:11.067324+00:00",
   "last_awesome_go_curator_error_v2": null,
   "last_hn_visual_briefing_error": "ERROR de datos durante 'Rattle's Hacker News Visual Briefing': No se encontraron art\u00edculos en la portada de Hacker News.",
-  "last_hn_visual_briefing_error_type": "ValueError"
+  "last_hn_visual_briefing_error_type": "ValueError",
+  "last_hn_newest_digest_error_v2": "ERROR de datos durante 'Rattle's Hacker News Newest Digest v2': No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News.",
+  "last_hn_newest_digest_error_type_v2": "ValueError"
 }
