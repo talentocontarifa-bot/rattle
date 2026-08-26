@@ -415,5 +415,7 @@
   "last_hn_newest_digest_error_v2": "ERROR de datos durante 'Rattle's Hacker News Newest Digest v2': No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News.",
   "last_hn_newest_digest_error_type_v2": "ValueError",
   "last_python_blog_digest_error": "ERROR de datos durante 'Rattle's Python Blog Digest': No se encontraron art\u00edculos en el blog de Python. Los selectores pueden haber cambiado.",
-  "last_python_blog_digest_error_type": "ValueError"
+  "last_python_blog_digest_error_type": "ValueError",
+  "last_awesome_selfhosted_curator_v2_error": "ERROR de datos durante 'Rattle's Awesome Self-Hosted Curator v2': No se encontr\u00f3 el cuerpo del markdown en la p\u00e1gina de GitHub.",
+  "last_awesome_selfhosted_curator_v2_error_type": "ValueError"
 }
