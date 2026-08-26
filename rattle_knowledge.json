@@ -417,5 +417,8 @@
   "last_python_blog_digest_error": "ERROR de datos durante 'Rattle's Python Blog Digest': No se encontraron art\u00edculos en el blog de Python. Los selectores pueden haber cambiado.",
   "last_python_blog_digest_error_type": "ValueError",
   "last_awesome_selfhosted_curator_v2_error": "ERROR de datos durante 'Rattle's Awesome Self-Hosted Curator v2': No se encontr\u00f3 el cuerpo del markdown en la p\u00e1gina de GitHub.",
-  "last_awesome_selfhosted_curator_v2_error_type": "ValueError"
+  "last_awesome_selfhosted_curator_v2_error_type": "ValueError",
+  "last_awesome_python_curator_v3_error": "ERROR de datos durante 'Rattle's Awesome Python Curator v3': No se encontr\u00f3 el cuerpo del markdown en la p\u00e1gina de GitHub.",
+  "last_awesome_python_curator_v3_error_type": "ValueError",
+  "last_awesome_python_curator_v3_timestamp": "2026-08-26T04:32:22.956730+00:00"
 }
