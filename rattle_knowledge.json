@@ -426,5 +426,8 @@
   "last_awesome_python_curator_error_v4": null,
   "last_awesome_javascript_curator_v2_error": "ERROR de datos durante 'Rattle's Awesome JavaScript Curator v2': No se encontraron elementos significativos en la lista Awesome JavaScript.",
   "last_awesome_javascript_curator_v2_error_type": "ValueError",
-  "last_awesome_javascript_curator_v2_timestamp": "2026-08-26T12:34:38.994335+00:00"
+  "last_awesome_javascript_curator_v2_timestamp": "2026-08-26T12:34:38.994335+00:00",
+  "last_awesome_ml_curator_v3_url": "https://termbin.com/n40me",
+  "last_awesome_ml_curator_v3_timestamp": "2026-08-26T16:43:45.041647+00:00",
+  "last_awesome_ml_curator_v3_error": null
 }
