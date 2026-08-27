@@ -435,5 +435,8 @@
   "last_awesome_go_curator_error_v3": null,
   "last_wired_dispatch_url": "https://termbin.com/x81eh\n\u0000",
   "last_wired_dispatch_timestamp": "2026-08-27T05:56:44.449794+00:00",
-  "last_wired_dispatch_error": null
+  "last_wired_dispatch_error": null,
+  "last_the_register_briefing_error_v2": "ERROR de datos durante 'Rattle's The Register Tech Briefing v2': No se encontraron art\u00edculos en el feed Atom de The Register en https://www.theregister.com/headlines.atom.",
+  "last_the_register_briefing_error_type_v2": "ValueError",
+  "last_the_register_briefing_timestamp_v2": "2026-08-27T18:43:01.848607Z"
 }
