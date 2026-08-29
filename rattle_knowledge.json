@@ -452,5 +452,8 @@
   "last_real_python_digest_error": "ERROR de datos durante 'Rattle's Real Python Blog Digest': No se encontraron art\u00edculos en el blog de Real Python. Los selectores pueden haber cambiado.",
   "last_real_python_digest_error_type": "ValueError",
   "last_lobsters_pulse_error": "ERROR de datos durante 'Rattle's Lobste.rs Pulse': No se encontraron titulares v\u00e1lidos dentro de los contenedores de historias de Lobste.rs.",
-  "last_lobsters_pulse_error_type": "ValueError"
+  "last_lobsters_pulse_error_type": "ValueError",
+  "last_awesome_list_nexus_url": "https://termbin.com/zy4vm\u0000",
+  "last_awesome_list_nexus_timestamp": "2026-08-29T22:09:45.270641+00:00",
+  "last_awesome_list_nexus_error": null
 }
