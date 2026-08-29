@@ -448,5 +448,7 @@
   "last_hn_comment_deep_dive_url": "https://termbin.com/iu3a",
   "last_hn_comment_deep_dive_timestamp": "2026-08-29T10:37:45.631828+00:00",
   "last_hn_comment_deep_dive_error": null,
-  "last_hn_comment_deep_dive_error_type": null
+  "last_hn_comment_deep_dive_error_type": null,
+  "last_real_python_digest_error": "ERROR de datos durante 'Rattle's Real Python Blog Digest': No se encontraron art\u00edculos en el blog de Real Python. Los selectores pueden haber cambiado.",
+  "last_real_python_digest_error_type": "ValueError"
 }
