@@ -458,5 +458,8 @@
   "last_awesome_list_nexus_error": null,
   "last_hn_front_page_analysis_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Analysis': No se encontraron art\u00edculos en la portada de Hacker News.",
   "last_hn_front_page_analysis_timestamp": "2026-08-30T02:39:13.315505+00:00",
-  "last_hn_front_page_analysis_error_type": "ValueError"
+  "last_hn_front_page_analysis_error_type": "ValueError",
+  "last_rattle's_awesome_list_cataloger_url": "https://termbin.com/onlh",
+  "last_rattle's_awesome_list_cataloger_timestamp": "2026-08-30T15:46:51.317477+00:00",
+  "last_rattle's_awesome_list_cataloger_error": null
 }
