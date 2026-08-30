@@ -455,5 +455,8 @@
   "last_lobsters_pulse_error_type": "ValueError",
   "last_awesome_list_nexus_url": "https://termbin.com/zy4vm\u0000",
   "last_awesome_list_nexus_timestamp": "2026-08-29T22:09:45.270641+00:00",
-  "last_awesome_list_nexus_error": null
+  "last_awesome_list_nexus_error": null,
+  "last_hn_front_page_analysis_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Analysis': No se encontraron art\u00edculos en la portada de Hacker News.",
+  "last_hn_front_page_analysis_timestamp": "2026-08-30T02:39:13.315505+00:00",
+  "last_hn_front_page_analysis_error_type": "ValueError"
 }
