@@ -474,5 +474,7 @@
   "last_awesome_list_deep_dive_v2_error_type": "ValueError",
   "last_awesome_sindresorhus_deep_dive_v3_error": "ERROR de red o HTTP durante 'Rattle's Awesome Sindresorhus Deep Dive v3': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/sindresorhus/awesome/main/README.md",
   "last_awesome_sindresorhus_deep_dive_v3_error_type": "requests.exceptions.RequestException",
-  "last_awesome_sindresorhus_deep_dive_v3_timestamp": "2026-08-31T18:31:05.929521+00:00"
+  "last_awesome_sindresorhus_deep_dive_v3_timestamp": "2026-08-31T18:31:05.929521+00:00",
+  "last_public_api_digest_v2_error": "ERROR de red o HTTP durante 'Rattle's Public API Digest v2': HTTPSConnectionPool(host='api.publicapis.org', port=443): Max retries exceeded with url: /entries (Caused by NameResolutionError(\"HTTPSConnection(host='api.publicapis.org', port=443): Failed to resolve 'api.publicapis.org' ([Errno -2] Name or service not known)\"))",
+  "last_public_api_digest_v2_error_type": "ConnectionError"
 }
