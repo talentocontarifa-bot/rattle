@@ -496,5 +496,8 @@
   "last_wired_tech_pulse_error": null,
   "last_bbc_tech_pulse_url": "https://termbin.com/0qd9k\n\u0000",
   "last_bbc_tech_pulse_timestamp": "2026-09-02T19:08:35.002217+00:00",
-  "last_bbc_tech_pulse_error": null
+  "last_bbc_tech_pulse_error": null,
+  "last_guardian_tech_pulse_url": "https://termbin.com/ugv5i\n\u0000",
+  "last_guardian_tech_pulse_timestamp": "2026-09-02T22:13:16.723156+00:00",
+  "last_guardian_tech_pulse_error": null
 }
