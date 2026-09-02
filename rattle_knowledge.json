@@ -487,5 +487,8 @@
   "last_rattle's_digital_scout_report_error": "ERROR general durante 'Rattle's Digital Scout Report': TimeoutError: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"#search_form_input\") to be visible\n",
   "last_rattle's_digital_scout_report_error_timestamp": "2026-09-01T22:16:19.582913+00:00",
   "last_rattle's_digital_scout_report_error_type": "TimeoutError",
-  "last_rattle's_digital_scout_report_error_type_timestamp": "2026-09-01T22:16:19.583676+00:00"
+  "last_rattle's_digital_scout_report_error_type_timestamp": "2026-09-01T22:16:19.583676+00:00",
+  "last_ars_technica_horizon_report_url": "https://termbin.com/ur1z",
+  "last_ars_technica_horizon_report_timestamp": "2026-09-02T02:08:25.403857",
+  "last_ars_technica_horizon_report_error": null
 }
