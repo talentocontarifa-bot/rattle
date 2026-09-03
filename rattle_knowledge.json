@@ -502,5 +502,8 @@
   "last_guardian_tech_pulse_error": null,
   "last_phoronix_dispatch_url": "https://termbin.com/opzq\n\u0000",
   "last_phoronix_dispatch_timestamp": "2026-09-03T02:15:35.997066+00:00",
-  "last_phoronix_dispatch_error": null
+  "last_phoronix_dispatch_error": null,
+  "last_toms_hardware_dispatch_url": "https://termbin.com/rcrx\n\u0000",
+  "last_toms_hardware_dispatch_timestamp": "2026-09-03T08:26:17.260091+00:00",
+  "last_toms_hardware_dispatch_error": null
 }
