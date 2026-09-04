@@ -517,5 +517,8 @@
   "last_anandtech_dispatch_error_type": "ParseError",
   "last_techrepublic_pulse_error": "ERROR de red o HTTP durante 'Rattle's TechRepublic Pulse': 403 Client Error: Forbidden for url: https://www.techrepublic.com/topic/tech/feed/",
   "last_techrepublic_pulse_timestamp": "2026-09-04T15:30:29.878950Z",
-  "last_techrepublic_pulse_error_type": "requests.exceptions.RequestException"
+  "last_techrepublic_pulse_error_type": "requests.exceptions.RequestException",
+  "last_engadget_tech_pulse_v2": "https://termbin.com/hsxxn",
+  "last_engadget_tech_pulse_v2_timestamp": "2026-09-04T18:45:09.550617Z",
+  "last_engadget_tech_pulse_v2_url": "https://termbin.com/hsxxn"
 }
