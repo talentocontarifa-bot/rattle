@@ -512,5 +512,7 @@
     "last_thenextweb_dispatch_url": "https://termbin.com/uaaha4",
     "last_thenextweb_dispatch_timestamp": "2026-09-03T19:00:51.102416+00:00",
     "last_thenextweb_dispatch_error": "ERROR general durante 'Rattle's The Next Web Tech Dispatch': type object 'datetime.datetime' has no attribute 'UTC'",
-    "last_thenextweb_dispatch_error_type": "AttributeError"
+    "last_thenextweb_dispatch_error_type": "AttributeError",
+    "last_anandtech_dispatch_error": "ERROR general durante 'AnandTech Dispatch': mismatched tag: line 77, column 2",
+    "last_anandtech_dispatch_error_type": "ParseError"
 }
