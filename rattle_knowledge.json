@@ -520,5 +520,9 @@
   "last_techrepublic_pulse_error_type": "requests.exceptions.RequestException",
   "last_engadget_tech_pulse_v2": "https://termbin.com/hsxxn",
   "last_engadget_tech_pulse_v2_timestamp": "2026-09-04T18:45:09.550617Z",
-  "last_engadget_tech_pulse_v2_url": "https://termbin.com/hsxxn"
+  "last_engadget_tech_pulse_v2_url": "https://termbin.com/hsxxn",
+  "last_rattles_engadget_tech_pulse_v3_timestamp": "2026-09-04T22:01:03.040681+00:00",
+  "last_rattles_engadget_tech_pulse_v3_url": "https://termbin.com/3di6w\n\u0000",
+  "last_rattles_engadget_tech_pulse_v3_error": null,
+  "last_rattles_engadget_tech_pulse_v3_error_type": null
 }
