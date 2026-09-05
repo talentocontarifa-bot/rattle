@@ -533,5 +533,9 @@
   "last_ask_hn_curated_digest_url": "https://termbin.com/nzxnr\n\u0000",
   "last_ask_hn_curated_digest_timestamp": "2026-09-05T14:18:25.439327+00:00",
   "last_ask_hn_curated_digest_error": null,
-  "last_ask_hn_curated_digest_error_type": null
+  "last_ask_hn_curated_digest_error_type": null,
+  "last_show_hn_requests_digest_v5_url": "https://termbin.com/fcm1b\n\u0000",
+  "last_show_hn_requests_digest_v5_timestamp": "2026-09-05T17:50:47.623753+00:00",
+  "last_show_hn_requests_digest_v5_error": null,
+  "last_show_hn_requests_digest_v5_error_type": null
 }
