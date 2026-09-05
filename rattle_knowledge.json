@@ -524,5 +524,7 @@
   "last_rattles_engadget_tech_pulse_v3_timestamp": "2026-09-04T22:01:03.040681+00:00",
   "last_rattles_engadget_tech_pulse_v3_url": "https://termbin.com/3di6w\n\u0000",
   "last_rattles_engadget_tech_pulse_v3_error": null,
-  "last_rattles_engadget_tech_pulse_v3_error_type": null
+  "last_rattles_engadget_tech_pulse_v3_error_type": null,
+  "last_gizmodo_dispatch_error": "ERROR de red o HTTP durante 'Rattle's Gizmodo Dispatch': 403 Client Error: Forbidden for url: https://gizmodo.com/rss",
+  "last_gizmodo_dispatch_timestamp": "2026-09-05T07:57:43.356310+00:00"
 }
