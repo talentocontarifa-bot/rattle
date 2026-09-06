@@ -539,5 +539,8 @@
   "last_show_hn_requests_digest_v5_error": null,
   "last_show_hn_requests_digest_v5_error_type": null,
   "last_hn_comment_deep_dive_v2_url": "https://termbin.com/aur6\u0000",
-  "last_hn_comment_deep_dive_v2_timestamp": "2026-09-06T02:05:49.687080+00:00"
+  "last_hn_comment_deep_dive_v2_timestamp": "2026-09-06T02:05:49.687080+00:00",
+  "last_hn_front_page_report_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Report v3': No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
+  "last_hn_front_page_report_error_type": "ValueError",
+  "last_hn_front_page_report_timestamp": "2026-09-06T08:15:17.396471+00:00"
 }
