@@ -551,5 +551,9 @@
   "last_hn_adaptive_report_error_type": "ValueError",
   "last_show_hn_adaptive_digest_error": "ERROR general durante 'Rattle's Show HN Adaptive Digest': 'Response' object has no attribute 'get_elements_by_name'",
   "last_show_hn_adaptive_digest_error_type": "AttributeError",
-  "last_show_hn_adaptive_digest_timestamp": "2026-09-07T02:03:30Z"
+  "last_show_hn_adaptive_digest_timestamp": "2026-09-07T02:03:30Z",
+  "last_hn_newest_feed_scrapling_url": null,
+  "last_hn_newest_feed_scrapling_timestamp": "2026-09-07T16:56:10.840731+00:00",
+  "last_hn_newest_feed_scrapling_error": "ERROR general durante 'Rattle's Hacker News Newest Feed Curator v2': No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News.",
+  "last_hn_newest_feed_scrapling_error_type": "ValueError"
 }
