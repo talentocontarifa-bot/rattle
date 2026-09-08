@@ -555,5 +555,8 @@
   "last_hn_newest_feed_scrapling_url": null,
   "last_hn_newest_feed_scrapling_timestamp": "2026-09-07T16:56:10.840731+00:00",
   "last_hn_newest_feed_scrapling_error": "ERROR general durante 'Rattle's Hacker News Newest Feed Curator v2': No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News.",
-  "last_hn_newest_feed_scrapling_error_type": "ValueError"
+  "last_hn_newest_feed_scrapling_error_type": "ValueError",
+  "last_hn_front_page_dispatch_v3_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Dispatch v3': No se encontraron art\u00edculos en la portada de Hacker News.",
+  "last_hn_front_page_dispatch_v3_timestamp": "2026-09-08T02:17:46",
+  "last_hn_front_page_dispatch_v3_error_type": "ValueError"
 }
