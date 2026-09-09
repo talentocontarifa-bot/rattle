@@ -564,5 +564,8 @@
     "last_devto_ai_briefing_error": "ERROR general durante 'Rattle's Dev.to AI Tools Briefing': Locator.text_content: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"article.crayons-story\").first.locator(\"h2.crayons-story__title a\").first\n",
     "last_devto_ai_briefing_timestamp": "2026-09-08T15:43:59.990475+00:00",
     "last_github_awesome_list_catalog_error": "ERROR general durante 'Rattle's GitHub Awesome List Catalog': 'TextHandler' object has no attribute 'css'",
-    "last_github_awesome_list_catalog_error_type": "AttributeError"
+    "last_github_awesome_list_catalog_error_type": "AttributeError",
+    "last_awesome_go_catalog_pulse_v5_error": "ERROR de datos durante 'Rattle's Awesome Go Catalog Pulse v5': No se encontr\u00f3 el cuerpo del markdown en la p\u00e1gina de GitHub.",
+    "last_awesome_go_catalog_pulse_v5_error_type": "ValueError",
+    "last_awesome_go_catalog_pulse_v5_timestamp": "2026-09-09T02:18:51.094320+00:00"
 }
