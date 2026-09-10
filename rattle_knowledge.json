@@ -570,5 +570,7 @@
   "last_awesome_go_catalog_pulse_v5_timestamp": "2026-09-09T02:18:51.094320+00:00",
   "last_awesome_python_deep_dive_url": "https://termbin.com/8rn7j",
   "last_awesome_python_deep_dive_timestamp": "2026-09-09T15:38:43.360804+00:00",
-  "last_awesome_python_deep_dive_error": null
+  "last_awesome_python_deep_dive_error": null,
+  "last_awesome_recursion_report_error": "ERROR de red o HTTP durante 'Rattle's Awesome List Recursion Report': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/bayandin/awesome-awesomeness/main/README.md",
+  "last_awesome_recursion_report_timestamp": "2026-09-10T02:17:10.849337+00:00"
 }
