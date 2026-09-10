@@ -572,5 +572,7 @@
   "last_awesome_python_deep_dive_timestamp": "2026-09-09T15:38:43.360804+00:00",
   "last_awesome_python_deep_dive_error": null,
   "last_awesome_recursion_report_error": "ERROR de red o HTTP durante 'Rattle's Awesome List Recursion Report': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/bayandin/awesome-awesomeness/main/README.md",
-  "last_awesome_recursion_report_timestamp": "2026-09-10T02:17:10.849337+00:00"
+  "last_awesome_recursion_report_timestamp": "2026-09-10T02:17:10.849337+00:00",
+  "last_pypi_trending_digest_error": "ERROR de red o HTTP durante 'Rattle's PyPI Trending Packages Digest': 404 Client Error: Not Found for url: https://pypi.org/trending/",
+  "last_pypi_trending_digest_error_type": "HTTPError"
 }
