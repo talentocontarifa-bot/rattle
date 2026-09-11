@@ -574,5 +574,7 @@
   "last_awesome_recursion_report_error": "ERROR de red o HTTP durante 'Rattle's Awesome List Recursion Report': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/bayandin/awesome-awesomeness/main/README.md",
   "last_awesome_recursion_report_timestamp": "2026-09-10T02:17:10.849337+00:00",
   "last_pypi_trending_digest_error": "ERROR de red o HTTP durante 'Rattle's PyPI Trending Packages Digest': 404 Client Error: Not Found for url: https://pypi.org/trending/",
-  "last_pypi_trending_digest_error_type": "HTTPError"
+  "last_pypi_trending_digest_error_type": "HTTPError",
+  "last_hn_newest_deep_dive_error": "ERROR de datos durante 'Rattle's Hacker News Newest Deep Dive': No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News con los selectores intentados.",
+  "last_hn_newest_deep_dive_error_type": "ValueError"
 }
