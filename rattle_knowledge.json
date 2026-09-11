@@ -580,5 +580,7 @@
   "last_hn_newest_stealth_dive_error": "ERROR general durante 'Rattle's Hacker News Newest Deep Dive (Scrapling Stealth)': ValueError: No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News con los selectores intentados.",
   "last_hn_newest_stealth_dive_error_type": "ValueError",
   "last_hn_front_page_snapshot_v5_error": "No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
-  "last_hn_front_page_snapshot_v5_error_type": "ValueError"
+  "last_hn_front_page_snapshot_v5_error_type": "ValueError",
+  "last_hn_new_discovery_error": "ERROR de red o HTTP durante 'Rattle's Hacker News 'New' Article Discovery': 404 Client Error: Not Found for url: https://news.ycombinator.com/new",
+  "last_hn_new_discovery_error_type": "requests.exceptions.RequestException"
 }
