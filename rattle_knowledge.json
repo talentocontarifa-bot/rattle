@@ -588,5 +588,9 @@
   "last_hn_front_page_playwright_digest_error_type": "TimeoutError",
   "last_hn_newest_requests_digest_url": "https://termbin.com/6yoo\n\u0000",
   "last_hn_newest_requests_digest_timestamp": "2026-09-12T08:16:33.087700+00:00",
-  "last_hn_newest_requests_digest_error": null
+  "last_hn_newest_requests_digest_error": null,
+  "last_ask_hn_curated_digest_v2_url": "https://termbin.com/9qaj\u0000",
+  "last_ask_hn_curated_digest_v2_timestamp": "2026-09-12T14:43:16+00:00",
+  "last_ask_hn_curated_digest_v2_error": null,
+  "last_ask_hn_curated_digest_v2_error_type": null
 }
