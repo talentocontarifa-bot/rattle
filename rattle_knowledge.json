@@ -582,5 +582,8 @@
   "last_hn_front_page_snapshot_v5_error": "No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
   "last_hn_front_page_snapshot_v5_error_type": "ValueError",
   "last_hn_new_discovery_error": "ERROR de red o HTTP durante 'Rattle's Hacker News 'New' Article Discovery': 404 Client Error: Not Found for url: https://news.ycombinator.com/new",
-  "last_hn_new_discovery_error_type": "requests.exceptions.RequestException"
+  "last_hn_new_discovery_error_type": "requests.exceptions.RequestException",
+  "last_hn_front_page_playwright_digest_error": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"table.itemlist tr.athing\") to be visible\n",
+  "last_hn_front_page_playwright_digest_timestamp": "2026-09-12T02:19:35.737926+00:00",
+  "last_hn_front_page_playwright_digest_error_type": "TimeoutError"
 }
