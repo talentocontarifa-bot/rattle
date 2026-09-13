@@ -598,5 +598,7 @@
     "last_show_hn_requests_digest_v6_url": "https://termbin.com/usou\n\u0000",
     "last_show_hn_requests_digest_v6_timestamp": "2026-09-12T18:01:57.301524Z",
     "last_show_hn_requests_digest_v7_error": "ERROR de datos durante 'Rattle's Show HN Digest v7 (Requests-based)': No se encontr\u00f3 la tabla principal 'itemlist' en la p\u00e1gina. Los selectores pueden haber cambiado.",
-    "last_show_hn_requests_digest_v7_error_type": "ValueError"
+    "last_show_hn_requests_digest_v7_error_type": "ValueError",
+    "last_hn_trending_keywords_error": "ERROR de datos durante 'Rattle's Hacker News Trending Keywords Analysis': No se encontraron t\u00edtulos en la portada de Hacker News.",
+    "last_hn_trending_keywords_error_type": "ValueError"
 }
