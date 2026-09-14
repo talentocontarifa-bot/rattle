@@ -609,5 +609,8 @@
   "last_awesome_ml_research_scan_error": null,
   "last_awesome_python_web_frameworks_scan_url": "https://termbin.com/qlna",
   "last_awesome_python_web_frameworks_scan_timestamp": "2026-09-13T21:59:23.706462+00:00",
-  "last_rattles_awesome_python_web_frameworks_scan_error": null
+  "last_rattles_awesome_python_web_frameworks_scan_error": null,
+  "last_awesome_list_catalog_v2_error": "ERROR general durante 'Rattle's Awesome List Catalog v2': 'Selector' object is not callable",
+  "last_awesome_list_catalog_v2_error_type": "TypeError",
+  "last_awesome_list_catalog_v2_timestamp": "2026-09-14T02:34:41.861084+00:00"
 }
