@@ -617,5 +617,7 @@
   "last_awesome_ai_tools_scan_error_type": "HTTPError",
   "last_awesome_selfhosted_html_curator_error": "ERROR de datos durante 'Rattle's Awesome Self-Hosted HTML Curator': No se encontr\u00f3 el cuerpo del markdown en la p\u00e1gina de GitHub. Los selectores pueden haber cambiado.",
   "last_awesome_selfhosted_html_curator_timestamp": "2026-09-14T17:18:44.538647+00:00",
-  "last_awesome_selfhosted_html_curator_error_type": "ValueError"
+  "last_awesome_selfhosted_html_curator_error_type": "ValueError",
+  "last_awesome_sindresorhus_hybrid_curator_error": "ERROR general durante 'Rattle's Awesome Sindresorhus Hybrid Curator': TypeError: 'NoneType' object is not callable",
+  "last_awesome_sindresorhus_hybrid_curator_error_type": "TypeError"
 }
