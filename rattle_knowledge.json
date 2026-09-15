@@ -622,5 +622,7 @@
   "last_awesome_sindresorhus_hybrid_curator_error_type": "TypeError",
   "last_awesome_sindresorhus_hybrid_curator_v4_error": "ERROR general durante 'Rattle's Awesome Sindresorhus Hybrid Curator v4 (Robust Parsing)': 'Response' object has no attribute 'html'",
   "last_awesome_sindresorhus_hybrid_curator_v4_error_type": "AttributeError",
-  "last_awesome_sindresorhus_hybrid_curator_v4_timestamp": "2026-09-15T02:38:05.485758+00:00"
+  "last_awesome_sindresorhus_hybrid_curator_v4_timestamp": "2026-09-15T02:38:05.485758+00:00",
+  "last_awesome_python_curator_robust_error": "ERROR de datos durante 'Rattle's Awesome Python Curator (Robust HTML Parsing)': No se encontr\u00f3 el cuerpo del markdown en la p\u00e1gina de GitHub con el selector 'div.markdown-body'. Los selectores pueden haber cambiado.",
+  "last_awesome_python_curator_robust_error_type": "ValueError"
 }
