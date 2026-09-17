@@ -643,5 +643,8 @@
   "last_devto_ai_rss_briefing_error": null,
   "last_awesome_javascript_curator_v3_url": "https://termbin.com/52kf\u0000",
   "last_awesome_javascript_curator_v3_timestamp": "2026-09-16T22:31:34.460759+00:00",
-  "last_awesome_javascript_curator_v3_error": null
+  "last_awesome_javascript_curator_v3_error": null,
+  "last_show_hn_requests_digest_v8_error": "ERROR de red o HTTP durante 'Rattle's Show HN Digest v8 (Requests-based)': 429 Client Error: Too Many Requests for url: https://news.ycombinator.com/show",
+  "last_show_hn_requests_digest_v8_error_type": "requests.exceptions.RequestException",
+  "last_show_hn_requests_digest_v8_timestamp": "2026-09-17T02:36:38.407001+00:00"
 }
