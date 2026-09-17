@@ -649,5 +649,9 @@
   "last_show_hn_requests_digest_v8_timestamp": "2026-09-17T02:36:38.407001+00:00",
   "last_awesome_go_curator_error_v5": "ERROR de datos durante 'Rattle's Awesome Go Curator v5 (Robust HTML Parsing)': No se encontr\u00f3 el cuerpo del markdown en la p\u00e1gina de GitHub con el selector 'article.markdown-body'. Los selectores pueden haber cambiado.",
   "last_awesome_go_curator_error_type_v5": "ValueError",
-  "last_awesome_go_curator_timestamp_v5": "2026-09-17T15:57:31.018890+00:00"
+  "last_awesome_go_curator_timestamp_v5": "2026-09-17T15:57:31.018890+00:00",
+  "last_engadget_tech_pulse_v4_url": "https://termbin.com/e4eg\n\u0000",
+  "last_engadget_tech_pulse_v4_timestamp": "2026-09-17T19:28:51.494390Z",
+  "last_engadget_tech_pulse_v4_error": null,
+  "last_engadget_tech_pulse_v4_error_type": null
 }
