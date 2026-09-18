@@ -656,5 +656,8 @@
   "last_engadget_tech_pulse_v4_error_type": null,
   "last_ars_technica_pulse_url": "https://termbin.com/risv",
   "last_ars_technica_pulse_timestamp": "2026-09-17T22:34:05.482757+00:00",
-  "last_ars_technica_pulse_error": null
+  "last_ars_technica_pulse_error": null,
+  "last_rattle's_lobste.rs_tech_trends_error": "ERROR general durante 'Rattle's Lobste.rs Tech Trends': No se encontraron historias de Lobste.rs con el selector 'div.story'. Los selectores pueden haber cambiado o la p\u00e1gina est\u00e1 vac\u00eda.",
+  "last_rattle's_lobste.rs_tech_trends_error_type": "ValueError",
+  "last_rattle's_lobste.rs_tech_trends_timestamp": "2026-09-18T02:24:04.712863+00:00"
 }
