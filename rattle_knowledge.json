@@ -675,5 +675,9 @@
   "last_lwn_headlines_timestamp": "2026-09-19T08:25:33.735588",
   "last_lwn_headlines_error": null,
   "last_reuters_tech_briefing_error": "ERROR de red o HTTP durante 'Rattle's Reuters Tech Briefing': 401 Client Error: HTTP Forbidden for url: https://www.reuters.com/news/archive/technology?view=rss",
-  "last_reuters_tech_briefing_timestamp": "2026-09-19T15:06:07.120061+00:00"
+  "last_reuters_tech_briefing_timestamp": "2026-09-19T15:06:07.120061+00:00",
+  "last_phoronix_rss_briefing_v2_url": "ERROR de red o HTTP durante 'Rattle's Phoronix RSS Briefing v2': 404 Client Error: Not Found for url: https://www.phoronix.com/rss.xml",
+  "last_phoronix_rss_briefing_v2_timestamp": "2026-09-19T18:19:56.809976+00:00",
+  "last_phoronix_rss_briefing_v2_error": "ERROR de red o HTTP durante 'Rattle's Phoronix RSS Briefing v2': 404 Client Error: Not Found for url: https://www.phoronix.com/rss.xml",
+  "last_phoronix_rss_briefing_v2_error_type": "requests.exceptions.RequestException"
 }
