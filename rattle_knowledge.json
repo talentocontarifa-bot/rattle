@@ -691,5 +691,7 @@
   "last_awesome_data_engineering_curator_error_type": "requests.exceptions.RequestException",
   "last_awesome_python_html_curator_error": "ERROR de datos durante 'Rattle's Awesome Python HTML Curator': No se encontraron categor\u00edas o proyectos en la lista Awesome Python.",
   "last_awesome_python_html_curator_error_type": "ValueError",
-  "last_awesome_rust_curator_url_v2": "https://termbin.com/x78w\u0000"
+  "last_awesome_rust_curator_url_v2": "https://termbin.com/x78w\u0000",
+  "last_awesome_rust_curator_error_v3": "Failed to publish to termbin.",
+  "last_awesome_rust_curator_error_type_v3": "TermbinPublishError"
 }
