@@ -683,5 +683,8 @@
   "last_phoronix_rss_briefing_v3_url": "https://termbin.com/cnoez\n\u0000",
   "last_phoronix_rss_briefing_v3_timestamp": "2026-09-19T21:58:57.064628+00:00",
   "last_phoronix_rss_briefing_v3_error": null,
-  "last_phoronix_rss_briefing_v3_error_type": null
+  "last_phoronix_rss_briefing_v3_error_type": null,
+  "last_the_register_atom_digest_v3_error": "ERROR de datos durante 'Rattle's The Register Atom Digest v3': No se encontraron elementos '<entry>' en el feed Atom de The Register.",
+  "last_the_register_atom_digest_v3_error_type": "ValueError",
+  "last_the_register_atom_digest_v3_timestamp": "2026-09-20T02:34:10.354277"
 }
