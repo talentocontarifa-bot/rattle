@@ -686,5 +686,7 @@
   "last_phoronix_rss_briefing_v3_error_type": null,
   "last_the_register_atom_digest_v3_error": "ERROR de datos durante 'Rattle's The Register Atom Digest v3': No se encontraron elementos '<entry>' en el feed Atom de The Register.",
   "last_the_register_atom_digest_v3_error_type": "ValueError",
-  "last_the_register_atom_digest_v3_timestamp": "2026-09-20T02:34:10.354277"
+  "last_the_register_atom_digest_v3_timestamp": "2026-09-20T02:34:10.354277",
+  "last_awesome_data_engineering_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome Data Engineering Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/DataEngineerInc/awesome-data-engineering/master/README.md",
+  "last_awesome_data_engineering_curator_error_type": "requests.exceptions.RequestException"
 }
