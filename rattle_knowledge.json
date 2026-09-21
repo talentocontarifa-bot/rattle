@@ -693,5 +693,8 @@
   "last_awesome_python_html_curator_error_type": "ValueError",
   "last_awesome_rust_curator_url_v2": "https://termbin.com/x78w\u0000",
   "last_awesome_rust_curator_error_v3": "Failed to publish to termbin.",
-  "last_awesome_rust_curator_error_type_v3": "TermbinPublishError"
+  "last_awesome_rust_curator_error_type_v3": "TermbinPublishError",
+  "last_awesome_rust_curator_url_v4": "https://paste.rs/AWzBz",
+  "last_awesome_rust_curator_timestamp_v4": "2026-09-21T09:28:00.313856+00:00",
+  "last_awesome_rust_curator_error_v4": null
 }
