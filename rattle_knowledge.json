@@ -696,5 +696,7 @@
   "last_awesome_rust_curator_error_type_v3": "TermbinPublishError",
   "last_awesome_rust_curator_url_v4": "https://paste.rs/AWzBz",
   "last_awesome_rust_curator_timestamp_v4": "2026-09-21T09:28:00.313856+00:00",
-  "last_awesome_rust_curator_error_v4": null
+  "last_awesome_rust_curator_error_v4": null,
+  "last_awesome_for_beginners_curator_error": "ERROR general durante 'Rattle's Awesome for Beginners Curator': Fallo al publicar el reporte en termbin.",
+  "last_awesome_for_beginners_curator_error_type": "Exception"
 }
