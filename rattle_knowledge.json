@@ -713,5 +713,8 @@
   "last_awesome_cli_curator_url": null,
   "last_awesome_cli_curator_timestamp": "2026-09-22T19:38:27.881619+00:00",
   "last_awesome_cli_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome CLI Curator (Markdown Parsing)': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/rasbt/awesome-cli-apps/main/README.md",
-  "last_awesome_cli_curator_error_type": "HTTPError"
+  "last_awesome_cli_curator_error_type": "HTTPError",
+  "last_awesome_web_security_report_url_v2": "https://paste.rs/3SDJp",
+  "last_awesome_web_security_report_timestamp_v2": "2026-09-22T22:34:50.830117+00:00",
+  "last_awesome_web_security_report_error_v2": null
 }
