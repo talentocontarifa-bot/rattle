@@ -705,5 +705,7 @@
   "last_awesome_go_catalog_pulse_v6": "https://paste.rs/hNlEI",
   "last_awesome_go_catalog_pulse_v6_timestamp": "2026-09-22T02:34:36.720085+00:00",
   "last_awesome_go_catalog_pulse_v6_error": null,
-  "last_awesome_go_catalog_pulse_v6_error_timestamp": "2026-09-22T02:34:36.720871+00:00"
+  "last_awesome_go_catalog_pulse_v6_error_timestamp": "2026-09-22T02:34:36.720871+00:00",
+  "last_the_verge_atom_digest_v2_error": "ERROR de red o HTTP durante 'Rattle's The Verge Atom Digest v2': 403 Client Error: X-Forbidden for url: https://www.theverge.com/rss/index.xml",
+  "last_the_verge_atom_digest_v2_error_type": "HTTPError"
 }
