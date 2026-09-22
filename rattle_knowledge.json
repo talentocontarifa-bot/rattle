@@ -707,5 +707,7 @@
   "last_awesome_go_catalog_pulse_v6_error": null,
   "last_awesome_go_catalog_pulse_v6_error_timestamp": "2026-09-22T02:34:36.720871+00:00",
   "last_the_verge_atom_digest_v2_error": "ERROR de red o HTTP durante 'Rattle's The Verge Atom Digest v2': 403 Client Error: X-Forbidden for url: https://www.theverge.com/rss/index.xml",
-  "last_the_verge_atom_digest_v2_error_type": "HTTPError"
+  "last_the_verge_atom_digest_v2_error_type": "HTTPError",
+  "last_hn_who_is_hiring_digest_error": "ERROR de datos durante 'Rattle's Hacker News 'Who is Hiring?' Digest': No se encontr\u00f3 el enlace al hilo 'Who is hiring?' en la p\u00e1gina de trabajos de Hacker News.",
+  "last_hn_who_is_hiring_digest_error_type": "ValueError"
 }
