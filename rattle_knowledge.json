@@ -709,5 +709,9 @@
   "last_the_verge_atom_digest_v2_error": "ERROR de red o HTTP durante 'Rattle's The Verge Atom Digest v2': 403 Client Error: X-Forbidden for url: https://www.theverge.com/rss/index.xml",
   "last_the_verge_atom_digest_v2_error_type": "HTTPError",
   "last_hn_who_is_hiring_digest_error": "ERROR de datos durante 'Rattle's Hacker News 'Who is Hiring?' Digest': No se encontr\u00f3 el enlace al hilo 'Who is hiring?' en la p\u00e1gina de trabajos de Hacker News.",
-  "last_hn_who_is_hiring_digest_error_type": "ValueError"
+  "last_hn_who_is_hiring_digest_error_type": "ValueError",
+  "last_awesome_cli_curator_url": null,
+  "last_awesome_cli_curator_timestamp": "2026-09-22T19:38:27.881619+00:00",
+  "last_awesome_cli_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome CLI Curator (Markdown Parsing)': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/rasbt/awesome-cli-apps/main/README.md",
+  "last_awesome_cli_curator_error_type": "HTTPError"
 }
