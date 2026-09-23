@@ -217,7 +217,7 @@ def send_telegram_message(text):
         print(f"Telegram helper error: {e}")
         return False
 
-def send_telegram_voice(file_path):
+def send_telegram_voice(file_path, caption=None):
     if should_silence_telegram():
         print(f"Telegram Voice Bypassed (Silent/Autonomous Mode): {file_path}")
         return True
@@ -225,15 +225,18 @@ def send_telegram_voice(file_path):
         print("Telegram helper: Token or Chat ID not configured.")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendVoice"
+    data = {"chat_id": TELEGRAM_CHAT_ID}
+    if caption:
+        data["caption"] = caption
     try:
         with open(file_path, "rb") as f:
-            r = requests.post(url, files={"voice": f}, data={"chat_id": TELEGRAM_CHAT_ID}, timeout=30)
+            r = requests.post(url, files={"voice": f}, data=data, timeout=30)
         return r.status_code == 200
     except Exception as e:
         print(f"Telegram helper error: {e}")
         return False
 
-def send_telegram_video(file_path):
+def send_telegram_video(file_path, caption=None):
     if should_silence_telegram():
         print(f"Telegram Video Bypassed (Silent/Autonomous Mode): {file_path}")
         return True
@@ -241,9 +244,12 @@ def send_telegram_video(file_path):
         print("Telegram helper: Token or Chat ID not configured.")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendVideo"
+    data = {"chat_id": TELEGRAM_CHAT_ID}
+    if caption:
+        data["caption"] = caption
     try:
         with open(file_path, "rb") as f:
-            r = requests.post(url, files={"video": f}, data={"chat_id": TELEGRAM_CHAT_ID}, timeout=90)
+            r = requests.post(url, files={"video": f}, data=data, timeout=90)
         return r.status_code == 200
     except Exception as e:
         print(f"Telegram helper error: {e}")
