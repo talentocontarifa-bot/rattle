@@ -726,5 +726,7 @@
     "last_awesome_ml_curated_report_error": null,
     "last_awesome_go_deep_dive_v4_url": "https://paste.rs/fx7Eb",
     "last_awesome_go_deep_dive_v4_timestamp": "2026-09-23T15:51:05.246654",
-    "last_awesome_go_deep_dive_v4_error": null
+    "last_awesome_go_deep_dive_v4_error": null,
+    "last_awesome_gpt_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome GPT Curator': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/ramitsingh/awesome-gpt/main/README.md",
+    "last_awesome_gpt_curator_error_type": "requests.exceptions.RequestException"
 }
