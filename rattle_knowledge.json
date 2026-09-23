@@ -716,5 +716,9 @@
   "last_awesome_cli_curator_error_type": "HTTPError",
   "last_awesome_web_security_report_url_v2": "https://paste.rs/3SDJp",
   "last_awesome_web_security_report_timestamp_v2": "2026-09-22T22:34:50.830117+00:00",
-  "last_awesome_web_security_report_error_v2": null
+  "last_awesome_web_security_report_error_v2": null,
+  "last_awesome_python_web_frameworks_pulse_url": null,
+  "last_awesome_python_web_frameworks_pulse_timestamp": "2026-09-23T02:40:48.043060+00:00",
+  "last_awesome_python_web_frameworks_pulse_error": "ERROR general durante 'Rattle's Awesome Python Web Frameworks Pulse': nothing to repeat at position 1",
+  "last_awesome_python_web_frameworks_pulse_error_type": "error"
 }
