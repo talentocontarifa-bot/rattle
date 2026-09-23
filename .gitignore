@@ -1,3 +1,11 @@
 .env
 __pycache__/
 *.pyc
+bin/
+obscura_bin/
+*.zip
+*.tar.gz
+public/*.mp4
+public/*.mp3
+public/props.json
+rattle_image.png

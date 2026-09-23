@@ -6,3 +6,5 @@ gradio_client==1.3.0
 playwright
 edge-tts
 scrapling[fetchers]
+crawl4ai>=0.9.4
+psutil

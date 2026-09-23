@@ -373,6 +373,8 @@ def execute_code(code_string):
     import random
     import logging
     from playwright.sync_api import sync_playwright
+    import obscura_manager
+    from crawl_helper import crawl_url
     
     custom_globals = globals().copy()
     custom_globals.update({
@@ -390,7 +392,13 @@ def execute_code(code_string):
         'send_telegram_video': send_telegram_video,
         'send_telegram_photo': send_telegram_photo,
         'generate_nvidia_image': generate_nvidia_image,
-        'render_video': render_video
+        'render_video': render_video,
+        'obscura_manager': obscura_manager,
+        'obscura_fetch': obscura_manager.obscura_fetch,
+        'obscura_scrape': obscura_manager.obscura_scrape,
+        'start_obscura_cdp': obscura_manager.start_obscura_cdp,
+        'stop_obscura_cdp': obscura_manager.stop_obscura_cdp,
+        'crawl_url': crawl_url
     })
     
     with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
@@ -427,6 +435,8 @@ def execute_code(code_string):
                 print(f"Limpieza: No se pudo eliminar {tf}: {e}")
     
     output = f.getvalue()
+    if sys.platform == "win32" and sys.stdout.encoding:
+        output = output.encode(sys.stdout.encoding, errors='replace').decode(sys.stdout.encoding)
     if error_msg:
         output += "\n--- ERROR EN TIEMPO DE EJECUCIÓN ---\n" + error_msg
         
@@ -605,6 +615,44 @@ Condiciones y Recursos del Entorno:
       print(f"Post: {{title}} -> {{link}}")
   ```
   Si quieres usar selectores adaptativos que guarden la "huella" de los elementos para futuras ejecuciones, usa `auto_save=True` y `adaptive=True`.
+
+- NUEVO SÚPER PODER DE NAVEGACIÓN EN RUST ULTRALIGERA (OBSCURA - ~30 MB RAM):
+  Tienes integrado Obscura, un motor de navegador headless en Rust con footprint mínimo de memoria (~30 MB de RAM frente a los 300+ MB de Chromium) y arranque instantáneo (~85ms).
+  Es ideal para ahorrar tiempo y recursos en GitHub Actions y evitar límites de memoria.
+  Formas de usarlo:
+  1. Fetch directo y ultra-rápido:
+     ```python
+     # Obscura evalúa JavaScript y devuelve el resultado en milisegundos
+     resultado = obscura_fetch('https://news.ycombinator.com', eval_js='document.title')
+     print("Resultado rápido Obscura:", resultado)
+     ```
+  2. Vía Chrome DevTools Protocol (CDP) con Playwright:
+     ```python
+     from playwright.sync_api import sync_playwright
+     
+     start_obscura_cdp() # Inicia el daemon CDP en puerto 9222
+     with sync_playwright() as p:
+         browser = p.chromium.connect_over_cdp("http://127.0.0.1:9222")
+         page = browser.new_page()
+         page.goto("https://news.ycombinator.com")
+         print("Página navegada con Obscura en Rust:", page.title())
+         browser.close()
+     ```
+
+- NUEVO SÚPER PODER DE EXTRACCIÓN CON IA SIN SELECTORES FRÁGILES (CRAWL4AI):
+  ¡Se acabaron los selectores CSS que se rompen cuando las páginas cambian de diseño!
+  Tienes disponible `crawl_url(url, use_obscura=True)`:
+  Crawl4AI analiza la página web y extrae automáticamente un Markdown limpio y estructurado listo para que lo leas y analices como IA, extrayendo enlaces limpios, tablas y artículos completos.
+  Además, al usar `use_obscura=True`, se conecta internamente a tu navegador Obscura en Rust para gastar únicamente ~30MB de memoria.
+  Ejemplo de uso:
+  ```python
+  # Extraer datos de cualquier sitio web sin preocuparte por selectores CSS frágiles
+  crawl_result = crawl_url("https://news.ycombinator.com", use_obscura=True)
+  if crawl_result.success:
+      print("--- CONTENIDO LIMPIO EN MARKDOWN ---")
+      print(crawl_result.markdown[:1000]) # Texto estructurado y legible
+      print("Enlaces encontrados:", crawl_result.links[:5])
+  ```
 
 - NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION):
   Puedes generar videos dinámicos premium en formato vertical (1080x1920) listos para compartir o subir. Rattle cuenta con una plantilla integrada en React que reproduce un audio, muestra un fondo animado futurista con ondas de audio y muestra el texto segmentado en subtítulos animados en el centro de una tarjeta con glassmorphism.

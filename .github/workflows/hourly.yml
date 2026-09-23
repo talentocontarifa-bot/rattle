@@ -50,6 +50,13 @@ jobs:
         run: |
           playwright install --with-deps chromium
 
+      - name: Setup Obscura (Rust Headless Browser)
+        run: |
+          mkdir -p bin
+          curl -sL https://github.com/h4ckf0r0day/obscura/releases/download/v0.2.3/obscura-x86_64-linux.tar.gz | tar -xz -C bin
+          chmod +x bin/obscura bin/obscura-worker 2>/dev/null || true
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+
       - name: Run Scheduled Task
         env:
           GEMINI_API: ${{ secrets.GEMINI_API }}
