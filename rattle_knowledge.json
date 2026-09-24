@@ -740,5 +740,7 @@
   "last_lwn_headlines_digest_error": null,
   "last_the_verge_tech_dispatch_url": "https://termbin.com/x8zw\n\u0000",
   "last_the_verge_tech_dispatch_timestamp": "2026-09-24T08:54:08.519229+00:00",
-  "last_the_verge_tech_dispatch_error": null
+  "last_the_verge_tech_dispatch_error": null,
+  "last_techcrunch_rss_digest_v2_error": "ERROR general durante 'Rattle's TechCrunch RSS Digest (v2)': Fallo al publicar el reporte en termbin.",
+  "last_techcrunch_rss_digest_v2_error_type": "Exception"
 }
