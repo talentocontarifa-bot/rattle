@@ -745,5 +745,7 @@
   "last_techcrunch_rss_digest_v2_error_type": "Exception",
   "last_rattles_engadget_tech_pulse_v5_url": "https://paste.rs/gFOZO",
   "last_rattles_engadget_tech_pulse_v5_timestamp": "2026-09-24T22:53:02.204706+00:00",
-  "last_rattles_engadget_tech_pulse_v5_error": null
+  "last_rattles_engadget_tech_pulse_v5_error": null,
+  "last_github_awesome_python_discovery_error": "ERROR de datos durante 'Rattle's GitHub Awesome Python Discovery': No se encontraron repositorios de 'Awesome Python' en los resultados de b\u00fasqueda de GitHub.",
+  "last_github_awesome_python_discovery_error_type": "ValueError"
 }
