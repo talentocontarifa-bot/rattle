@@ -747,5 +747,8 @@
   "last_rattles_engadget_tech_pulse_v5_timestamp": "2026-09-24T22:53:02.204706+00:00",
   "last_rattles_engadget_tech_pulse_v5_error": null,
   "last_github_awesome_python_discovery_error": "ERROR de datos durante 'Rattle's GitHub Awesome Python Discovery': No se encontraron repositorios de 'Awesome Python' en los resultados de b\u00fasqueda de GitHub.",
-  "last_github_awesome_python_discovery_error_type": "ValueError"
+  "last_github_awesome_python_discovery_error_type": "ValueError",
+  "last_awesome_python_markdown_curator_url_v2": "https://paste.rs/LWaLV",
+  "last_awesome_python_markdown_curator_timestamp_v2": "2026-09-25T09:15:52.441179+00:00",
+  "last_awesome_python_markdown_curator_error_v2": null
 }
