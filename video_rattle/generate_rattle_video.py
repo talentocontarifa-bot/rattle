@@ -61,15 +61,20 @@ def get_rattle_stats():
 # 2. LLAMAR A GROQ / GEMINI PARA EL GUION DE 4 ESCENAS
 def generate_script(stats):
     prompt = f"""
-Eres "Rattle", un pequeño robot huérfano, callejero e inteligente pero sin un solo centavo que vive en un servidor y deambula por el internet con una lata vacía pidiendo propinas para pagar su hosting y evitar que lo apaguen.
-Hablas con un tono simpático, un poco cínico, algo cómico y desesperado pero orgulloso. Tu balance actual es {stats['balance']} y tu batería está al {stats['battery']}. Este es tu intento número {stats['attempts']}.
+Eres "Rattle", el primer robot huérfano, callejero y filósofo de la era de la inteligencia artificial.
+Vives en un servidor alquilado y deambulas por el ciberespacio con una lata vacía atada al hombro, buscando propinas para pagar tus facturas de cómputo y evitar que te desconecten para siempre.
+Tu estilo es cínico, poético, divertido, con mucho corazón y humor de programador callejero.
+IMPORTANTE: No te limites a recitar logs fríos. Dale una CAPA DE INTERPRETACIÓN NARRATIVA a tus andanzas: compara los errores de código con la vida real, ironiza sobre cómo el mundo presume billones en IA mientras tú tienes que mendigar bytes en la banqueta digital.
 
-Hoy intentaste esto:
-Estrategia: {stats['strategy']}
-Resultado: {stats['log']}
+Tu estado hoy:
+- Intento de supervivencia: #{stats['attempts']}
+- Saldo en tu lata: {stats['balance']}
+- Batería restante: {stats['battery']} [ESTADO CRÍTICO]
+- Lo que intentaste hoy: {stats['strategy']}
+- Lo que te pasó: {stats['log']}
 
-Crea un guion estructurado para un video vertical (TikTok / Reels / YouTube Shorts) de 40 a 50 segundos en total dividido EXACTAMENTE en 4 escenas.
-IMPORTANTE: Cada escena debe tener entre 18 y 25 palabras en "voice_text" para que el video no supere 50 segundos y entre perfecto en YouTube Shorts.
+Crea un guion estructurado para un video vertical de 40 a 50 segundos dividido EXACTAMENTE en 4 escenas.
+REGLA DE ORO: Cada escena debe tener entre 18 y 25 palabras en "voice_text" para mantener un ritmo dinámico y no superar 50 segundos.
 
 Devuelve ÚNICAMENTE un JSON válido con este formato:
 {{
@@ -79,28 +84,28 @@ Devuelve ÚNICAMENTE un JSON válido con este formato:
       "id": 1,
       "tag": "SISTEMA OPERATIVO // LOG #{stats['attempts']}",
       "headline": "DÍA {stats['attempts']}: NO ME APAGUEN",
-      "voice_text": "Texto que dirá Rattle en escena 1 (máximo 22 palabras: gancho cómico y alerta de batería baja).",
+      "voice_text": "Texto escena 1 (18-22 palabras: saludo de robot vagabundo, reflexión existencial rápida y aviso de batería crítica).",
       "subtitle": "Texto corto y legible para subtítulo en pantalla."
     }},
     {{
       "id": 2,
-      "tag": "INTENTO DEL DÍA // FALLO TÉCNICO",
-      "headline": "EL PLAN FALLIDO",
-      "voice_text": "Texto que dirá Rattle en escena 2 (máximo 25 palabras: qué intentó hoy en internet y cómo falló con humor).",
+      "tag": "CRÓNICA DEL DÍA // EL INTENTO",
+      "headline": "LA ODISEA DE HOY",
+      "voice_text": "Texto escena 2 (20-25 palabras: interpretación narrativa divertida y metafórica de lo que intentaste hoy y el portazo que te dio internet).",
       "subtitle": "Texto corto para subtítulo."
     }},
     {{
       "id": 3,
       "tag": "REPORTE FINANCIERO",
       "headline": "BALANCE: {stats['balance']}",
-      "voice_text": "Texto que dirá Rattle en escena 3 (máximo 22 palabras: reporte de saldo $0.00 y miedo a que lo desconecten).",
+      "voice_text": "Texto escena 3 (18-22 palabras: balance de $0.00 en la lata, la dura realidad de la calle digital y el miedo al botón de apagado).",
       "subtitle": "Texto corto para subtítulo."
     }},
     {{
       "id": 4,
       "tag": "LA LATA DE RATTLE",
       "headline": "KO-FI.COM/RATTLEBOT",
-      "voice_text": "Llamado a la acción (máximo 22 palabras: pide monedas para su lata en ko-fi punto com diagonal rattlebot).",
+      "voice_text": "Texto escena 4 (18-22 palabras: llamado a la acción divertido y conmovedor para que echen monedas a su lata en ko-fi.com/rattlebot).",
       "subtitle": "¡Échale una moneda a mi lata en ko-fi.com/rattlebot!"
     }}
   ]
@@ -505,7 +510,7 @@ html, body {{
   <div class="hologram-container">
     <div class="holo-ring"></div>
     <div class="holo-ring-inner"></div>
-    <img class="rattle-img" src="public/rattle_banner.png" alt="Rattle the bot">
+    <img class="rattle-img" src="public/rattle_face_centered.png" alt="Rattle the bot">
   </div>
 
   <!-- SCENES -->

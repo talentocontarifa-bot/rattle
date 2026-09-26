@@ -80,8 +80,9 @@ async function publishAll() {
   // 1. TIKTOK
   try {
     console.log('\n--- 1/3: TIKTOK ---');
+    const safeTikTokTitle = `${meta.shortTitle.replace(/[^\w\s#áéíóúÁÉÍÓÚñÑ.,:!-]/g, '')}`.trim().substring(0, 90);
     results.tiktok = await publishVideoToTikTok(VIDEO_PATH, {
-      title: `${meta.shortTitle} #RattleBot #IA #DevHumor`
+      title: safeTikTokTitle
     });
   } catch (err) {
     console.error('❌ Error en TikTok:', err.message);
