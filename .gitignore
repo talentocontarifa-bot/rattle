@@ -5,7 +5,13 @@ bin/
 obscura_bin/
 *.zip
 *.tar.gz
+node_modules/
+video_rattle/node_modules/
+video_rattle/temp_audio/
+video_rattle/out/
 public/*.mp4
 public/*.mp3
 public/props.json
 rattle_image.png
+video_rattle/public/*.mp3
+

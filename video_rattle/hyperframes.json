@@ -1,0 +1,15 @@
+{
+  "$schema": "https://hyperframes.dev/schema.json",
+  "name": "video_rattle",
+  "resolution": "portrait",
+  "compositions": [
+    {
+      "id": "main",
+      "source": "index.html",
+      "width": 1080,
+      "height": 1920,
+      "duration": 44,
+      "fps": 30
+    }
+  ]
+}
