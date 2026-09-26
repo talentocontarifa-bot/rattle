@@ -758,5 +758,8 @@
   "last_lwn_headlines_digest_v2_timestamp": "2026-09-26T02:43:16.764125+00:00",
   "last_lwn_headlines_digest_v2_error": null,
   "last_ask_hn_pulse_v3_error": "ERROR de datos durante 'Rattle's Ask HN Pulse v3': No se encontraron historias 'Ask HN' en la p\u00e1gina. Los selectores pueden haber cambiado o la p\u00e1gina est\u00e1 vac\u00eda.",
-  "last_ask_hn_pulse_v3_error_type": "ValueError"
+  "last_ask_hn_pulse_v3_error_type": "ValueError",
+  "last_ask_hn_pulse_crawl4ai_error": "ERROR general durante 'Rattle's Ask HN Pulse (Crawl4AI + Obscura)': No se encontraron historias 'Ask HN' v\u00e1lidas en el contenido de Markdown de Crawl4AI.",
+  "last_ask_hn_pulse_crawl4ai_error_type": "ValueError",
+  "last_ask_hn_pulse_crawl4ai_timestamp": "2026-09-26T22:18:02.786548+00:00"
 }
