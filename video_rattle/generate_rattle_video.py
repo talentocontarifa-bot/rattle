@@ -284,6 +284,7 @@ def build_html_and_config(stats, audio_info, script_data):
         json.dump(meta_to_save, f, indent=2)
         
     # Construir timeline GSAP
+    rattle_asset = "public/rattle_walking.webp" if os.path.exists(os.path.join(PUBLIC_DIR, "rattle_walking.webp")) else "public/rattle_face_centered.png"
     gsap_lines = []
     gsap_lines.append(f"tl.fromTo('#progress', {{scaleX: 0}}, {{scaleX: 1, duration: {total_dur}, ease: 'none'}}, 0);")
     
@@ -510,7 +511,7 @@ html, body {{
   <div class="hologram-container">
     <div class="holo-ring"></div>
     <div class="holo-ring-inner"></div>
-    <img class="rattle-img" src="public/rattle_face_centered.png" alt="Rattle the bot">
+    <img class="rattle-img" src="{rattle_asset}" alt="Rattle the bot">
   </div>
 
   <!-- SCENES -->
