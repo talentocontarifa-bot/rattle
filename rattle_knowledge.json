@@ -756,5 +756,7 @@
   "last_awesome_deep_learning_scan_timestamp": "2026-09-25T23:00:03.133407+00:00",
   "last_lwn_headlines_digest_v2_url": "https://paste.rs/SDbiY",
   "last_lwn_headlines_digest_v2_timestamp": "2026-09-26T02:43:16.764125+00:00",
-  "last_lwn_headlines_digest_v2_error": null
+  "last_lwn_headlines_digest_v2_error": null,
+  "last_ask_hn_pulse_v3_error": "ERROR de datos durante 'Rattle's Ask HN Pulse v3': No se encontraron historias 'Ask HN' en la p\u00e1gina. Los selectores pueden haber cambiado o la p\u00e1gina est\u00e1 vac\u00eda.",
+  "last_ask_hn_pulse_v3_error_type": "ValueError"
 }
