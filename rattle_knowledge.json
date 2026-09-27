@@ -769,5 +769,8 @@
   "last_ask_hn_pulse_crawl4ai_robust_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 95, in <module>\nValueError: No se encontraron historias 'Ask HN' v\u00e1lidas en el contenido de Markdown de Crawl4AI con los patrones intentados.\n",
   "last_thenextweb_dispatch_v2_url": "https://termbin.com/aolz\n\u0000",
   "last_thenextweb_dispatch_v2_timestamp": "2026-09-27T16:07:01.179728+00:00",
-  "last_thenextweb_dispatch_v2_error": null
+  "last_thenextweb_dispatch_v2_error": null,
+  "last_ars_technica_rss_dispatch_url": "https://paste.rs/8EhyS",
+  "last_ars_technica_rss_dispatch_timestamp": "2026-09-27T22:44:41.713445+00:00",
+  "last_ars_technica_rss_dispatch_error": null
 }
