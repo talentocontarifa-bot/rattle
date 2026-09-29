@@ -789,5 +789,7 @@
   "last_zdnet_tech_pulse_timestamp": "2026-09-29T00:07:57.366362+00:00",
   "last_awesome_python_deep_dive_v4_url": "https://paste.rs/y6een",
   "last_awesome_python_deep_dive_v4_timestamp": "2026-09-29T17:21:49.619146+00:00",
-  "last_awesome_python_deep_dive_v4_error": null
+  "last_awesome_python_deep_dive_v4_error": null,
+  "last_rattle's_awesome_javascript_digest_v1_error": "ERROR de datos durante 'Rattle's Awesome JavaScript Digest v1': No se encontraron categor\u00edas o proyectos significativos en la lista Awesome JavaScript.",
+  "last_rattle's_awesome_javascript_digest_v1_error_type": "ValueError"
 }
