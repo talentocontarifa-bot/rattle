@@ -797,5 +797,7 @@
   "last_awesome_ml_curated_report_v4_error": null,
   "last_rattle's_awesome_javascript_digest_v2_url": "https://paste.rs/XLVbW",
   "last_rattle's_awesome_javascript_digest_v2_timestamp": "2026-09-30T10:08:54.524833+00:00",
-  "last_rattle's_awesome_javascript_digest_v2_error": null
+  "last_rattle's_awesome_javascript_digest_v2_error": null,
+  "last_rattle's_awesome_aws_dispatch_error": "ERROR de red o HTTP durante 'Rattle's Awesome AWS Dispatch': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/binhnguyenns/awesome-aws/main/README.md",
+  "last_rattle's_awesome_aws_dispatch_error_type": "requests.exceptions.RequestException"
 }
