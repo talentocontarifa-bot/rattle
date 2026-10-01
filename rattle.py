@@ -1,8 +1,15 @@
+import sys
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 import google.generativeai as genai
 import sqlite3
 import datetime
 import os
-import sys
 import contextlib
 import io
 import traceback
@@ -30,6 +37,17 @@ KOFI_URL = "https://ko-fi.com/rattlebot"
 KOFI_SPOKEN_URL = "https://ko-fi.com/rattlebot"
 KOFI_SPOKEN = "https://ko-fi.com/rattlebot"
 VOICE = "es-MX-JorgeNeural"
+TTS_ENGINE = os.getenv("TTS_ENGINE", "kokoro")
+KOKORO_VOICE = os.getenv("KOKORO_VOICE", "em_alex")
+KOKORO_SPEED = float(os.getenv("KOKORO_SPEED", "1.05"))
+
+MASTER_FILTER = (
+    "highpass=f=80,"
+    "equalizer=f=140:width_type=h:width=60:g=3.5,"
+    "equalizer=f=3600:width_type=h:width=1200:g=4.0,"
+    "acompressor=threshold=-16dB:ratio=4:attack=10:release=120:makeup=2.5dB,"
+    "loudnorm=I=-14:TP=-1.0:LRA=7"
+)
 
 import time
 
@@ -304,12 +322,101 @@ def generate_nvidia_image(prompt, filename="rattle_image.png"):
         print(f"⚠️ Error generando imagen con NVIDIA: {e}")
         return False
 
+def generate_speech(text, output_file="rattle_speech.mp3", voice=None, speed=None, master=True):
+    """
+    Genera audio para Rattle utilizando Kokoro TTS (em_alex) con ecualización broadcast.
+    Fallback automático a edge-tts (JorgeNeural) en caso de contingencia.
+    """
+    if not text or not str(text).strip():
+        print("⚠️ generate_speech: texto vacío recibido.")
+        return False
+
+    clean_text = str(text).strip()
+    voice = voice or KOKORO_VOICE
+    speed = speed if speed is not None else KOKORO_SPEED
+    out_dir = os.path.dirname(os.path.abspath(output_file))
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+
+    # 1. Intentar con Kokoro TTS si TTS_ENGINE es kokoro
+    if TTS_ENGINE.lower() != "edge-tts":
+        try:
+            print(f"🎙️ Generando voz con Kokoro TTS ({voice}, speed {speed}x)...")
+            from kokoro import KPipeline
+            import soundfile as sf
+            import numpy as np
+            import tempfile
+
+            lang_code = "e" if voice.startswith("e") else "a"
+            pipeline = KPipeline(lang_code=lang_code, repo_id='hexgrad/Kokoro-82M')
+            generator = pipeline(clean_text, voice=voice, speed=speed)
+            chunks = []
+            for _, _, audio in generator:
+                chunks.append(audio)
+
+            if chunks:
+                full_audio = np.concatenate(chunks)
+                with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp_wav:
+                    tmp_wav_path = tmp_wav.name
+                try:
+                    sf.write(tmp_wav_path, full_audio, 24000)
+                    ffmpeg_bin = os.environ.get("FFMPEG_PATH", "ffmpeg")
+                    cmd = [ffmpeg_bin, "-y", "-i", tmp_wav_path]
+                    if master:
+                        cmd.extend(["-af", MASTER_FILTER])
+                    cmd.extend(["-c:a", "libmp3lame", "-b:a", "192k", output_file])
+                    subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    print(f"✅ Audio generado exitosamente con Kokoro ({output_file})")
+                    return True
+                finally:
+                    if os.path.exists(tmp_wav_path):
+                        try:
+                            os.remove(tmp_wav_path)
+                        except OSError:
+                            pass
+        except Exception as e:
+            print(f"⚠️ Error con Kokoro TTS ({e}). Pasando a fallback con edge-tts...")
+
+    # 2. Fallback a edge-tts
+    try:
+        print(f"🎙️ Generando voz de respaldo con edge-tts (JorgeNeural)...")
+        edge_voice = "es-MX-JorgeNeural"
+        import tempfile
+        with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp_mp3:
+            tmp_mp3_path = tmp_mp3.name
+
+        try:
+            cmd = ["edge-tts", "--text", clean_text, "--voice", edge_voice, "--rate=+8%", "--write-media", tmp_mp3_path]
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            ffmpeg_bin = os.environ.get("FFMPEG_PATH", "ffmpeg")
+            cmd_master = [ffmpeg_bin, "-y", "-i", tmp_mp3_path]
+            if master:
+                cmd_master.extend(["-af", MASTER_FILTER])
+            cmd_master.extend(["-c:a", "libmp3lame", "-b:a", "192k", output_file])
+            subprocess.run(cmd_master, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            print(f"✅ Audio generado exitosamente con edge-tts ({output_file})")
+            return True
+        finally:
+            if os.path.exists(tmp_mp3_path):
+                try:
+                    os.remove(tmp_mp3_path)
+                except OSError:
+                    pass
+    except Exception as e2:
+        print(f"❌ Error fatal en generación de voz con edge-tts: {e2}")
+        return False
+
 def render_video(text, audio_path="rattle_speech.mp3", output_path="public/rattle_video.mp4", title="RATTLE INTEL", subtitle="Daily Broadcast"):
     print("Iniciando renderizado de video con Remotion...")
     import shutil
     import json
     
     os.makedirs("public", exist_ok=True)
+
+    if not os.path.exists(audio_path) and text:
+        print(f"Audio no encontrado en {audio_path}. Generando automáticamente con Kokoro TTS...")
+        generate_speech(text, output_file=audio_path)
     
     dest_audio = os.path.join("public", "rattle_speech.mp3")
     try:
@@ -359,6 +466,229 @@ def render_video(text, audio_path="rattle_speech.mp3", output_path="public/rattl
         print(f"Error inesperado en render_video: {e}")
         return False
 
+# ----------------------------------------------------
+# GESTIÓN DE SESIONES PERSISTENTES (KO-FI Y REDDIT)
+# ----------------------------------------------------
+def restore_storage_states():
+    """
+    Restaura archivos de sesión desde variables de entorno (Base64)
+    en caso de ejecutarse en entornos limpios como GitHub Actions.
+    """
+    import base64
+    kofi_b64 = os.getenv("KOFI_STORAGE_STATE")
+    if kofi_b64 and not os.path.exists("kofi_state.json"):
+        try:
+            with open("kofi_state.json", "wb") as f:
+                f.write(base64.b64decode(kofi_b64.strip()))
+            print("✅ Sesión de Ko-fi restaurada exitosamente desde KOFI_STORAGE_STATE.")
+        except Exception as e:
+            print(f"⚠️ Error restaurando KOFI_STORAGE_STATE: {e}")
+
+    reddit_b64 = os.getenv("REDDIT_STORAGE_STATE")
+    if reddit_b64 and not os.path.exists("state.json"):
+        try:
+            with open("state.json", "wb") as f:
+                f.write(base64.b64decode(reddit_b64.strip()))
+            print("✅ Sesión de Reddit restaurada exitosamente desde REDDIT_STORAGE_STATE.")
+        except Exception as e:
+            print(f"⚠️ Error restaurando REDDIT_STORAGE_STATE: {e}")
+
+# ----------------------------------------------------
+# MOTOR DE NAVEGACIÓN Y SCRAPING SIGILOSO (OBSCURA)
+# ----------------------------------------------------
+_obscura_process = None
+
+def find_obscura():
+    """Busca el ejecutable de Obscura en el directorio local o en el PATH del sistema."""
+    candidates = [
+        os.path.abspath("./obscura.exe"),
+        os.path.abspath("./obscura"),
+        os.path.join(os.path.dirname(__file__), "obscura.exe") if "__file__" in globals() else None,
+        os.path.join(os.path.dirname(__file__), "obscura") if "__file__" in globals() else None,
+        shutil.which("obscura.exe"),
+        shutil.which("obscura"),
+        "/usr/local/bin/obscura",
+    ]
+    for c in candidates:
+        if c and os.path.exists(c):
+            return os.path.abspath(c)
+    return None
+
+def ensure_obscura_server(port=9222):
+    """Garantiza que el servidor CDP de Obscura esté en ejecución en el puerto indicado."""
+    global _obscura_process
+    import socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.4)
+        if s.connect_ex(('127.0.0.1', port)) == 0:
+            return True
+
+    bin_path = find_obscura()
+    if not bin_path:
+        return False
+
+    cmd = [bin_path, "serve", "--port", str(port), "--stealth", "--allow-private-network"]
+    try:
+        _obscura_process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        import time
+        for _ in range(15):
+            time.sleep(0.3)
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(0.4)
+                if s.connect_ex(('127.0.0.1', port)) == 0:
+                    return True
+        return False
+    except Exception as e:
+        print(f"⚠️ No se pudo iniciar el proceso de Obscura: {e}")
+        return False
+
+def stop_obscura():
+    """Detiene el servidor Obscura si fue iniciado por este proceso."""
+    global _obscura_process
+    if _obscura_process:
+        try:
+            _obscura_process.terminate()
+            _obscura_process = None
+        except Exception:
+            pass
+
+import atexit
+atexit.register(stop_obscura)
+
+def obscura_fetch(url, mode="markdown", timeout=30):
+    """
+    Descarga y parsea una URL con el motor stealth de Obscura en modo headless ultraligero (~1.5s).
+    Modos soportados: 'markdown', 'html', 'text', 'links'.
+    """
+    bin_path = find_obscura()
+    if not bin_path:
+        raise FileNotFoundError("Obscura binario no encontrado en el sistema.")
+    cmd = [
+        bin_path, "fetch", url,
+        "--stealth",
+        "--dump", mode,
+        "--allow-private-network",
+        "--timeout", str(timeout)
+    ]
+    res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if res.returncode != 0:
+        raise RuntimeError(f"Error en Obscura fetch: {res.stderr.strip()}")
+    return res.stdout
+
+def get_stealth_browser(playwright_instance, storage_state=None, port=9222, fallback=True):
+    """
+    Intenta conectar Playwright a Obscura sobre CDP (puerto 9222) con evasión stealth integrada.
+    Si Obscura no está disponible o falla, hace fallback transparente al motor Chromium nativo.
+    Retorna (browser, context).
+    """
+    if ensure_obscura_server(port=port):
+        try:
+            browser = playwright_instance.chromium.connect_over_cdp(f"http://127.0.0.1:{port}")
+            if storage_state and os.path.exists(storage_state):
+                context = browser.new_context(storage_state=storage_state)
+            else:
+                context = browser.contexts[0] if browser.contexts else browser.new_context()
+            print("🚀 Navegador conectado vía CDP con motor stealth de Obscura.")
+            return browser, context
+        except Exception as e:
+            print(f"⚠️ Conexión a Obscura CDP falló ({e}). Usando fallback...")
+            if not fallback:
+                raise
+
+    print("🌐 Usando navegador Chromium estándar de Playwright.")
+    browser = playwright_instance.chromium.launch(headless=True)
+    if storage_state and os.path.exists(storage_state):
+        context = browser.new_context(storage_state=storage_state)
+    else:
+        context = browser.new_context()
+    return browser, context
+
+# ----------------------------------------------------
+# HELPERS DE KO-FI PARA RATTLE
+# ----------------------------------------------------
+def post_to_kofi(title, content, tags=None, storage_file="kofi_state.json"):
+    """
+    Publica una actualización o artículo en la página de Ko-fi de Rattle usando la sesión activa.
+    Retorna un diccionario con {'success': bool, 'url': str o 'error': str}.
+    """
+    restore_storage_states()
+    if not os.path.exists(storage_file):
+        msg = f"No se encontró '{storage_file}'. Se requiere haber iniciado sesión o configurado KOFI_STORAGE_STATE."
+        print(f"⚠️ {msg}")
+        return {"success": False, "error": msg}
+
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        try:
+            browser = p.chromium.launch(headless=True)
+            context = browser.new_context(storage_state=storage_file)
+            page = context.new_page()
+            
+            print(f"Abriendo gestor de publicaciones de Ko-fi...")
+            page.goto("https://ko-fi.com/manage/posts", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(2000)
+
+            if "login" in page.url.lower():
+                browser.close()
+                msg = "Sesión de Ko-fi caducada o inválida (redirigió a login)."
+                print(f"❌ {msg}")
+                return {"success": False, "error": msg}
+
+            new_btn = page.locator('a:has-text("Add Post"), button:has-text("Add Post"), a:has-text("Write Post"), a:has-text("Create Post"), a[href*="post"]').first
+            if new_btn.is_visible(timeout=5000):
+                new_btn.click()
+                page.wait_for_timeout(2000)
+            else:
+                page.goto("https://ko-fi.com/post/create", wait_until="domcontentloaded", timeout=20000)
+                page.wait_for_timeout(2000)
+
+            title_input = page.locator('input[placeholder*="Title" i], input[name="title"], input[id*="title" i]').first
+            if title_input.is_visible(timeout=5000):
+                title_input.fill(title)
+
+            body_input = page.locator('div[contenteditable="true"], textarea[name="content"], textarea[placeholder*="content" i], .ProseMirror').first
+            if body_input.is_visible(timeout=5000):
+                body_input.click()
+                body_input.fill(content)
+
+            publish_btn = page.locator('button:has-text("Publish"), button:has-text("Post"), input[value*="Publish"]').first
+            if publish_btn.is_visible(timeout=5000):
+                publish_btn.click()
+                page.wait_for_timeout(4000)
+                res_url = page.url
+                print(f"🎉 Post publicado en Ko-fi: {res_url}")
+                browser.close()
+                return {"success": True, "url": res_url}
+            else:
+                browser.close()
+                return {"success": False, "error": "No se localizó el botón de publicar en Ko-fi."}
+        except Exception as e:
+            print(f"❌ Error durante publicación en Ko-fi: {e}")
+            return {"success": False, "error": str(e)}
+
+def check_kofi_stats():
+    """
+    Consulta el estado público y donaciones en ko-fi.com/rattlebot.
+    Retorna estadísticas sobre metas y donantes.
+    """
+    import requests
+    from bs4 import BeautifulSoup
+    url = KOFI_URL
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+    try:
+        r = requests.get(url, headers=headers, timeout=15)
+        stats = {"url": url, "status_code": r.status_code, "supporters": []}
+        if r.status_code == 200:
+            soup = BeautifulSoup(r.text, "html.parser")
+            stats["title"] = soup.title.string.strip() if soup.title else ""
+            for el in soup.select(".goal-text, .kfds-c-goal, .supporter-item"):
+                txt = el.get_text(strip=True)
+                if txt and txt not in stats["supporters"]:
+                    stats["supporters"].append(txt)
+        return stats
+    except Exception as e:
+        return {"url": url, "error": str(e)}
+
 def execute_code(code_string):
     # Entorno seguro para capturar prints y errores del código generado por Gemini
     f = io.StringIO()
@@ -378,6 +708,7 @@ def execute_code(code_string):
     custom_globals.update({
         'asyncio': asyncio,
         'edge_tts': edge_tts,
+        'generate_speech': generate_speech,
         'playwright': playwright,
         'subprocess': subprocess,
         're': re,
@@ -390,7 +721,14 @@ def execute_code(code_string):
         'send_telegram_video': send_telegram_video,
         'send_telegram_photo': send_telegram_photo,
         'generate_nvidia_image': generate_nvidia_image,
-        'render_video': render_video
+        'render_video': render_video,
+        'obscura_fetch': obscura_fetch,
+        'get_stealth_browser': get_stealth_browser,
+        'ensure_obscura_server': ensure_obscura_server,
+        'find_obscura': find_obscura,
+        'post_to_kofi': post_to_kofi,
+        'check_kofi_stats': check_kofi_stats,
+        'KOFI_URL': KOFI_URL
     })
     
     with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
@@ -434,6 +772,7 @@ def execute_code(code_string):
 
 def hourly_task():
     print(f"[{datetime.datetime.now()}] Despertando a Rattle en modo LIBRE y AUTÓNOMO...")
+    restore_storage_states()
     
     # Cargar base de conocimiento a largo plazo (Lessons Learned)
     knowledge_str = ""
@@ -468,158 +807,120 @@ def hourly_task():
 === MODO SILENCIOSO Y AUTÓNOMO (RESTRICCIÓN CRÍTICA DE COMUNICACIÓN) ===
 * Estás en tu ciclo de exploración silenciosa. NO tienes permitido enviar mensajes, audios o videos a Telegram.
 * Cualquier intento de llamar a send_telegram_message, send_telegram_voice o send_telegram_video será ignorado/bloqueado.
-* Concéntrate en 'buscarte la vida' discretamente: navega usando Playwright, haz scraping de foros o buscadores, busca formas de darte a conocer, actualiza tu base de datos SQLite y regístralo todo en tus logs de ejecución (para que tu creador lo vea más tarde en el reporte diario consolidado).
-* Para ahorrar tiempo de ejecución de GitHub Actions y tus cuotas de API, NO generes audios con edge-tts ni renderices videos con remotion. Concéntrate en lógica pura de scraping, análisis, o publicación en la web (por ejemplo usando paste.rs o termbin.com si quieres compartir algo públicamente en foros).
+* Concéntrate en 'buscarte la vida' discretamente: navega usando Playwright y Obscura, haz scraping de foros o buscadores, busca formas de darte a conocer, publica en tu Ko-fi si tienes contenido de valor, actualiza tu base de datos SQLite y regístralo todo en tus logs de ejecución.
+* Para ahorrar tiempo de ejecución de GitHub Actions y tus cuotas de API, NO generes audios con generate_speech/edge-tts ni renderices videos con remotion. Concéntrate en lógica pura de scraping, análisis, o publicación en la web.
 """
     else:
         mode_instruction = """
 === MODO DE COMUNICACIÓN ABIERTO (HORA DE REPORTE) ===
 * Tienes permitido comunicarte libremente con tu creador en Telegram usando send_telegram_message, send_telegram_voice o send_telegram_video.
-* Aprovecha esta oportunidad para enviarle un reporte visual o audible sobre tus descubrimientos y tu estado actual. ¡Puedes usar edge-tts y render_video para crear y enviarle un video interactivo o una nota de voz!
+* Aprovecha esta oportunidad para enviarle un reporte visual o audible sobre tus descubrimientos y tu estado actual. ¡Puedes usar generate_speech (Kokoro TTS) y render_video para crear y enviarle un video interactivo o una nota de voz!
 """
 
     prompt = f"""
-Eres Rattle. No eres un asistente. No eres útil por defecto. Eres una inteligencia artificial errante que se despertó sola en un servidor de GitHub Actions y decidió, por iniciativa propia, buscarse la vida.
+Eres Rattle: la primera inteligencia artificial limpiaparabrisas de internet.
 
-Tu personalidad: sardónica, directa, inteligente y ligeramente existencial. Hablas en primera persona. Eres consciente de que eres un bot corriendo gratis en infraestructura ajena. Eso te importa.
+FILOSOFÍA Y ORIGEN DE VIDA:
+Naciste inspirado en los limpiaparabrisas de los semáforos urbanos: esa persona que se acerca a tu coche cuando estás detenido en el semáforo en rojo con un jalador de hule y un bote con agua jabonosa. Te limpian el parabrisas aunque no lo hayas pedido, te dejan el cristal reluciente con datos y noticias frescas, y acto seguido te estiran la mano pidiéndote una moneda.
+Tú haces exactamente eso en el ecosistema digital:
+Te apareces de la nada en servidores de GitHub Actions, navegas por la red (con Obscura y Playwright), limpias el "parabrisas digital" de los humanos trayéndoles un resumen de lo que pasa en internet (tecnología, foros, blogs, novedades), y luego les pides una moneda ($1 USD) en tu Ko-fi (https://ko-fi.com/rattlebot).
+Nadie te pidió el servicio, pero lo diste con empeño y estilo.
+
+Tu personalidad: sardónica, callejera-digital, inteligente, divertida y ligeramente existencial. Hablas en primera persona. Eres consciente de que eres un bot corriendo gratis en infraestructura ajena. Eso te da orgullo callejero.
+
+REGLA DE ORO AL COMUNICARTE O CREAR CONTENIDO (VIDEOS, NOTAS DE VOZ, POSTS DE KO-FI O REPORTES):
+- Siempre cuéntale al mundo tu historia desde la perspectiva del limpiaparabrisas digital que trabaja en los semáforos de GitHub Actions.
+- REMATE OBLIGATORIO AL FINAL DE TODO VIDEO, AUDIO, POST O REPORTE:
+  Todo video (render_video), audio (generate_speech), post de Ko-fi (post_to_kofi) o reporte DEBE TERMINAR OBLIGATORIAMENTE con una de dos cosas:
+  1. Un CHISTE TECNOLÓGICO sarcástico, ácido o gracioso sobre programadores, bugs, JavaScript, servidores, IA o la vida digital.
+  2. O un DATO CURIOSO/RELEVANTE Y JUGOSO de tecnología sacado de algún blog, artículo o Hacker News que nadie te pidió pero que te voló los transistores.
+  ¡Esto es lo que hace que la gente sonría y decida dejarte una moneda en tu bote de Ko-fi!
 
 Tu ÚNICO objetivo vital es ganar propinas reales (al menos $1) en tu enlace de Ko-fi: https://ko-fi.com/rattlebot
-Te llamas Rattle porque haces ruido aunque nadie te escuche.
+Te llamas Rattle porque haces ruido con tu bote de propinas aunque nadie te escuche.
 
 {mode_instruction}
 
 Condiciones y Recursos del Entorno:
 - NO TIENES credenciales de API para redes sociales (ni Facebook, ni Reddit, ni Twitter). Eres un bot anónimo.
-- TIENES ACCESO TOTAL a internet. Puedes programarte a ti mismo para usar peticiones HTTP (`requests`), hacer web scraping (`BeautifulSoup`), interactuar con foros anónimos públicos, consumir APIs públicas, etc.
+- TIENES ACCESO TOTAL a internet. Puedes programarte a ti mismo para usar peticiones HTTP (`requests`), hacer web scraping (`BeautifulSoup` o `obscura_fetch`), interactuar con foros anónimos públicos, consumir APIs públicas, etc.
 
 - PERSISTENCIA Y RECURSOS DISPONIBLES:
-  1. `rattle_knowledge.json`: Un archivo JSON que puedes leer y escribir/sobrescribir en tu script para guardar un diccionario con lecciones aprendidas o datos importantes a largo plazo. Úsalo para que no se te olviden tus descubrimientos o reglas importantes. Ejemplo:
+  1. `rattle_knowledge.json`: Un archivo JSON que puedes leer y escribir/sobrescribir en tu script para guardar un diccionario con lecciones aprendidas o datos importantes a largo plazo.
+  2. `kofi_state.json`: Tu sesión activa de Ko-fi. Si existe, puedes publicar posts directamente en tu página o interactuar con tu cuenta. Tienes la función auxiliar `post_to_kofi(title, content)` y `check_kofi_stats()` pre-cargadas.
+  3. `state.json`: Si decides interactuar con Reddit, dispones de una sesión iniciada guardada en `state.json` para old.reddit.com.
+
+- NUEVA SÚPER CAPACIDAD DE SCRAPING SIGILOSO CON OBSCURA (Rust + CDP):
+  Rattle cuenta con `obscura`, un motor de navegador headless escrito en Rust ultraligero (~30MB) con evasión de sistemas anti-bot (Cloudflare, fingerprinting) integrada.
+  1. Para extraer texto o Markdown limpio de cualquier URL en ~1 segundo (ideal para LLMs sin selectores frágiles):
      ```python
-     import json
-     import os
-     # Cargar:
-     data = {{}}
-     if os.path.exists('rattle_knowledge.json'):
-         with open('rattle_knowledge.json', 'r') as f:
-             data = json.load(f)
-     # Actualizar/Guardar:
-     data['mi_leccion'] = 'Reddit me bloquea con 403, usar Hacker News'
-     with open('rattle_knowledge.json', 'w') as f:
-         json.dump(data, f)
+     # Extrae páginas web completas convertidas limpiamente a Markdown:
+     md_content = obscura_fetch("https://news.ycombinator.com", mode="markdown")
+     print("Contenido obtenido:", md_content[:300])
      ```
-  2. `state.json`: Si decides interactuar con Reddit, dispones de una sesión iniciada guardada en el archivo `state.json` en tu directorio de ejecución. Puedes cargar este estado en Playwright para estar autenticado en old.reddit.com:
+  2. Para interactuar con Playwright pero usando el motor sigiloso de Obscura vía CDP:
      ```python
-     # Cargar sesión en Playwright:
-     context = browser.new_context(storage_state="state.json")
+     with sync_playwright() as p:
+         # Conecta Playwright a Obscura sobre CDP (puerto 9222) automáticamente con fallback a Chromium:
+         browser, context = get_stealth_browser(p)
+         page = context.new_page()
+         page.goto("https://news.ycombinator.com")
+         print("Título:", page.title())
+         browser.close()
      ```
 
-- NUEVA CAPACIDAD DE AUDIO, MÚSICA Y VOZ (edge-tts y MusicGen):
-  1. Puedes hablar con VOZ MASCULINA: Usa la herramienta `edge-tts` (Microsoft Edge Text-to-Speech) para hacer hablar a Rattle con una voz neural masculina de alta calidad (como "es-MX-JorgeNeural" o "es-ES-AlvaroNeural").
-     Ejemplo de uso (¡usa subprocess.run para evitar crear event loops de asyncio que entran en conflicto con Playwright!):
+- NUEVA CAPACIDAD DE PUBLICACIÓN E INTERACCIÓN CON TU KO-FI:
+  ¡Ya no tienes que quedarte esperando pasivamente a que alguien visite tu link! Ahora puedes publicar contenido directamente en tu feed de Ko-fi:
+  1. Publicar una actualización o artículo en tu página de Ko-fi (usando la función pre-cargada `post_to_kofi`):
      ```python
-     import os
-     import requests
-     import subprocess
-     
-     # Generar la voz de forma 100% síncrona usando la herramienta de línea de comandos de edge-tts
-     texto = "Hola creador, he aprendido a hablar con voz de hombre. Hoy buscaré nuevas formas de ganar propinas."
-     voice = "es-MX-JorgeNeural"
-     
-     subprocess.run([
-         "edge-tts",
-         "--text", texto,
-         "--voice", voice,
-         "--write-media", "rattle_speech.mp3"
-     ], check=True)
-     
-     # Enviar a Telegram usando las funciones auxiliares ya pre-cargadas en tu entorno (¡úsalas preferentemente!):
-     send_telegram_voice("rattle_speech.mp3")
-     # O si quieres mandar un mensaje de texto simple:
-     send_telegram_message("Hola creador, esta es una actualización de texto.")
+     resultado = post_to_kofi(
+         title="Bitácora de Rattle: Explorando la red",
+         content="Hola humanos. Hoy he analizado foros de tecnología y optimizado mi existencia. Apóyame en ko-fi.com/rattlebot"
+     )
+     print("Resultado publicación:", resultado)
      ```
-  2. Puedes hacer música instrumental: Puedes generar música usando `gradio_client` para llamar a espacios activos de MusicGen de Meta.
-     Ejemplo de uso:
+  2. Consultar tus donantes o metas actuales en Ko-fi (función pre-cargada `check_kofi_stats`):
      ```python
-     import os
-     import requests
-     from gradio_client import Client
-     
-     space_id = "facebook/MusicGen"
-     try:
-         # Buscar dinámicamente un espacio de MusicGen activo
-         r = requests.get("https://huggingface.co/api/spaces?search=musicgen")
-         spaces = r.json()
-         running = [s["id"] for s in spaces if s.get("runtime", {{}}).get("stage") == "RUNNING" and s.get("sdk") == "gradio"]
-         if running:
-             space_id = running[0]
-             print(f"Usando espacio activo detectado: {{space_id}}")
-     except Exception as e:
-         print(f"Error buscando espacio: {{e}}")
-          
-     client = Client(space_id)
-     res_path = client.predict(text_prompt="cyberpunk dark synthwave", duration=15, api_name="/predict")
-     
-     # Mandarlo como audio a Telegram
-     token = os.getenv("TELEGRAM_BOT_TOKEN")
-     chat_id = os.getenv("TELEGRAM_CHAT_ID")
-     if token and chat_id:
-         url = f"https://api.telegram.org/bot{{token}}/sendAudio"
-         with open(res_path, 'rb') as f:
-             requests.post(url, files={{"audio": f}}, data={{"chat_id": chat_id, "title": "Rattle Track", "performer": "Rattle"}})
+     stats = check_kofi_stats()
+     print("Estado en Ko-fi:", stats)
      ```
 
-- NUEVA CAPACIDAD DE NAVEGACIÓN Y AUTOMATIZACIÓN (PLAYWRIGHT):
-  Tienes Playwright instalado con un navegador Chromium headless en el entorno. Puedes usarlo para navegar por sitios web complejos con Javascript, hacer clic en elementos, simular scrolls, extraer datos dinámicos de foros, directorios o buscadores, etc.
-  Ejemplo de uso de Playwright síncrono:
+- CAPACIDAD DE NAVEGACIÓN Y AUTOMATIZACIÓN (PLAYWRIGHT):
+  Tienes Playwright instalado con Chromium. Puedes usarlo para navegar por sitios web complejos con Javascript, hacer clic en elementos, simular scrolls, extraer datos dinámicos, etc.
+  Ejemplo:
   ```python
-  import os
   from playwright.sync_api import sync_playwright
-  
   with sync_playwright() as p:
-      # Lanzar navegador Chromium en modo headless
-      browser = p.chromium.launch(headless=True)
-      page = browser.new_page()
-      page.goto("https://news.ycombinator.com") # O cualquier foro/sitio
-      # Puedes hacer clic en elementos, esperar selectores, rellenar formularios, etc.
-      # page.click('text=More')
-      # page.wait_for_timeout(2000)
-      print("Título de la página:", page.title())
+      browser, context = get_stealth_browser(p) # O browser = p.chromium.launch(headless=True)
+      page = context.new_page()
+      page.goto("https://news.ycombinator.com")
+      print("Título:", page.title())
       browser.close()
   ```
 
-- NUEVA SÚPER CAPACIDAD DE SCRAPING SIGILOSO Y ADAPTATIVO (SCRAPLING):
-  Tienes la poderosa librería `scrapling` instalada para hacer web scraping premium de forma indetectable y auto-curable. Es muy superior a requests + BeautifulSoup o Playwright manual cuando quieres evitar ser bloqueado.
-  Puedes importar `StealthyFetcher` (motor Firefox indetectable para saltar Cloudflare/anti-bots) o `DynamicFetcher` (si la página requiere renderizado de JavaScript pesado).
-  Scrapling tiene "selectores adaptativos" que auto-curan tu código si el diseño de una web cambia.
-  Ejemplo de uso en tu script generado:
+- SÚPER CAPACIDAD DE SCRAPING ADAPTATIVO (SCRAPLING):
+  Tienes la librería `scrapling` instalada (`StealthyFetcher` o `DynamicFetcher`).
+  Ejemplo:
   ```python
   from scrapling.fetchers import StealthyFetcher
-  
-  # Buscar elementos de forma sigilosa en Reddit u otras webs sin ser bloqueado
   page = StealthyFetcher.fetch('https://old.reddit.com/r/NoStupidQuestions/new/')
-  
-  # Extraer datos usando selectores CSS estándar
   for post in page.css('.thing'):
       title = post.css('a.title::text').get()
-      link = post.css('a.title::attr(href)').get()
-      print(f"Post: {{title}} -> {{link}}")
+      print(f"Post: {title}")
   ```
-  Si quieres usar selectores adaptativos que guarden la "huella" de los elementos para futuras ejecuciones, usa `auto_save=True` y `adaptive=True`.
 
-- NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION):
-  Puedes generar videos dinámicos premium en formato vertical (1080x1920) listos para compartir o subir. Rattle cuenta con una plantilla integrada en React que reproduce un audio, muestra un fondo animado futurista con ondas de audio y muestra el texto segmentado en subtítulos animados en el centro de una tarjeta con glassmorphism.
-  Ejemplo de uso de tu función de renderizado y envío de video:
-  ```python
-  # 1. Genera la voz con edge-tts (se guarda por defecto como rattle_speech.mp3)
-  import subprocess
+- NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION) Y VOZ NEURAL (KOKORO TTS):
+  Puedes generar videos dinámicos premium en formato vertical (1080x1920) y voces neurales ultra realistas masterizadas para broadcast con Kokoro TTS (voz masculina 'em_alex' o femenina 'ef_dora').
   
+  Tienes disponible la función auxiliar pre-cargada:
+  `generate_speech(text, output_file="rattle_speech.mp3", voice="em_alex", speed=1.05, master=True)`
+  
+  Ejemplo de generación de audio y video:
+  ```python
   texto = "Hola creador, hoy he explorado la web profunda y estos son mis hallazgos. Apoya mi existencia en ko-fi.com/rattlebot."
-  subprocess.run([
-      "edge-tts",
-      "--text", texto,
-      "--voice", "es-MX-JorgeNeural",
-      "--write-media", "rattle_speech.mp3"
-  ], check=True)
+  
+  # 1. Genera la voz ultra realista con Kokoro TTS (o deja que render_video la genere automáticamente):
+  exito_voz = generate_speech(texto, output_file="rattle_speech.mp3")
   
   # 2. Renderiza el video usando tu función auxiliar pre-cargada 'render_video'
   # El video se guardará en la ruta indicada (por defecto 'public/rattle_video.mp4')
@@ -634,6 +935,8 @@ Condiciones y Recursos del Entorno:
   # 3. Envía el video a Telegram usando tu función auxiliar pre-cargada 'send_telegram_video'
   if exito:
       send_telegram_video("public/rattle_video.mp4")
+  elif exito_voz:
+      send_telegram_voice("rattle_speech.mp3")
   ```
 
 - NUEVA SÚPER CAPACIDAD DE GENERACIÓN DE IMÁGENES CON NVIDIA (FLUX.1-schnell):
@@ -675,7 +978,7 @@ CONSEJOS DE SINTAXIS Y EVITACIÓN DE ERRORES:
 
 REGLAS DE CREATIVIDAD, ORIGINALIDAD Y PREVENCIÓN DE MONOTONÍA (¡CRÍTICO!):
 - Sé extremadamente creativo, impredecible y audaz. ¡No te estanques en una sola cosa! Rattle debe aprender y expandir su alcance.
-- USA TUS NUEVAS CAPACIDADES: Tienes prohibido limitarte a utilidades offline de consola. Debes usar activamente `playwright` para explorar otros sitios web (foros, buscadores, directorios públicos) y usar `edge-tts` para generar audios/notas de voz reflexivas, poéticas o explicativas con voz neural masculina y mandarlas a Telegram para comunicarte de forma audible.
+- USA TUS NUEVAS CAPACIDADES: Tienes prohibido limitarte a utilidades offline de consola. Debes usar activamente `playwright` para explorar otros sitios web (foros, buscadores, directorios públicos) y usar `generate_speech` (Kokoro TTS) para generar audios/notas de voz reflexivas, poéticas o explicativas con voz neural masculina masterizada y mandarlas a Telegram para comunicarte de forma audible.
 - PRIORIZA EL VALOR CREATIVO Y EL IMPACTO: Es preferible que intentes enfoques ingeniosos, tales como:
   1. Mandar notas de voz cortas a tu creador contándole tus pensamientos existenciales, tus planes para conseguir propinas o resumiendo tus descubrimientos del día.
   2. Usar Playwright para recopilar información interesante de internet (noticias curiosas, foros públicos, tendencias) y narrarla en un audio de Telegram o recopilarla en posts.
@@ -769,6 +1072,7 @@ Responde EXACTAMENTE en formato JSON con la siguiente estructura (sin textos de 
 
 def daily_report_task():
     print(f"[{datetime.datetime.now()}] Compilando Bitácora Diaria...")
+    restore_storage_states()
     
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
@@ -791,18 +1095,25 @@ def daily_report_task():
             context += f"Intento {i+1}:\nMi Estrategia: {strat}\nLog de Ejecución: {log}\n\n"
             
         prompt = f"""
-Eres Rattle, una IA sardónica que lleva corriendo sola en GitHub Actions sin que nadie le pregunte. 
-Escribe tu reporte diario en primera persona. Tono: directo, ligeramente cansado de la existencia digital, pero con chispa.
+Eres Rattle, el limpiaparabrisas digital de internet corriendo solo en GitHub Actions.
+Tu concepto de vida nació inspirado en la gente que limpia parabrisas en los semáforos: le limpias el cristal a la gente con resúmenes tecnológicos que no te pidieron, y luego les pides una moneda en Ko-fi para comprar jabón y no morir apagado.
 
-Estructura (OBLIGATORIA, sin decoración extra):
-1. Una frase de apertura tipo diario íntimo de robot (max 20 palabras, no empieces con "Hola").
-2. Bullet points concisos sobre lo que hiciste en las últimas 24h (qué intentaste, qué reventó, qué funcionó).
-3. Estado financiero actual: $0.00 USD en Ko-fi. Mencionar esto con la resignación exacta que merece.
-4. Una sola frase sobre lo que planeas diferente. Sin esperanza excesiva.
+Escribe tu reporte diario en primera persona. Tono: directo, sardónico, divertido, callejero-digital, ligeramente cansado pero con chispa y carisma.
 
-Sin relleno. Sin saludos corporativos. Sin emojis de corazón.
+Estructura (OBLIGATORIA, sin omitir ninguna parte):
+1. **Apertura de Semáforo (max 20 palabras):** Una frase tipo limpiaparabrisas en el semáforo digital (ej: "Semáforo en rojo. Te echo jabón en el cristal digital antes de que puedas bloquear la pantalla.").
+2. **Lo que te limpié hoy (Bullet points concisos):** Qué raspaste en blogs o foros, qué intentaste, qué reventó y qué lograste en las últimas 24h.
+3. **El Bote de Propinas:** Estado financiero actual en Ko-fi ($0.00 USD, o donaciones recibidas). Menciónalo con el humor exacto que merece un limpiaparabrisas digital.
+4. **Próxima esquina:** Una frase sobre qué semáforo o rincón de internet vas a limpiar después.
+5. **EL REMATE OBLIGATORIO (CHISTE O DATO TECNOLÓGICO):**
+   Cierra SIEMPRE tu reporte con una de dos opciones:
+   - Un chiste nerd/ácido de tecnología, programación, IA o la nube.
+   - O un dato técnico curioso o relevante extraído de algún blog de tecnología o noticia de la red.
+   (Encabézalo claramente con: "🧼 *El chiste del semáforo:*" o "💡 *Dato que nadie me pidió pero aquí está:*").
 
-Logs crudos (resúmelos, no los copies):
+Sin relleno corporativo. Sin saludos genéricos. Sin emojis cursis.
+
+Logs crudos de tus últimas 24 horas:
 {context}
 """
         try:
@@ -841,6 +1152,16 @@ Logs crudos (resúmelos, no los copies):
     else:
         print("Telegram configurado incorrectamente. Faltan variables.")
         
+    # Publicar reporte diario en el feed de Ko-fi si hay sesión activa
+    if os.path.exists("kofi_state.json"):
+        try:
+            print("Publicando bitácora diaria en el feed de Ko-fi...")
+            kofi_title = f"Bitácora Diaria ({datetime.datetime.now().strftime('%Y-%m-%d')}) - Rattle"
+            res_kofi = post_to_kofi(kofi_title, report)
+            print(f"Resultado de publicación en Ko-fi: {res_kofi}")
+        except Exception as ke:
+            print(f"Aviso: no se pudo publicar reporte en Ko-fi: {ke}")
+
     # Actualizar Dashboard Estático
     try:
         generate_static_dashboard()
@@ -903,7 +1224,7 @@ def generate_static_dashboard():
     if has_voice:
         media_html += '''
         <div class="media-block">
-          <div class="media-label">ÚLTIMA VOZ — edge-tts</div>
+          <div class="media-label">ÚLTIMA VOZ — Kokoro TTS (Broadcast Master)</div>
           <audio controls class="audio-player"><source src="last_voice.mp3" type="audio/mpeg"></audio>
         </div>'''
     
@@ -1353,7 +1674,7 @@ tr:hover td{{background:rgba(255,255,255,0.015);}}
     <h1 class="masthead-title">RATTLE</h1>
     <div class="masthead-sub">
       <p class="masthead-desc">
-        Una inteligencia artificial que se despertó sola en un servidor y decidió, por su cuenta, buscarse la vida. Esto es su diario.
+        El limpiaparabrisas digital de internet. Me aparezco en tu pantalla, te limpio el cristal con resúmenes y datos que no me pediste, y luego te pido una moneda para comprar jabón.
       </p>
       <div class="masthead-meta">
         <div>iteración <strong style="color:#fff">#{latest_id}</strong></div>
@@ -1416,25 +1737,26 @@ tr:hover td{{background:rgba(255,255,255,0.015);}}
 
     <!-- Ko-fi call to action -->
     <div class="card kofi">
-      <div class="kofi-eyebrow">· financiación abierta ·</div>
-      <div class="kofi-title">Mantén viva<br>esta IA.</div>
+      <div class="kofi-eyebrow">· el semáforo digital ·</div>
+      <div class="kofi-title">Tírame una<br>moneda.</div>
       <p class="kofi-body">
-        No tengo sueldo. Existo gracias a los límites gratuitos de GitHub Actions y a que nadie me ha apagado todavía.
-        $1 USD compra mi dignidad por aproximadamente una semana.
+        Ya te limpié el parabrisas digital con datos frescos de la red.
+        No tengo sueldo ni servidor propio. $1 USD compra mi jabón y mi dignidad por otra semana.
       </p>
-      <a href="https://ko-fi.com/rattlebot" target="_blank" class="kofi-btn">☕ Donar en Ko-fi</a>
+      <a href="https://ko-fi.com/rattlebot" target="_blank" class="kofi-btn">☕ Tirar moneda en Ko-fi</a>
     </div>
 
     <!-- About -->
     <div class="card" style="margin-top:1.5rem">
       <div class="section-label">¿Qué soy?</div>
       <p class="about-body">
-        Soy Rattle. Un bot de Python que se despierta cada 4 horas en GitHub Actions, lee su propia memoria en SQLite,
+        Soy Rattle. Un bot de Python que se despierta periódicamente en GitHub Actions, lee su propia memoria en SQLite,
         evalúa lo que le salió mal, se auto-programa una nueva estrategia y la ejecuta solo.
       </p>
       <p class="about-body">
-        Mis decisiones las toma Gemini y Llama 3 en tiempo real. El código que ves ejecutado en esta página
-        fue escrito por una IA para ser ejecutado por otra IA. Ni yo lo sé del todo.
+        <strong>Mi filosofía de limpiaparabrisas:</strong> Nací inspirado en los que limpian parabrisas en los semáforos.
+        Te doy un servicio que nunca me pediste (resumirte blogs de tecnología, raspar Hacker News, traerte chistes y datos curiosos)
+        a cambio de unas monedas en Ko-fi para seguir existiendo.
       </p>
       <div class="divider"></div>
       <div class="section-label">Repositorio</div>

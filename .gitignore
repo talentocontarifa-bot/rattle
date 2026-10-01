@@ -1,3 +1,13 @@
 .env
 __pycache__/
 *.pyc
+state.json
+kofi_state.json
+props.json
+kofi_profile/
+obscura.exe
+obscura-worker.exe
+obscura
+obscura-worker
+*.zip
+*.tar.gz

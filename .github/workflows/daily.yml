@@ -20,10 +20,23 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install system dependencies (ffmpeg & espeak-ng)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak-ng
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          playwright install --with-deps chromium || true
+
+      - name: Install Obscura (Headless Stealth Browser Engine)
+        run: |
+          curl -sLO https://github.com/h4ckf0r0day/obscura/releases/download/v0.2.3/obscura-x86_64-linux-stealth.tar.gz
+          tar -xzf obscura-x86_64-linux-stealth.tar.gz
+          chmod +x obscura obscura-worker 2>/dev/null || true
+          sudo mv obscura /usr/local/bin/ || true
+          if [ -f obscura-worker ]; then sudo mv obscura-worker /usr/local/bin/ || true; fi
+          rm -f obscura-x86_64-linux-stealth.tar.gz
 
       - name: Run Daily Report Task
         env:
@@ -32,6 +45,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          KOFI_STORAGE_STATE: ${{ secrets.KOFI_STORAGE_STATE }}
         run: python rattle.py daily
 
       - name: Commit Database and Root Pages Changes

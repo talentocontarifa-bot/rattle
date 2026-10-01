@@ -277,7 +277,7 @@ export const MainVideo: React.FC<MainVideoProps> = ({
             marginTop: "16px"
           }}
         >
-          RATTLE AI SYSTEMS INC.
+          RATTLE · EL LIMPIAPARABRISAS DIGITAL DE INTERNET
         </span>
       </div>
 

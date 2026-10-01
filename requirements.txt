@@ -6,3 +6,5 @@ gradio_client==1.3.0
 playwright
 edge-tts
 scrapling[fetchers]
+kokoro
+soundfile
