@@ -53,14 +53,12 @@ jobs:
         run: |
           playwright install --with-deps chromium
 
-      - name: Install Obscura (Headless Stealth Browser Engine)
+      - name: Setup Obscura (Rust Headless Browser)
         run: |
-          curl -sLO https://github.com/h4ckf0r0day/obscura/releases/download/v0.2.3/obscura-x86_64-linux-stealth.tar.gz
-          tar -xzf obscura-x86_64-linux-stealth.tar.gz
-          chmod +x obscura obscura-worker 2>/dev/null || true
-          sudo mv obscura /usr/local/bin/ || true
-          if [ -f obscura-worker ]; then sudo mv obscura-worker /usr/local/bin/ || true; fi
-          rm -f obscura-x86_64-linux-stealth.tar.gz
+          mkdir -p bin
+          curl -sL https://github.com/h4ckf0r0day/obscura/releases/download/v0.2.3/obscura-x86_64-linux.tar.gz | tar -xz -C bin
+          chmod +x bin/obscura bin/obscura-worker 2>/dev/null || true
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
 
       - name: Run Scheduled Task
         env:

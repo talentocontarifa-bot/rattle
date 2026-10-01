@@ -235,7 +235,7 @@ def send_telegram_message(text):
         print(f"Telegram helper error: {e}")
         return False
 
-def send_telegram_voice(file_path):
+def send_telegram_voice(file_path, caption=None):
     if should_silence_telegram():
         print(f"Telegram Voice Bypassed (Silent/Autonomous Mode): {file_path}")
         return True
@@ -243,15 +243,18 @@ def send_telegram_voice(file_path):
         print("Telegram helper: Token or Chat ID not configured.")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendVoice"
+    data = {"chat_id": TELEGRAM_CHAT_ID}
+    if caption:
+        data["caption"] = caption
     try:
         with open(file_path, "rb") as f:
-            r = requests.post(url, files={"voice": f}, data={"chat_id": TELEGRAM_CHAT_ID}, timeout=30)
+            r = requests.post(url, files={"voice": f}, data=data, timeout=30)
         return r.status_code == 200
     except Exception as e:
         print(f"Telegram helper error: {e}")
         return False
 
-def send_telegram_video(file_path):
+def send_telegram_video(file_path, caption=None):
     if should_silence_telegram():
         print(f"Telegram Video Bypassed (Silent/Autonomous Mode): {file_path}")
         return True
@@ -259,9 +262,12 @@ def send_telegram_video(file_path):
         print("Telegram helper: Token or Chat ID not configured.")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendVideo"
+    data = {"chat_id": TELEGRAM_CHAT_ID}
+    if caption:
+        data["caption"] = caption
     try:
         with open(file_path, "rb") as f:
-            r = requests.post(url, files={"video": f}, data={"chat_id": TELEGRAM_CHAT_ID}, timeout=90)
+            r = requests.post(url, files={"video": f}, data=data, timeout=90)
         return r.status_code == 200
     except Exception as e:
         print(f"Telegram helper error: {e}")
@@ -703,6 +709,8 @@ def execute_code(code_string):
     import random
     import logging
     from playwright.sync_api import sync_playwright
+    import obscura_manager
+    from crawl_helper import crawl_url
     
     custom_globals = globals().copy()
     custom_globals.update({
@@ -728,7 +736,9 @@ def execute_code(code_string):
         'find_obscura': find_obscura,
         'post_to_kofi': post_to_kofi,
         'check_kofi_stats': check_kofi_stats,
-        'KOFI_URL': KOFI_URL
+        'KOFI_URL': KOFI_URL,
+        'obscura_manager': obscura_manager,
+        'crawl_url': crawl_url
     })
     
     with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
@@ -765,6 +775,8 @@ def execute_code(code_string):
                 print(f"Limpieza: No se pudo eliminar {tf}: {e}")
     
     output = f.getvalue()
+    if sys.platform == "win32" and sys.stdout.encoding:
+        output = output.encode(sys.stdout.encoding, errors='replace').decode(sys.stdout.encoding)
     if error_msg:
         output += "\n--- ERROR EN TIEMPO DE EJECUCIÓN ---\n" + error_msg
         
@@ -907,6 +919,44 @@ Condiciones y Recursos del Entorno:
   for post in page.css('.thing'):
       title = post.css('a.title::text').get()
       print(f"Post: {title}")
+  ```
+
+- NUEVO SÚPER PODER DE NAVEGACIÓN EN RUST ULTRALIGERA (OBSCURA - ~30 MB RAM):
+  Tienes integrado Obscura, un motor de navegador headless en Rust con footprint mínimo de memoria (~30 MB de RAM frente a los 300+ MB de Chromium) y arranque instantáneo (~85ms).
+  Es ideal para ahorrar tiempo y recursos en GitHub Actions y evitar límites de memoria.
+  Formas de usarlo:
+  1. Fetch directo y ultra-rápido:
+     ```python
+     # Obscura evalúa JavaScript y devuelve el resultado en milisegundos
+     resultado = obscura_fetch('https://news.ycombinator.com', eval_js='document.title')
+     print("Resultado rápido Obscura:", resultado)
+     ```
+  2. Vía Chrome DevTools Protocol (CDP) con Playwright:
+     ```python
+     from playwright.sync_api import sync_playwright
+     
+     start_obscura_cdp() # Inicia el daemon CDP en puerto 9222
+     with sync_playwright() as p:
+         browser = p.chromium.connect_over_cdp("http://127.0.0.1:9222")
+         page = browser.new_page()
+         page.goto("https://news.ycombinator.com")
+         print("Página navegada con Obscura en Rust:", page.title())
+         browser.close()
+     ```
+
+- NUEVO SÚPER PODER DE EXTRACCIÓN CON IA SIN SELECTORES FRÁGILES (CRAWL4AI):
+  ¡Se acabaron los selectores CSS que se rompen cuando las páginas cambian de diseño!
+  Tienes disponible `crawl_url(url, use_obscura=True)`:
+  Crawl4AI analiza la página web y extrae automáticamente un Markdown limpio y estructurado listo para que lo leas y analices como IA, extrayendo enlaces limpios, tablas y artículos completos.
+  Además, al usar `use_obscura=True`, se conecta internamente a tu navegador Obscura en Rust para gastar únicamente ~30MB de memoria.
+  Ejemplo de uso:
+  ```python
+  # Extraer datos de cualquier sitio web sin preocuparte por selectores CSS frágiles
+  crawl_result = crawl_url("https://news.ycombinator.com", use_obscura=True)
+  if crawl_result.success:
+      print("--- CONTENIDO LIMPIO EN MARKDOWN ---")
+      print(crawl_result.markdown[:1000]) # Texto estructurado y legible
+      print("Enlaces encontrados:", crawl_result.links[:5])
   ```
 
 - NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION) Y VOZ NEURAL (KOKORO TTS):

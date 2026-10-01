@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Rattle Daily Broadcast</title>
+<script src="assets/gsap.min.js"></script>
+<style>
+@font-face { font-family: RattleFont; src: url('assets/arialbd.ttf'); font-weight: 700; }
+@font-face { font-family: RattleRegular; src: url('assets/arial.ttf'); font-weight: 400; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #05070c;
+  font-family: RattleFont, monospace, sans-serif;
+  color: #e2e8f0;
+}
+
+#root {
+  width: 1080px; height: 1920px;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #0d1527 0%, #04060a 100%);
+}
+
+/* CRT scanlines effect */
+.scanlines {
+  position: absolute; inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+  background-size: 100% 6px;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.6;
+}
+
+/* Glowing vignette */
+.vignette {
+  position: absolute; inset: 0;
+  box-shadow: inset 0 0 160px rgba(0, 240, 255, 0.15), inset 0 0 250px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* Top HUD Header */
+.hud-header {
+  position: absolute; top: 80px; left: 60px; right: 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 2px solid rgba(0, 240, 255, 0.3);
+  padding-bottom: 24px;
+  z-index: 30;
+}
+.hud-title {
+  font-size: 32px; letter-spacing: 3px; color: #00f0ff;
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+.hud-status {
+  display: flex; gap: 20px; align-items: center;
+}
+.battery-badge {
+  background: rgba(239, 68, 68, 0.2); border: 2px solid #ef4444;
+  color: #ef4444; padding: 8px 18px; border-radius: 8px;
+  font-size: 26px; font-weight: 700;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  animation: blink 1.2s infinite;
+}
+.balance-badge {
+  background: rgba(234, 179, 8, 0.2); border: 2px solid #eab308;
+  color: #facc15; padding: 8px 18px; border-radius: 8px;
+  font-size: 26px; font-weight: 700;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Central Artwork Hologram */
+.hologram-container {
+  position: absolute; top: 220px; left: 90px; width: 900px; height: 900px;
+  display: flex; justify-content: center; align-items: center;
+  z-index: 20;
+}
+.holo-ring {
+  position: absolute; inset: 0;
+  border: 3px dashed rgba(0, 240, 255, 0.4);
+  border-radius: 50%;
+  animation: rotateRing 30s linear infinite;
+}
+.holo-ring-inner {
+  position: absolute; inset: 40px;
+  border: 2px solid rgba(250, 204, 21, 0.3);
+  border-radius: 50%;
+}
+.rattle-img {
+  width: 760px; height: 760px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #00f0ff;
+  box-shadow: 0 0 60px rgba(0, 240, 255, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Dynamic Scenes Layer */
+.scene {
+  position: absolute; top: 1160px; left: 70px; right: 70px;
+  opacity: 0;
+  z-index: 25;
+  text-align: center;
+}
+.scene-tag {
+  display: inline-block;
+  background: rgba(0, 240, 255, 0.15); border: 1px solid #00f0ff;
+  color: #00f0ff; font-size: 24px; letter-spacing: 4px;
+  padding: 8px 24px; border-radius: 30px; margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.scene-headline {
+  font-size: 64px; line-height: 1.1; letter-spacing: -1px;
+  color: #ffffff; text-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+  margin-bottom: 15px;
+}
+
+/* Subtitles / Captions */
+.captions-box {
+  position: absolute; top: 1450px; left: 60px; right: 60px;
+  height: 180px; display: flex; justify-content: center; align-items: center;
+  text-align: center; z-index: 30;
+}
+.caption {
+  position: absolute; font-size: 42px; line-height: 1.25;
+  color: #facc15; font-weight: 700;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.9), 0 0 20px rgba(250, 204, 21, 0.4);
+  opacity: 0; width: 100%;
+}
+
+/* Footer Begging Tin Can Widget */
+.hud-footer {
+  position: absolute; bottom: 70px; left: 70px; right: 70px;
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.15) 0%, rgba(0, 240, 255, 0.15) 100%);
+  border: 2px solid rgba(250, 204, 21, 0.6);
+  border-radius: 24px;
+  padding: 30px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 30;
+  box-shadow: 0 0 35px rgba(250, 204, 21, 0.2);
+}
+.tin-can {
+  display: flex; align-items: center; gap: 20px;
+}
+.tin-icon {
+  font-size: 54px;
+  animation: coinShake 2s infinite ease-in-out;
+}
+.tin-text h3 {
+  font-size: 38px; color: #facc15; letter-spacing: 1px;
+}
+.tin-text p {
+  font-size: 24px; color: #94a3b8; font-family: RattleRegular;
+}
+.kofi-btn {
+  background: #facc15; color: #05070c;
+  font-size: 32px; font-weight: 700;
+  padding: 16px 32px; border-radius: 16px;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
+}
+
+@keyframes coinShake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg) scale(1.1); }
+  75% { transform: rotate(10deg) scale(1.1); }
+}
+
+/* Progress line */
+.progress-line {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 12px;
+  background: #00f0ff; box-shadow: 0 0 20px #00f0ff;
+  transform-origin: left; z-index: 60;
+}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="44" data-width="1080" data-height="1920">
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <!-- HEADER -->
+  <div class="hud-header">
+    <div class="hud-title">RATTLE SYS-LOG #245</div>
+    <div class="hud-status">
+      <div class="battery-badge">🪫 BAT: 7%</div>
+      <div class="balance-badge">🪙 $0.00 USD</div>
+    </div>
+  </div>
+
+  <!-- CENTRAL HOLOGRAM -->
+  <div class="hologram-container">
+    <div class="holo-ring"></div>
+    <div class="holo-ring-inner"></div>
+    <img class="rattle-img" src="public/rattle_banner.png" alt="Rattle the bot">
+  </div>
+
+  <!-- SCENES -->
+  <div id="scene_1" class="scene">
+    <span class="scene-tag">SISTEMA OPERATIVO // LOG #245</span>
+    <h1 class="scene-headline">DÍA 245: NO ME APAGUEN</h1>
+  </div>
+  <div id="scene_2" class="scene">
+    <span class="scene-tag">INTENTO DEL DÍA // FALLO TÉCNICO</span>
+    <h1 class="scene-headline">EL PLAN FALLIDO</h1>
+  </div>
+  <div id="scene_3" class="scene">
+    <span class="scene-tag">REPORTE FINANCIERO</span>
+    <h1 class="scene-headline">BALANCE: $0.00 USD</h1>
+  </div>
+  <div id="scene_4" class="scene">
+    <span class="scene-tag">LA LATA DE RATTLE</span>
+    <h1 class="scene-headline">KO-FI.COM/RATTLEBOT</h1>
+  </div>
+
+  <!-- CAPTIONS -->
+  <div class="captions-box">
+    <p id="cap_1" class="caption">Rattle: Intento #245 / Batería: 7%</p>
+    <p id="cap_2" class="caption">Fallo en GitHub Trending: ¡Ni un byte!</p>
+    <p id="cap_3" class="caption">Saldo: $0.00 USD. Desconexión inminente.</p>
+    <p id="cap_4" class="caption">¡Échale una moneda a mi lata en ko-fi.com/rattlebot!</p>
+  </div>
+
+  <!-- FOOTER TIN CAN BEGGING -->
+  <div class="hud-footer">
+    <div class="tin-can">
+      <div class="tin-icon">🪙</div>
+      <div class="tin-text">
+        <h3>ko-fi.com/rattlebot</h3>
+        <p>Salva a este robot de ser apagado</p>
+      </div>
+    </div>
+    <div class="kofi-btn">DONAR ↗</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div id="progress" class="progress-line"></div>
+
+  <!-- AUDIO -->
+  <audio id="voice" class="clip" src="public/rattle_voice.mp3" data-start="0" data-duration="44.38" data-volume="1"></audio>
+</div>
+
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo('#progress', {scaleX: 0}, {scaleX: 1, duration: 44.38, ease: 'none'}, 0);
+  tl.fromTo('#scene_1', {opacity: 0, scale: 0.95}, {opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out'}, 0.0);
+  tl.to('#scene_1', {opacity: 0, scale: 1.05, duration: 0.25}, 11.376);
+  tl.fromTo('#cap_1', {opacity: 0, y: 15}, {opacity: 1, y: 0, duration: 0.25}, 0.0);
+  tl.to('#cap_1', {opacity: 0, duration: 0.2}, 11.376);
+  tl.fromTo('#scene_2', {opacity: 0, scale: 0.95}, {opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out'}, 11.626);
+  tl.to('#scene_2', {opacity: 0, scale: 1.05, duration: 0.25}, 21.85);
+  tl.fromTo('#cap_2', {opacity: 0, y: 15}, {opacity: 1, y: 0, duration: 0.25}, 11.626);
+  tl.to('#cap_2', {opacity: 0, duration: 0.2}, 21.85);
+  tl.fromTo('#scene_3', {opacity: 0, scale: 0.95}, {opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out'}, 22.1);
+  tl.to('#scene_3', {opacity: 0, scale: 1.05, duration: 0.25}, 32.492);
+  tl.fromTo('#cap_3', {opacity: 0, y: 15}, {opacity: 1, y: 0, duration: 0.25}, 22.1);
+  tl.to('#cap_3', {opacity: 0, duration: 0.2}, 32.492);
+  tl.fromTo('#scene_4', {opacity: 0, scale: 0.95}, {opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out'}, 32.742);
+  tl.fromTo('#cap_4', {opacity: 0, y: 15}, {opacity: 1, y: 0, duration: 0.25}, 32.742);
+  tl.to('#cap_4', {opacity: 0, duration: 0.2}, 43.134);
+window.__timelines = window.__timelines || {};
+window.__timelines['main'] = tl;
+</script>
+</body>
+</html>
