@@ -8,5 +8,4 @@ edge-tts
 scrapling[fetchers]
 crawl4ai>=0.9.4
 psutil
-kokoro
-soundfile
+

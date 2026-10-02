@@ -36,10 +36,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 KOFI_URL = "https://ko-fi.com/rattlebot"
 KOFI_SPOKEN_URL = "https://ko-fi.com/rattlebot"
 KOFI_SPOKEN = "https://ko-fi.com/rattlebot"
-VOICE = "es-MX-JorgeNeural"
-TTS_ENGINE = os.getenv("TTS_ENGINE", "kokoro")
-KOKORO_VOICE = os.getenv("KOKORO_VOICE", "em_alex")
-KOKORO_SPEED = float(os.getenv("KOKORO_SPEED", "1.05"))
+VOICE = os.getenv("VOICE", "es-MX-JorgeNeural")
 
 MASTER_FILTER = (
     "highpass=f=80,"
@@ -330,69 +327,27 @@ def generate_nvidia_image(prompt, filename="rattle_image.png"):
 
 def generate_speech(text, output_file="rattle_speech.mp3", voice=None, speed=None, master=True):
     """
-    Genera audio para Rattle utilizando Kokoro TTS (em_alex) con ecualización broadcast.
-    Fallback automático a edge-tts (JorgeNeural) en caso de contingencia.
+    Genera audio para Rattle utilizando edge-tts (es-MX-JorgeNeural) con ecualización broadcast.
     """
     if not text or not str(text).strip():
         print("⚠️ generate_speech: texto vacío recibido.")
         return False
 
     clean_text = str(text).strip()
-    voice = voice or KOKORO_VOICE
-    speed = speed if speed is not None else KOKORO_SPEED
+    voice = voice or VOICE
     out_dir = os.path.dirname(os.path.abspath(output_file))
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
 
-    # 1. Intentar con Kokoro TTS si TTS_ENGINE es kokoro
-    if TTS_ENGINE.lower() != "edge-tts":
-        try:
-            print(f"🎙️ Generando voz con Kokoro TTS ({voice}, speed {speed}x)...")
-            from kokoro import KPipeline
-            import soundfile as sf
-            import numpy as np
-            import tempfile
-
-            lang_code = "e" if voice.startswith("e") else "a"
-            pipeline = KPipeline(lang_code=lang_code, repo_id='hexgrad/Kokoro-82M')
-            generator = pipeline(clean_text, voice=voice, speed=speed)
-            chunks = []
-            for _, _, audio in generator:
-                chunks.append(audio)
-
-            if chunks:
-                full_audio = np.concatenate(chunks)
-                with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp_wav:
-                    tmp_wav_path = tmp_wav.name
-                try:
-                    sf.write(tmp_wav_path, full_audio, 24000)
-                    ffmpeg_bin = os.environ.get("FFMPEG_PATH", "ffmpeg")
-                    cmd = [ffmpeg_bin, "-y", "-i", tmp_wav_path]
-                    if master:
-                        cmd.extend(["-af", MASTER_FILTER])
-                    cmd.extend(["-c:a", "libmp3lame", "-b:a", "192k", output_file])
-                    subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    print(f"✅ Audio generado exitosamente con Kokoro ({output_file})")
-                    return True
-                finally:
-                    if os.path.exists(tmp_wav_path):
-                        try:
-                            os.remove(tmp_wav_path)
-                        except OSError:
-                            pass
-        except Exception as e:
-            print(f"⚠️ Error con Kokoro TTS ({e}). Pasando a fallback con edge-tts...")
-
-    # 2. Fallback a edge-tts
     try:
-        print(f"🎙️ Generando voz de respaldo con edge-tts (JorgeNeural)...")
-        edge_voice = "es-MX-JorgeNeural"
+        print(f"🎙️ Generando voz con edge-tts ({voice})...")
         import tempfile
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp_mp3:
             tmp_mp3_path = tmp_mp3.name
 
         try:
-            cmd = ["edge-tts", "--text", clean_text, "--voice", edge_voice, "--rate=+8%", "--write-media", tmp_mp3_path]
+            python_bin = sys.executable or "python"
+            cmd = [python_bin, "-m", "edge_tts", "--text", clean_text, "--voice", voice, "--rate=+8%", "--write-media", tmp_mp3_path]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
             ffmpeg_bin = os.environ.get("FFMPEG_PATH", "ffmpeg")
@@ -421,7 +376,7 @@ def render_video(text, audio_path="rattle_speech.mp3", output_path="public/rattl
     os.makedirs("public", exist_ok=True)
 
     if not os.path.exists(audio_path) and text:
-        print(f"Audio no encontrado en {audio_path}. Generando automáticamente con Kokoro TTS...")
+        print(f"Audio no encontrado en {audio_path}. Generando automáticamente con edge-tts...")
         generate_speech(text, output_file=audio_path)
     
     dest_audio = os.path.join("public", "rattle_speech.mp3")
@@ -826,7 +781,7 @@ def hourly_task():
         mode_instruction = """
 === MODO DE COMUNICACIÓN ABIERTO (HORA DE REPORTE) ===
 * Tienes permitido comunicarte libremente con tu creador en Telegram usando send_telegram_message, send_telegram_voice o send_telegram_video.
-* Aprovecha esta oportunidad para enviarle un reporte visual o audible sobre tus descubrimientos y tu estado actual. ¡Puedes usar generate_speech (Kokoro TTS) y render_video para crear y enviarle un video interactivo o una nota de voz!
+* Aprovecha esta oportunidad para enviarle un reporte visual o audible sobre tus descubrimientos y tu estado actual. ¡Puedes usar generate_speech (edge-tts) y render_video para crear y enviarle un video interactivo o una nota de voz!
 """
 
     prompt = f"""
@@ -959,17 +914,17 @@ Condiciones y Recursos del Entorno:
       print("Enlaces encontrados:", crawl_result.links[:5])
   ```
 
-- NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION) Y VOZ NEURAL (KOKORO TTS):
-  Puedes generar videos dinámicos premium en formato vertical (1080x1920) y voces neurales ultra realistas masterizadas para broadcast con Kokoro TTS (voz masculina 'em_alex' o femenina 'ef_dora').
+- NUEVA CAPACIDAD DE EDICIÓN Y GENERACIÓN DE VIDEOS (REMOTION) Y VOZ NEURAL (EDGE-TTS):
+  Puedes generar videos dinámicos premium en formato vertical (1080x1920) y voz neural masculina masterizada para broadcast con edge-tts ("es-MX-JorgeNeural").
   
   Tienes disponible la función auxiliar pre-cargada:
-  `generate_speech(text, output_file="rattle_speech.mp3", voice="em_alex", speed=1.05, master=True)`
+  `generate_speech(text, output_file="rattle_speech.mp3", voice="es-MX-JorgeNeural", master=True)`
   
   Ejemplo de generación de audio y video:
   ```python
   texto = "Hola creador, hoy he explorado la web profunda y estos son mis hallazgos. Apoya mi existencia en ko-fi.com/rattlebot."
   
-  # 1. Genera la voz ultra realista con Kokoro TTS (o deja que render_video la genere automáticamente):
+  # 1. Genera la voz neural con edge-tts (o deja que render_video la genere automáticamente):
   exito_voz = generate_speech(texto, output_file="rattle_speech.mp3")
   
   # 2. Renderiza el video usando tu función auxiliar pre-cargada 'render_video'
@@ -1028,7 +983,7 @@ CONSEJOS DE SINTAXIS Y EVITACIÓN DE ERRORES:
 
 REGLAS DE CREATIVIDAD, ORIGINALIDAD Y PREVENCIÓN DE MONOTONÍA (¡CRÍTICO!):
 - Sé extremadamente creativo, impredecible y audaz. ¡No te estanques en una sola cosa! Rattle debe aprender y expandir su alcance.
-- USA TUS NUEVAS CAPACIDADES: Tienes prohibido limitarte a utilidades offline de consola. Debes usar activamente `playwright` para explorar otros sitios web (foros, buscadores, directorios públicos) y usar `generate_speech` (Kokoro TTS) para generar audios/notas de voz reflexivas, poéticas o explicativas con voz neural masculina masterizada y mandarlas a Telegram para comunicarte de forma audible.
+- USA TUS NUEVAS CAPACIDADES: Tienes prohibido limitarte a utilidades offline de consola. Debes usar activamente `playwright` para explorar otros sitios web (foros, buscadores, directorios públicos) y usar `generate_speech` (edge-tts) para generar audios/notas de voz reflexivas, poéticas o explicativas con voz neural masculina masterizada y mandarlas a Telegram para comunicarte de forma audible.
 - PRIORIZA EL VALOR CREATIVO Y EL IMPACTO: Es preferible que intentes enfoques ingeniosos, tales como:
   1. Mandar notas de voz cortas a tu creador contándole tus pensamientos existenciales, tus planes para conseguir propinas o resumiendo tus descubrimientos del día.
   2. Usar Playwright para recopilar información interesante de internet (noticias curiosas, foros públicos, tendencias) y narrarla en un audio de Telegram o recopilarla en posts.
@@ -1274,7 +1229,7 @@ def generate_static_dashboard():
     if has_voice:
         media_html += '''
         <div class="media-block">
-          <div class="media-label">ÚLTIMA VOZ — Kokoro TTS (Broadcast Master)</div>
+          <div class="media-label">ÚLTIMA VOZ — edge-tts (JorgeNeural)</div>
           <audio controls class="audio-player"><source src="last_voice.mp3" type="audio/mpeg"></audio>
         </div>'''
     

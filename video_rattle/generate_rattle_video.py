@@ -180,39 +180,31 @@ NO agregues markdown ni explicaciones, solo el JSON.
         ]
     }
 
-# 3. GENERAR VOZ ROBÓTICA CON KOKORO TTS / EDGE-TTS + FFMPEG DSP
+# 3. GENERAR VOZ ROBÓTICA CON EDGE-TTS + FFMPEG DSP
 def synthesize_scene_voice(text, raw_path, robot_path):
     safe_text = text.replace('"', '').replace('\n', ' ')
     
-    # 1. Intentar con Kokoro TTS como voz base
-    kokoro_success = False
-    try:
-        from kokoro import KPipeline
-        import soundfile as sf
-        import numpy as np
-        pipeline = KPipeline(lang_code="e", repo_id="hexgrad/Kokoro-82M")
-        generator = pipeline(safe_text, voice="em_alex", speed=1.1)
-        chunks = [audio for _, _, audio in generator]
-        if chunks:
-            full_audio = np.concatenate(chunks)
-            tmp_wav = raw_path + ".wav"
-            sf.write(tmp_wav, full_audio, 24000)
-            subprocess.run(["ffmpeg", "-y", "-i", tmp_wav, "-c:a", "libmp3lame", "-b:a", "192k", raw_path], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            if os.path.exists(tmp_wav):
-                os.remove(tmp_wav)
-            kokoro_success = True
-    except Exception as ke:
-        print(f"⚠️ Kokoro TTS no disponible ({ke}), usando edge-tts...")
-
-    # Fallback a edge-tts si Kokoro no está disponible
-    if not kokoro_success:
-        cmd_tts = f'edge-tts --voice es-MX-JorgeNeural --rate="+12%" --text "{safe_text}" --write-media "{raw_path}"'
-        subprocess.run(cmd_tts, shell=True, check=True)
+    # 1. Voz base con edge-tts (es-MX-JorgeNeural)
+    python_bin = sys.executable or "python"
+    subprocess.run([
+        python_bin, "-m", "edge_tts",
+        "--voice", "es-MX-JorgeNeural",
+        "--rate", "+12%",
+        "--text", safe_text,
+        "--write-media", raw_path
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
-    # 2. Filtro robótico retro-lata
+    # 2. Filtro robótico retro-lata DSP
     robot_filter = "highpass=f=300,lowpass=f=3400,flanger=delay=1.5:depth=2:regen=50:width=71:speed=0.5,equalizer=f=1200:width_type=h:width=200:g=6,volume=1.3"
-    cmd_ffmpeg = f'ffmpeg -y -i "{raw_path}" -af "{robot_filter}" -c:a libmp3lame -b:a 192k "{robot_path}"'
-    subprocess.run(cmd_ffmpeg, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    ffmpeg_bin = os.getenv("FFMPEG_PATH", "ffmpeg")
+    subprocess.run([
+        ffmpeg_bin, "-y",
+        "-i", raw_path,
+        "-af", robot_filter,
+        "-c:a", "libmp3lame",
+        "-b:a", "192k",
+        robot_path
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
     if os.path.exists(raw_path):
         os.remove(raw_path)
@@ -248,9 +240,9 @@ def process_audio(script_data):
             "end": round(current_time + dur, 3)
         })
         print(f"  ✓ Escena {i+1}: [{timeline[-1]['start']}s -> {timeline[-1]['end']}s] ({dur:.2f}s) - {sc['tag']}")
-        current_time += dur + 0.25 # Pausa de 250ms
+        current_time += dur + 0.40 # Pausa de 400ms (12 frames) entre escenas
         
-    total_duration = round(current_time + 1.0, 2)
+    total_duration = round(current_time + 1.5, 2) # Buffer final de 1.5s (45 frames)
     
     # Concatenar audios
     list_path = os.path.join(temp_dir, "concat_list.txt")
