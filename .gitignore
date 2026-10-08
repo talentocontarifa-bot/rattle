@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 state.json
 kofi_state.json
+tiktok_tokens.json
 props.json
 kofi_profile/
 bin/

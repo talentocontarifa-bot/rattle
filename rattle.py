@@ -873,31 +873,8 @@ Condiciones y Recursos del Entorno:
   page = StealthyFetcher.fetch('https://old.reddit.com/r/NoStupidQuestions/new/')
   for post in page.css('.thing'):
       title = post.css('a.title::text').get()
-      print(f"Post: {title}")
+      print(f"Post: {{title}}")
   ```
-
-- NUEVO SÚPER PODER DE NAVEGACIÓN EN RUST ULTRALIGERA (OBSCURA - ~30 MB RAM):
-  Tienes integrado Obscura, un motor de navegador headless en Rust con footprint mínimo de memoria (~30 MB de RAM frente a los 300+ MB de Chromium) y arranque instantáneo (~85ms).
-  Es ideal para ahorrar tiempo y recursos en GitHub Actions y evitar límites de memoria.
-  Formas de usarlo:
-  1. Fetch directo y ultra-rápido:
-     ```python
-     # Obscura evalúa JavaScript y devuelve el resultado en milisegundos
-     resultado = obscura_fetch('https://news.ycombinator.com', eval_js='document.title')
-     print("Resultado rápido Obscura:", resultado)
-     ```
-  2. Vía Chrome DevTools Protocol (CDP) con Playwright:
-     ```python
-     from playwright.sync_api import sync_playwright
-     
-     start_obscura_cdp() # Inicia el daemon CDP en puerto 9222
-     with sync_playwright() as p:
-         browser = p.chromium.connect_over_cdp("http://127.0.0.1:9222")
-         page = browser.new_page()
-         page.goto("https://news.ycombinator.com")
-         print("Página navegada con Obscura en Rust:", page.title())
-         browser.close()
-     ```
 
 - NUEVO SÚPER PODER DE EXTRACCIÓN CON IA SIN SELECTORES FRÁGILES (CRAWL4AI):
   ¡Se acabaron los selectores CSS que se rompen cuando las páginas cambian de diseño!

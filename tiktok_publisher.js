@@ -33,9 +33,55 @@ try {
   }
 }
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+const { execFileSync } = require('child_process');
+const { describeAxiosError, withRetry } = require('./http_errors');
 
 const TOKEN_FILE = path.join(__dirname, 'tiktok_tokens.json');
 const ENV_FILE = path.join(__dirname, '.env');
+
+// Límites oficiales de TikTok para FILE_UPLOAD
+const MIN_CHUNK = 5 * 1024 * 1024;
+const MAX_CHUNK = 64 * 1024 * 1024;
+
+// Mensajes accionables para los errores más comunes de la API
+const TIKTOK_ERROR_HINTS = {
+  spam_risk_too_many_pending_share: 'Hay demasiados borradores pendientes en el Inbox de TikTok. Abre la app de TikTok y publica o descarta los borradores de Rattle.',
+  spam_risk_too_many_posts: 'TikTok alcanzó el límite diario de publicaciones para esta cuenta.',
+  spam_risk_user_banned_from_posting: 'La cuenta tiene bloqueada la publicación vía API.',
+  scope_not_authorized: 'El token no tiene el scope necesario (video.upload / video.publish). Re-autoriza la app.',
+  access_token_invalid: 'Access token inválido; revisa TIKTOK_REFRESH_TOKEN.',
+  unaudited_client_can_only_post_to_private_accounts: 'La app no está auditada: solo puede publicar en cuentas privadas (se usa Inbox como fallback).',
+  invalid_params: 'Parámetros inválidos (revisa tamaño/chunks del video).'
+};
+
+function tiktokErrorSummary(err) {
+  const code = err.response?.data?.error?.code;
+  const hint = code && TIKTOK_ERROR_HINTS[code] ? ` 💡 ${TIKTOK_ERROR_HINTS[code]}` : '';
+  return `${describeAxiosError(err)}${hint}`;
+}
+
+/**
+ * En GitHub Actions el runner es efímero: si TikTok rota el refresh_token, hay que
+ * guardarlo de vuelta en los Secrets o la siguiente corrida usará uno viejo.
+ * Requiere el secret GH_SECRETS_PAT (PAT con permiso "Secrets: read/write" del repo).
+ */
+function persistGithubSecret(name, value) {
+  const pat = process.env.GH_SECRETS_PAT;
+  const repo = process.env.GITHUB_REPOSITORY;
+  if (!pat || !repo || !value) return false;
+  try {
+    execFileSync('gh', ['secret', 'set', name, '--repo', repo], {
+      input: value,
+      env: { ...process.env, GH_TOKEN: pat },
+      stdio: ['pipe', 'ignore', 'pipe']
+    });
+    console.log(`🔐 Secret ${name} actualizado en GitHub.`);
+    return true;
+  } catch (e) {
+    console.warn(`⚠️ No se pudo actualizar el secret ${name}: ${e.message}`);
+    return false;
+  }
+}
 
 /**
  * Carga las credenciales de TikTok.
@@ -103,9 +149,15 @@ async function refreshAccessToken() {
     refresh_token: tokens.refresh_token
   });
 
-  const response = await axios.post('https://open.tiktokapis.com/v2/oauth/token/', params.toString(), {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  });
+  let response;
+  try {
+    response = await axios.post('https://open.tiktokapis.com/v2/oauth/token/', params.toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      timeout: 30000
+    });
+  } catch (err) {
+    throw new Error(`No se pudo renovar el token de TikTok: ${describeAxiosError(err)}`);
+  }
 
   const data = response.data;
   if (!data.access_token && !data.data?.access_token) {
@@ -122,6 +174,12 @@ async function refreshAccessToken() {
   };
 
   saveTokens(newTokens);
+  if (newTokens.refresh_token && newTokens.refresh_token !== tokens.refresh_token) {
+    console.log('🔁 TikTok rotó el refresh_token.');
+    if (!persistGithubSecret('TIKTOK_REFRESH_TOKEN', newTokens.refresh_token) && process.env.GITHUB_ACTIONS) {
+      console.warn('⚠️ El nuevo refresh_token NO se guardó en GitHub Secrets (falta GH_SECRETS_PAT). La próxima corrida podría fallar.');
+    }
+  }
   console.log('✅ Token de TikTok renovado exitosamente.');
   return newTokens.access_token;
 }
@@ -205,6 +263,27 @@ async function publishVideoToTikTok(videoFilePath, options = {}) {
   const title = options.title || 'Talento con Tarifa #TalentoConTarifa #InteligenciaArtificial #Emprendedores';
   const privacyLevel = options.privacy_level || 'SELF_ONLY';
 
+  // Calcular chunks según las reglas de TikTok:
+  //  - Videos <= 64MB: un solo chunk del tamaño exacto.
+  //  - Más grandes: chunks de 10MB; el último absorbe el resto (total = floor(size / chunk)).
+  let chunkSize = videoSize;
+  let totalChunks = 1;
+  if (videoSize > MAX_CHUNK) {
+    chunkSize = 10 * 1024 * 1024;
+    totalChunks = Math.floor(videoSize / chunkSize);
+  }
+  const sourceInfo = {
+    source: 'FILE_UPLOAD',
+    video_size: videoSize,
+    chunk_size: chunkSize,
+    total_chunk_count: totalChunks
+  };
+
+  const authHeaders = () => ({
+    'Authorization': `Bearer ${accessToken}`,
+    'Content-Type': 'application/json; charset=UTF-8'
+  });
+
   let mode = 'DIRECT_POST';
   let initUrl = 'https://open.tiktokapis.com/v2/post/publish/video/init/';
   let initPayload = {
@@ -216,23 +295,13 @@ async function publishVideoToTikTok(videoFilePath, options = {}) {
       disable_comment: options.disable_comment ?? false,
       video_cover_timestamp_ms: options.video_cover_timestamp_ms ?? 1000
     },
-    source_info: {
-      source: 'FILE_UPLOAD',
-      video_size: videoSize,
-      chunk_size: videoSize,
-      total_chunk_count: 1
-    }
+    source_info: sourceInfo
   };
 
-  console.log('📡 Solicitando URL de carga a TikTok API (Direct Post)...');
+  console.log(`📡 Solicitando URL de carga a TikTok API (Direct Post, ${totalChunks} chunk/s)...`);
   let initRes;
   try {
-    initRes = await axios.post(initUrl, initPayload, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    });
+    initRes = await axios.post(initUrl, initPayload, { headers: authHeaders(), timeout: 60000 });
   } catch (err) {
     let errCode = err.response?.data?.error?.code;
     let status = err.response?.status;
@@ -242,12 +311,7 @@ async function publishVideoToTikTok(videoFilePath, options = {}) {
       console.log('⚠️ Token inválido o expirado. Renovando token...');
       accessToken = await refreshAccessToken();
       try {
-        initRes = await axios.post(initUrl, initPayload, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json; charset=UTF-8'
-          }
-        });
+        initRes = await axios.post(initUrl, initPayload, { headers: authHeaders(), timeout: 60000 });
       } catch (retryErr) {
         err = retryErr;
         errCode = err.response?.data?.error?.code;
@@ -258,27 +322,18 @@ async function publishVideoToTikTok(videoFilePath, options = {}) {
     // Si la llamada directa falló por ser Sandbox / cuenta no auditada (403 o error_code)
     if (!initRes) {
       if (errCode === 'unaudited_client_can_only_post_to_private_accounts' || status === 403) {
-        console.log('ℹ️ Entorno Sandbox / cuenta pública: usando Creator Inbox (Upload directo a borrador de TikTok)...');
+        console.log(`ℹ️ Direct Post no permitido (${errCode || status}). Usando Creator Inbox (borrador en la app de TikTok)...`);
         mode = 'INBOX_DRAFT';
         initUrl = 'https://open.tiktokapis.com/v2/post/publish/inbox/video/init/';
-        initPayload = {
-          source_info: {
-            source: 'FILE_UPLOAD',
-            video_size: videoSize,
-            chunk_size: videoSize,
-            total_chunk_count: 1
-          }
-        };
+        initPayload = { source_info: sourceInfo };
 
-        initRes = await axios.post(initUrl, initPayload, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json; charset=UTF-8'
-          }
-        });
+        try {
+          initRes = await axios.post(initUrl, initPayload, { headers: authHeaders(), timeout: 60000 });
+        } catch (inboxErr) {
+          throw new Error(`TikTok Inbox init falló: ${tiktokErrorSummary(inboxErr)}`);
+        }
       } else {
-        console.error('❌ Error al inicializar publicación en TikTok:', err.response?.data || err.message);
-        throw err;
+        throw new Error(`TikTok init falló: ${tiktokErrorSummary(err)}`);
       }
     }
   }
@@ -292,18 +347,32 @@ async function publishVideoToTikTok(videoFilePath, options = {}) {
   const uploadUrl = initData.upload_url;
   console.log(`✅ Sesión de subida creada [${mode}]. Publish ID: ${publishId}`);
 
-  // Subir el archivo de video binario completo
+  // Subir el video (por chunks si hace falta), con reintentos por chunk
   console.log('📤 Subiendo video a los servidores de TikTok...');
   const fileBuffer = fs.readFileSync(videoFilePath);
-
-  await axios.put(uploadUrl, fileBuffer, {
-    headers: {
-      'Content-Type': 'video/mp4',
-      'Content-Range': `bytes 0-${videoSize - 1}/${videoSize}`
-    },
-    maxBodyLength: Infinity,
-    maxContentLength: Infinity
-  });
+  for (let i = 0; i < totalChunks; i++) {
+    const start = i * chunkSize;
+    const end = i === totalChunks - 1 ? videoSize - 1 : start + chunkSize - 1;
+    const chunk = fileBuffer.subarray(start, end + 1);
+    try {
+      await withRetry(
+        () => axios.put(uploadUrl, chunk, {
+          headers: {
+            'Content-Type': 'video/mp4',
+            'Content-Length': chunk.length.toString(),
+            'Content-Range': `bytes ${start}-${end}/${videoSize}`
+          },
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 5 * 60 * 1000
+        }),
+        { label: `Chunk ${i + 1}/${totalChunks} TikTok` }
+      );
+    } catch (err) {
+      throw new Error(`Subida a TikTok falló en chunk ${i + 1}/${totalChunks}: ${tiktokErrorSummary(err)}`);
+    }
+    if (totalChunks > 1) console.log(`   ✓ Chunk ${i + 1}/${totalChunks}`);
+  }
 
   console.log('✅ Archivo binario cargado con éxito en TikTok CDN. Verificando estado...');
 

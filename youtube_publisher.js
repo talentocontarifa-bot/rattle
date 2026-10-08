@@ -33,6 +33,7 @@ try {
   }
 }
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+const { describeAxiosError, withRetry } = require('./http_errors');
 
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const UPLOAD_URL = 'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status';
@@ -67,7 +68,15 @@ async function getValidGoogleAccessToken() {
 
     return res.data.access_token;
   } catch (err) {
-    const errorDetails = err.response?.data ? JSON.stringify(err.response.data) : err.message;
+    const errorDetails = describeAxiosError(err);
+    if (err.response?.data?.error === 'invalid_grant') {
+      throw new Error(
+        `YOUTUBE_REFRESH_TOKEN vencido o revocado (invalid_grant). ` +
+        `💡 Si la app OAuth está en modo "Testing", Google revoca el token cada 7 días: ` +
+        `Google Cloud Console → OAuth consent screen → "Publish app", luego genera un refresh token nuevo ` +
+        `y actualiza el secret YOUTUBE_REFRESH_TOKEN.`
+      );
+    }
     throw new Error(`Error al renovar access_token de YouTube: ${errorDetails}`);
   }
 }
@@ -131,14 +140,20 @@ async function publishVideoToYouTube(videoFilePath, metadata = {}) {
 
   // PASO 1: Iniciar sesión de subida Resumible
   console.log('📡 Solicitando URL de carga a YouTube Data API v3...');
-  const initRes = await axios.post(UPLOAD_URL, videoMetadata, {
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-Type': 'application/json; charset=UTF-8',
-      'X-Upload-Content-Type': 'video/mp4',
-      'X-Upload-Content-Length': videoSize.toString()
-    }
-  });
+  let initRes;
+  try {
+    initRes = await withRetry(() => axios.post(UPLOAD_URL, videoMetadata, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-Upload-Content-Type': 'video/mp4',
+        'X-Upload-Content-Length': videoSize.toString()
+      },
+      timeout: 60000
+    }), { label: 'Init subida YouTube' });
+  } catch (err) {
+    throw new Error(`YouTube rechazó la sesión de subida: ${describeAxiosError(err)}`);
+  }
 
   const uploadUrl = initRes.headers['location'];
   if (!uploadUrl) {
@@ -150,14 +165,20 @@ async function publishVideoToYouTube(videoFilePath, metadata = {}) {
   // PASO 2: Subir archivo de video a la URL obtenida
   const fileBuffer = fs.readFileSync(videoFilePath);
 
-  const uploadRes = await axios.put(uploadUrl, fileBuffer, {
-    headers: {
-      'Content-Type': 'video/mp4',
-      'Content-Length': videoSize.toString()
-    },
-    maxBodyLength: Infinity,
-    maxContentLength: Infinity
-  });
+  let uploadRes;
+  try {
+    uploadRes = await withRetry(() => axios.put(uploadUrl, fileBuffer, {
+      headers: {
+        'Content-Type': 'video/mp4',
+        'Content-Length': videoSize.toString()
+      },
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
+      timeout: 10 * 60 * 1000
+    }), { label: 'Subida YouTube' });
+  } catch (err) {
+    throw new Error(`Falló la subida a YouTube: ${describeAxiosError(err)}`);
+  }
 
   const videoData = uploadRes.data;
   if (!videoData?.id) {

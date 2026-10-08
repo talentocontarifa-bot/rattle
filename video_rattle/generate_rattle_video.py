@@ -128,7 +128,12 @@ NO agregues markdown ni explicaciones, solo el JSON.
             if r.status_code == 200:
                 data = r.json()
                 content = data["choices"][0]["message"]["content"]
-                return json.loads(content)
+                script = json.loads(content)
+                if len(script.get("scenes", [])) >= 4:
+                    return script
+                print(f"⚠️ Groq devolvió un guion incompleto ({len(script.get('scenes', []))} escenas).")
+            else:
+                print(f"⚠️ Groq respondió HTTP {r.status_code}: {r.text[:300]}")
         except Exception as e:
             print(f"⚠️ Groq falló: {e}")
 

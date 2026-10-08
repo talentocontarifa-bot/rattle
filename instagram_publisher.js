@@ -32,6 +32,7 @@ try {
   }
 }
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+const { describeAxiosError, withRetry } = require('./http_errors');
 
 const GRAPH_API_VERSION = 'v21.0';
 
@@ -89,56 +90,74 @@ async function publishReelToInstagram(videoFilePath, options = {}) {
   console.log(`\n📸 Iniciando publicación de Instagram Reel en cuenta ID: ${igAccountId} (${videoSizeMB} MB)...`);
 
   // PASO 1: Crear la sesión de subida resumible
-  console.log('📡 Creando contenedor de Reel (Resumable Upload)...');
   const initUrl = `https://graph.facebook.com/${GRAPH_API_VERSION}/${igAccountId}/media`;
-  
-  const postData = new URLSearchParams();
-  postData.append('media_type', 'REELS');
-  postData.append('upload_type', 'resumable');
-  postData.append('caption', caption);
-  postData.append('share_to_feed', shareToFeed.toString());
-  postData.append('access_token', accessToken);
+  const MAX_UPLOAD_ATTEMPTS = 3;
+  let containerId = null;
 
-  let initRes;
-  try {
-    initRes = await axios.post(initUrl, postData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
-  } catch (err) {
-    const errorDetails = err.response?.data ? JSON.stringify(err.response.data) : err.message;
-    console.error('❌ Error detallado de Meta al crear contenedor de IG:', errorDetails);
-    throw new Error(`Error de Meta al crear contenedor de IG: ${errorDetails}`);
+  for (let attempt = 1; attempt <= MAX_UPLOAD_ATTEMPTS; attempt++) {
+    // PASO 1: Crear la sesión de subida resumible (un contenedor nuevo por intento:
+    // si Meta marca la sesión como ProcessingFailedError, ya no se puede reutilizar)
+    console.log(`📡 Creando contenedor de Reel (Resumable Upload) [intento ${attempt}/${MAX_UPLOAD_ATTEMPTS}]...`);
+    const postData = new URLSearchParams();
+    postData.append('media_type', 'REELS');
+    postData.append('upload_type', 'resumable');
+    postData.append('caption', caption);
+    postData.append('share_to_feed', shareToFeed.toString());
+    postData.append('access_token', accessToken);
+
+    let initRes;
+    try {
+      initRes = await withRetry(
+        () => axios.post(initUrl, postData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 60000 }),
+        { label: 'Crear contenedor IG' }
+      );
+    } catch (err) {
+      throw new Error(`Error de Meta al crear contenedor de IG: ${describeAxiosError(err)}`);
+    }
+
+    if (!initRes.data?.id || !initRes.data?.uri) {
+      throw new Error(`Respuesta inválida al crear contenedor de IG: ${JSON.stringify(initRes.data)}`);
+    }
+
+    const uploadUri = initRes.data.uri;
+    console.log(`✅ Contenedor de Reel creado. ID: ${initRes.data.id}`);
+
+    // PASO 2: Subir el archivo de video binario a Meta CDN
+    console.log('📤 Subiendo video a los servidores de Instagram...');
+    try {
+      await axios.post(uploadUri, fs.readFileSync(videoFilePath), {
+        headers: {
+          'Authorization': `OAuth ${accessToken}`,
+          'offset': '0', // un solo header (antes iba duplicado como Offset/offset)
+          'file_size': videoSize.toString(),
+          'Content-Type': 'application/octet-stream'
+        },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        timeout: 5 * 60 * 1000
+      });
+    } catch (err) {
+      console.warn(`⚠️ Falló la subida a Meta: ${describeAxiosError(err)}`);
+      if (attempt === MAX_UPLOAD_ATTEMPTS) {
+        throw new Error(`Subida a Instagram falló tras ${MAX_UPLOAD_ATTEMPTS} intentos: ${describeAxiosError(err)}`);
+      }
+      await new Promise(r => setTimeout(r, 10000 * attempt));
+      continue;
+    }
+
+    console.log('✅ Video cargado con éxito en Meta CDN. Esperando codificación...');
+
+    // PASO 3: Sondear hasta que el estado sea FINISHED
+    try {
+      await pollInstagramContainerStatus(initRes.data.id, accessToken);
+      containerId = initRes.data.id;
+      break;
+    } catch (err) {
+      console.warn(`⚠️ Instagram no pudo procesar el video: ${err.message}`);
+      if (attempt === MAX_UPLOAD_ATTEMPTS) throw err;
+      await new Promise(r => setTimeout(r, 10000 * attempt));
+    }
   }
-
-  if (!initRes.data?.id || !initRes.data?.uri) {
-    throw new Error(`Respuesta inválida al crear contenedor de IG: ${JSON.stringify(initRes.data)}`);
-  }
-
-  const containerId = initRes.data.id;
-  const uploadUri = initRes.data.uri;
-  console.log(`✅ Contenedor de Reel creado con éxito. ID: ${containerId}`);
-
-  // PASO 2: Subir el archivo de video binario a Meta CDN
-  console.log('📤 Subiendo video a los servidores de Instagram...');
-  const videoBuffer = fs.readFileSync(videoFilePath);
-
-  await axios.post(uploadUri, videoBuffer, {
-    headers: {
-      'Authorization': `OAuth ${accessToken}`,
-      'Offset': '0',
-      'offset': '0',
-      'file_size': videoSize.toString(),
-      'Content-Type': 'application/octet-stream',
-      'Content-Length': videoSize.toString()
-    },
-    maxBodyLength: Infinity,
-    maxContentLength: Infinity
-  });
-
-  console.log('✅ Video cargado con éxito en Meta CDN. Esperando codificación...');
-
-  // PASO 3: Sondear hasta que el estado sea FINISHED
-  await pollInstagramContainerStatus(containerId, accessToken);
 
   // PASO 4: Publicar el Reel
   console.log('🚀 Publicando Reel en Instagram...');
@@ -150,13 +169,13 @@ async function publishReelToInstagram(videoFilePath, options = {}) {
 
   let pubRes;
   try {
-    pubRes = await axios.post(publishUrl, publishData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
+    pubRes = await withRetry(
+      () => axios.post(publishUrl, publishData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 60000 }),
+      // Meta a veces responde 400 "media not ready" justo después de FINISHED: reintentar también 400
+      { label: 'media_publish IG', retries: 4, baseDelayMs: 8000, shouldRetry: (e) => !e.response || e.response.status === 400 || e.response.status >= 429 }
+    );
   } catch (err) {
-    const errorDetails = err.response?.data ? JSON.stringify(err.response.data) : err.message;
-    console.error('❌ Error detallado al publicar Reel:', errorDetails);
-    throw new Error(`Error de Meta en media_publish: ${errorDetails}`);
+    throw new Error(`Error de Meta en media_publish: ${describeAxiosError(err)}`);
   }
 
   const mediaId = pubRes.data?.id;

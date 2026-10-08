@@ -54,3 +54,31 @@ Rattle ahora puede interactuar con su perfil de creador en Ko-fi:
      ```bash
      python kofi_setup.py --check
      ```
+
+---
+
+## 🩺 Operación y diagnóstico
+
+### Workflows
+| Workflow | Qué hace | Si falla |
+|---|---|---|
+| `hourly.yml` | Ciclo autónomo cada 4h (corre `tests/` antes de gastar cuota de LLM) | Alerta a Telegram |
+| `daily.yml` | Bitácora diaria a Telegram/Ko-fi | Alerta a Telegram |
+| `daily_video.yml` | Genera, optimiza (`optimize_video.sh`) y publica el video | Reporte por red a Telegram; falla si **todas** las redes fallan (`PUBLISH_STRICT=true` para fallar con cualquiera) |
+| `check_tokens.yml` | Verifica credenciales de TikTok/IG/YouTube **sin publicar** | Muestra qué token está roto |
+
+En ejecución manual de `daily_video.yml` puedes elegir plataformas (`tiktok,instagram,youtube`).
+
+### Secrets requeridos / opcionales
+- `GH_SECRETS_PAT` *(opcional, recomendado)*: PAT fine-grained con permiso **Secrets: Read and write** sobre este repo. Permite guardar el `TIKTOK_REFRESH_TOKEN` cuando TikTok lo rota.
+- `KOFI_STORAGE_STATE`: ver sección de Ko-fi arriba.
+
+### Problemas conocidos
+- **YouTube `invalid_grant`**: la app OAuth está en modo *Testing* → Google revoca el refresh token cada 7 días. Solución: Google Cloud Console → OAuth consent screen → **Publish app**, y regenerar `YOUTUBE_REFRESH_TOKEN`.
+- **TikTok `spam_risk_too_many_pending_share`**: hay demasiados borradores en el Inbox. Publícalos o descártalos desde la app de TikTok.
+
+### Pruebas locales
+```bash
+python -m pytest tests -q      # el prompt se construye sin errores
+node check_tokens.js           # credenciales (requiere .env)
+```
