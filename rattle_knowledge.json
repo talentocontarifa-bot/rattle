@@ -802,5 +802,9 @@
   "last_rattle's_awesome_aws_dispatch_error_type": "requests.exceptions.RequestException",
   "last_awesome_npm_curator_error": "ERROR de red o HTTP durante 'Rattle's Awesome npm Curator (Markdown Deep Dive)': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/sindresorhus/awesome-npm/main/README.md",
   "last_awesome_npm_curator_timestamp": "2026-10-08T01:26:48.144642+00:00",
-  "last_awesome_npm_curator_error_type": "requests.exceptions.RequestException"
+  "last_awesome_npm_curator_error_type": "requests.exceptions.RequestException",
+  "last_devto_webdev_insights_error": "ERROR general durante 'Rattle's Dev.to WebDev Insights': Fallo al publicar el reporte en paste.rs.",
+  "last_devto_webdev_insights_timestamp": "2026-10-08T20:57:44.629656+00:00",
+  "last_devto_webdev_insights_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 110, in rattle_devto_webdev_insights\nException: Fallo al publicar el reporte en paste.rs.\n",
+  "last_devto_webdev_insights_error_type": "Exception"
 }
