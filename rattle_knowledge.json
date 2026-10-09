@@ -806,5 +806,8 @@
   "last_devto_webdev_insights_error": "ERROR general durante 'Rattle's Dev.to WebDev Insights': Fallo al publicar el reporte en paste.rs.",
   "last_devto_webdev_insights_timestamp": "2026-10-08T20:57:44.629656+00:00",
   "last_devto_webdev_insights_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 110, in rattle_devto_webdev_insights\nException: Fallo al publicar el reporte en paste.rs.\n",
-  "last_devto_webdev_insights_error_type": "Exception"
+  "last_devto_webdev_insights_error_type": "Exception",
+  "last_thenextweb_dispatch_v3_url": "https://paste.rs/UNXGh",
+  "last_thenextweb_dispatch_v3_timestamp": "2026-10-09T11:20:06.982717+00:00",
+  "last_thenextweb_dispatch_v3_error": null
 }
