@@ -817,5 +817,9 @@
   "last_engadget_tech_pulse_v6_timestamp": "2026-10-10T03:33:40.256808+00:00",
   "last_engadget_tech_pulse_v6_error": null,
   "last_zdnet_tech_pulse_v2_error": "ERROR de datos durante 'Rattle's ZDNet Tech Pulse (v2)': No se encontraron art\u00edculos en el feed RSS de ZDNet.",
-  "last_zdnet_tech_pulse_v2_error_type": "ValueError"
+  "last_zdnet_tech_pulse_v2_error_type": "ValueError",
+  "last_techcrunch_rss_digest_v3_url": "https://termbin.com/bn7s9\n\u0000",
+  "last_techcrunch_rss_digest_v3_timestamp": "2026-10-10T16:40:33.828907+00:00",
+  "last_techcrunch_rss_digest_v3_error": null,
+  "last_techcrunch_rss_digest_v3_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE."
 }
