@@ -770,8 +770,8 @@
   "last_thenextweb_dispatch_v2_url": "https://termbin.com/aolz\n\u0000",
   "last_thenextweb_dispatch_v2_timestamp": "2026-09-27T16:07:01.179728+00:00",
   "last_thenextweb_dispatch_v2_error": null,
-  "last_ars_technica_rss_dispatch_url": "https://paste.rs/8EhyS",
-  "last_ars_technica_rss_dispatch_timestamp": "2026-09-27T22:44:41.713445+00:00",
+  "last_ars_technica_rss_dispatch_url": "https://termbin.com/q70p9\n\u0000",
+  "last_ars_technica_rss_dispatch_timestamp": "2026-10-11T23:21:05.570513+00:00",
   "last_ars_technica_rss_dispatch_error": null,
   "last_thehackernews_dispatch_error": null,
   "last_thehackernews_dispatch_error_type": null,
@@ -829,5 +829,6 @@
   "last_techcrunch_rss_digest_v5_url": "https://termbin.com/zmr1",
   "last_techcrunch_rss_digest_v5_timestamp": "2026-10-11T10:29:04.414730+00:00",
   "last_techcrunch_rss_digest_v5_error": null,
-  "last_techcrunch_rss_digest_v5_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE."
+  "last_techcrunch_rss_digest_v5_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE.",
+  "last_ars_technica_rss_dispatch_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE."
 }
