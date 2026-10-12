@@ -830,5 +830,7 @@
   "last_techcrunch_rss_digest_v5_timestamp": "2026-10-11T10:29:04.414730+00:00",
   "last_techcrunch_rss_digest_v5_error": null,
   "last_techcrunch_rss_digest_v5_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE.",
-  "last_ars_technica_rss_dispatch_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE."
+  "last_ars_technica_rss_dispatch_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE.",
+  "last_github_trending_explorer_error": "ERROR de datos durante 'Rattle's GitHub Trending Explorer v2': No se encontraron repositorios trending significativos en GitHub.",
+  "last_github_trending_explorer_error_type": "ValueError"
 }
