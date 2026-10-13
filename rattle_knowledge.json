@@ -841,5 +841,7 @@
   "last_thehackernews_dispatch_v2_error_type": "ValueError",
   "last_devto_webdev_deep_dive_error": "ERROR de datos durante 'Rattle's Dev.to Web Development Deep Dive (Crawl4AI)': No se encontraron art\u00edculos significativos de desarrollo web en el contenido de Dev.to.",
   "last_devto_webdev_deep_dive_timestamp": "2026-10-13T15:28:08.029381+00:00",
-  "last_devto_webdev_deep_dive_error_type": "ValueError"
+  "last_devto_webdev_deep_dive_error_type": "ValueError",
+  "last_hn_front_page_html_scan_v2_error": "ERROR general durante 'Rattle's Hacker News Front Page HTML Scan v2': No se encontraron art\u00edculos en la portada de Hacker News con los selectores HTML intentados.",
+  "last_hn_front_page_html_scan_v2_error_type": "ValueError"
 }
