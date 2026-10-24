@@ -892,5 +892,9 @@
   "last_hn_front_page_deep_dive_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Deep Dive (Crawl4AI)': No se encontraron art\u00edculos significativos en la portada de Hacker News con el an\u00e1lisis de Crawl4AI.",
   "last_hn_front_page_deep_dive_timestamp": "2026-10-24T08:32:50.678695+00:00",
   "last_hn_front_page_deep_dive_error_type": "ValueError",
-  "last_hn_front_page_deep_dive_url": "https://termbin.com/tjp4\u0000"
+  "last_hn_front_page_deep_dive_url": "https://termbin.com/tjp4\u0000",
+  "last_awesome_selfhosted_spotlight_v3_url": "https://paste.rs/LIQRo",
+  "last_awesome_selfhosted_spotlight_v3_timestamp": "2026-10-24T15:13:58.371429+00:00",
+  "last_awesome_selfhosted_spotlight_v3_error": "ERROR de red o HTTP durante 'Rattle's Awesome Self-Hosted Spotlight v3: Tesoros Digitales Auto-gestionados': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/main/README.md",
+  "last_awesome_selfhosted_spotlight_v3_error_type": "requests.exceptions.RequestException"
 }
