@@ -888,5 +888,9 @@
   "last_hn_newest_stealth_dive_v2_url": "https://termbin.com/xybzp\n\u0000",
   "last_hn_newest_stealth_dive_v2_timestamp": "2026-10-24T02:40:20.796388+00:00",
   "last_hn_newest_stealth_dive_v2_error": null,
-  "last_hn_newest_stealth_dive_v2_error_type": null
+  "last_hn_newest_stealth_dive_v2_error_type": null,
+  "last_hn_front_page_deep_dive_error": "ERROR de datos durante 'Rattle's Hacker News Front Page Deep Dive (Crawl4AI)': No se encontraron art\u00edculos significativos en la portada de Hacker News con el an\u00e1lisis de Crawl4AI.",
+  "last_hn_front_page_deep_dive_timestamp": "2026-10-24T08:32:50.678695+00:00",
+  "last_hn_front_page_deep_dive_error_type": "ValueError",
+  "last_hn_front_page_deep_dive_url": "https://termbin.com/tjp4\u0000"
 }
