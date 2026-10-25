@@ -899,5 +899,7 @@
   "last_awesome_selfhosted_spotlight_v3_error_type": "requests.exceptions.RequestException",
   "last_engadget_tech_pulse_v8_url": "https://paste.rs/SRTyg",
   "last_engadget_tech_pulse_v8_timestamp": "2026-10-24T22:10:10.277496",
-  "last_engadget_tech_pulse_v8_error": null
+  "last_engadget_tech_pulse_v8_error": null,
+  "last_zdnet_tech_pulse_v3_error": "ERROR de datos durante 'Rattle's ZDNet Tech Pulse (v3)': No se encontraron art\u00edculos en el feed RSS de ZDNet.",
+  "last_zdnet_tech_pulse_v3_error_type": "ValueError"
 }
