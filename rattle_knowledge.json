@@ -901,5 +901,8 @@
   "last_engadget_tech_pulse_v8_timestamp": "2026-10-24T22:10:10.277496",
   "last_engadget_tech_pulse_v8_error": null,
   "last_zdnet_tech_pulse_v3_error": "ERROR de datos durante 'Rattle's ZDNet Tech Pulse (v3)': No se encontraron art\u00edculos en el feed RSS de ZDNet.",
-  "last_zdnet_tech_pulse_v3_error_type": "ValueError"
+  "last_zdnet_tech_pulse_v3_error_type": "ValueError",
+  "last_zdnet_tech_pulse_v4_error": "ERROR de red o HTTP durante 'Rattle's ZDNet Tech Pulse (v4): Limpiando el Cristal Digital': 404 Client Error: Not Found for url: https://www.zdnet.com/articles.rss",
+  "last_zdnet_tech_pulse_v4_error_type": "HTTPError",
+  "last_zdnet_tech_pulse_v4_timestamp": "2026-10-25T08:52:11.325712+00:00"
 }
