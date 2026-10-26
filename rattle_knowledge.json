@@ -907,5 +907,8 @@
   "last_zdnet_tech_pulse_v4_timestamp": "2026-10-25T08:52:11.325712+00:00",
   "last_ars_technica_rss_dispatch_v3_url": "https://paste.rs/klhqu",
   "last_ars_technica_rss_dispatch_v3_timestamp": "2026-10-26T02:27:52.254968+00:00",
-  "last_ars_technica_rss_dispatch_v3_error": null
+  "last_ars_technica_rss_dispatch_v3_error": null,
+  "last_github_awesome_oss_scan_error": "ValueError: No se encontraron repositorios de 'Awesome Open Source Projects' en los resultados de GitHub.",
+  "last_github_awesome_oss_scan_timestamp": "2026-10-26T09:32:37.647654+00:00",
+  "last_github_awesome_oss_scan_error_type": "ValueError"
 }
