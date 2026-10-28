@@ -918,5 +918,9 @@
   "last_ars_technica_rss_dispatch_v4_error_type": "Exception",
   "last_ars_technica_rss_dispatch_v5_url": "https://termbin.com/xclv\u0000",
   "last_ars_technica_rss_dispatch_v5_timestamp": "2026-10-28T10:14:37.630585+00:00",
-  "last_ars_technica_rss_dispatch_v5_error": null
+  "last_ars_technica_rss_dispatch_v5_error": null,
+  "last_devto_webdev_rss_digest_url": "https://termbin.com/09il",
+  "last_devto_webdev_rss_digest_timestamp": "2026-10-28T17:43:19.584070+00:00",
+  "last_devto_webdev_rss_digest_error": null,
+  "last_devto_webdev_rss_digest_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE."
 }
