@@ -9,6 +9,10 @@ on:
         description: "Videos publicados hoy en TikTok Studio (opcional)"
         required: false
         default: ""
+      llo_summary:
+        description: "Resumen diario de La Legión Oculta (FB + IG + TikTok)"
+        required: false
+        default: ""
 
 jobs:
   send-corte-diario:
@@ -39,4 +43,5 @@ jobs:
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
           TRELLO_LCM_BOARD_ID: ${{ secrets.TRELLO_LCM_BOARD_ID }}
           TIKTOK_TODAY_COUNT: ${{ github.event.inputs.tiktok_today }}
+          LLO_SUMMARY: ${{ github.event.inputs.llo_summary }}
         run: python scripts/corte_diario_negocios.py
