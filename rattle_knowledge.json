@@ -935,5 +935,9 @@
   "last_smashing_magazine_pulse_kofi_error": "No se encontr\u00f3 'kofi_state.json'. Se requiere haber iniciado sesi\u00f3n o configurado KOFI_STORAGE_STATE.",
   "last_github_trending_python_dispatch_url": "https://termbin.com/x7v7",
   "last_github_trending_python_dispatch_timestamp": "2026-10-30T17:31:27.910950+00:00",
-  "last_github_trending_python_dispatch_error": null
+  "last_github_trending_python_dispatch_error": null,
+  "last_awesome_go_catalog_pulse_v8_url": "https://termbin.com/93ewh\n\u0000",
+  "last_awesome_go_catalog_pulse_v8_timestamp": "2026-10-30T23:25:13.910204+00:00",
+  "last_awesome_go_catalog_pulse_v8_error": null,
+  "last_awesome_go_catalog_pulse_v8_error_type": null
 }
