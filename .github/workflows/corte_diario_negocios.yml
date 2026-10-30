@@ -1,0 +1,42 @@
+name: Corte Diario de Negocios (Telegram 6 PM)
+
+on:
+  schedule:
+    - cron: "0 23 * * *" # 18:00 America/Cancun (UTC-5)
+  workflow_dispatch:
+    inputs:
+      tiktok_today:
+        description: "Videos publicados hoy en TikTok Studio (opcional)"
+        required: false
+        default: ""
+
+jobs:
+  send-corte-diario:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generar y enviar Corte Diario a Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          DREAMCRAFTERS_META_PAGE_ACCESS_TOKEN: ${{ secrets.DREAMCRAFTERS_META_PAGE_ACCESS_TOKEN }}
+          DREAMCRAFTERS_IG_ACCOUNT_ID: ${{ secrets.DREAMCRAFTERS_IG_ACCOUNT_ID }}
+          TCT_META_PAGE_ACCESS_TOKEN: ${{ secrets.TCT_META_PAGE_ACCESS_TOKEN }}
+          TCT_INSTAGRAM_ACCOUNT_ID: ${{ secrets.TCT_INSTAGRAM_ACCOUNT_ID }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          TRELLO_LCM_BOARD_ID: ${{ secrets.TRELLO_LCM_BOARD_ID }}
+          TIKTOK_TODAY_COUNT: ${{ github.event.inputs.tiktok_today }}
+        run: python scripts/corte_diario_negocios.py
