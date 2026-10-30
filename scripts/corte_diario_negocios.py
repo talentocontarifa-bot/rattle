@@ -211,6 +211,11 @@ def build_daily_report(env: dict) -> str:
         else ""
     )
 
+    llo_summary_str = (
+        env.get("LLO_SUMMARY", "").strip()
+        or "3 turnos diarios activos en FB + IG (@lalegion.oculta) + TikTok"
+    )
+
     # 4. TRELLO MS PROYECTO LCM
     trello_summary = "Sin cambios hoy"
     t_key = env.get("TRELLO_API_KEY")
@@ -259,7 +264,10 @@ def build_daily_report(env: dict) -> str:
         f"  • <b>Talento con Tarifa + PET:</b> {tct_ig_today} Reels publicados hoy\n"
         f"{tk_line}"
         f"  • <b>YouTube Shorts:</b> {yt_today_count} subidos hoy ({yt_total_views:,} vistas totales en el canal){yt_extra}\n\n"
-        f"📋 <b>4. CONSULTORÍA (TRELLO MS PROYECTO LCM)</b>\n"
+        f"📖 <b>4. LA LEGIÓN OCULTA (EL PROPICIATORIO)</b>\n"
+        f"  • <b>Shuffle Multicanal (FB + IG + TikTok):</b> {html.escape(llo_summary_str)}\n"
+        f"  • <b>Canales:</b> <a href=\"https://www.instagram.com/lalegion.oculta/\">IG @lalegion.oculta</a> · <a href=\"https://www.tiktok.com/@user6829058115686\">TikTok</a> · <a href=\"https://lalegionoculta.lat\">lalegionoculta.lat</a>\n\n"
+        f"📋 <b>5. CONSULTORÍA (TRELLO MS PROYECTO LCM)</b>\n"
         f"  • {html.escape(trello_summary)}\n\n"
         f"🔗 <a href=\"https://www.dreamcrafters.lat/admin-pedidos\">Abrir Panel Admin DreamCrafters</a>"
     )
