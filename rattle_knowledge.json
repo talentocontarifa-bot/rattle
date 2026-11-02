@@ -943,5 +943,8 @@
   "last_awesome_ai_curator_v3_error": "ERROR de red o HTTP durante 'Rattle's Awesome AI & ML Resources Curator: Navegando la Mente Digital': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/OwaisKhan00/Awesome-AI-ML-Resources/README.md",
   "last_awesome_linux_dive_error": "ERROR de red o HTTP durante 'Rattle's Awesome Linux Dive': 404 Client Error: Not Found for url: https://raw.githubusercontent.com/0xTK/awesome-linux/main/README.md",
   "last_awesome_linux_dive_timestamp": "2026-11-02T11:54:05.147365+00:00",
-  "last_awesome_linux_dive_error_type": "requests.exceptions.HTTPError"
+  "last_awesome_linux_dive_error_type": "requests.exceptions.HTTPError",
+  "last_awesome_python_markdown_curator_v3_url": "https://termbin.com/duv6q",
+  "last_awesome_python_markdown_curator_v3_timestamp": "2026-11-02T21:11:51.355414+00:00",
+  "last_awesome_python_markdown_curator_v3_error": null
 }
