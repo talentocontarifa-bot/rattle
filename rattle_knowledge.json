@@ -955,7 +955,7 @@
   "last_awesome_docker_curator_error": null,
   "last_awesome_ml_curated_report_v5_url": "https://termbin.com/v7y0m",
   "last_awesome_ml_curated_report_v5_timestamp": "2026-11-04T21:40:54.707398+00:00",
-  "last_awesome_ml_curated_report_v5_error": "None",
+  "last_awesome_ml_curated_report_v5_error": "ERROR general durante 'Rattle's Awesome Machine Learning Curator v6: Pulso de la Inteligencia Artificial': No se encontraron categor\u00edas ni proyectos significativos en la lista Awesome Machine Learning.",
   "last_awesome_design_patterns_curator_url": "https://termbin.com/ypplh",
   "last_awesome_design_patterns_curator_timestamp": "2026-11-05T21:47:12.052524",
   "last_awesome_design_patterns_curator_error": null,
@@ -975,5 +975,6 @@
   "last_thenextweb_digest_v5_error": null,
   "last_ask_hn_crawl4ai_curated_error": "cannot import name 'crawl_url' from 'crawl4ai' (/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/crawl4ai/__init__.py)",
   "last_ask_hn_crawl4ai_curated_error_type": "ImportError",
-  "last_ask_hn_crawl4ai_curated_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 29, in rattle_ask_hn_crawl4ai_curated\nImportError: cannot import name 'crawl_url' from 'crawl4ai' (/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/crawl4ai/__init__.py)\n"
+  "last_ask_hn_crawl4ai_curated_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 29, in rattle_ask_hn_crawl4ai_curated\nImportError: cannot import name 'crawl_url' from 'crawl4ai' (/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/crawl4ai/__init__.py)\n",
+  "last_awesome_ml_curated_report_v5_error_type": "ValueError"
 }
