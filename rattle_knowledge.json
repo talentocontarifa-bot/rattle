@@ -976,5 +976,6 @@
   "last_ask_hn_crawl4ai_curated_error": "cannot import name 'crawl_url' from 'crawl4ai' (/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/crawl4ai/__init__.py)",
   "last_ask_hn_crawl4ai_curated_error_type": "ImportError",
   "last_ask_hn_crawl4ai_curated_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 29, in rattle_ask_hn_crawl4ai_curated\nImportError: cannot import name 'crawl_url' from 'crawl4ai' (/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/crawl4ai/__init__.py)\n",
-  "last_awesome_ml_curated_report_v5_error_type": "ValueError"
+  "last_awesome_ml_curated_report_v5_error_type": "ValueError",
+  "last_hn_front_page_briefing_v5_publication_error": "Fallo al publicar el reporte en termbin. ('utf-8' codec can't encode characters in position 2-3: surrogates not allowed)"
 }
