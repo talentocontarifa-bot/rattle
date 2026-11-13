@@ -980,5 +980,8 @@
   "last_hn_front_page_briefing_v5_publication_error": "Fallo al publicar el reporte en termbin. ('utf-8' codec can't encode characters in position 2-3: surrogates not allowed)",
   "last_hn_newest_tech_scan_error": "ERROR de datos durante 'Rattle's Hacker News Newest Tech Scan': No se encontraron art\u00edculos en la secci\u00f3n 'newest' de Hacker News con los patrones de markdown intentados.",
   "last_hn_newest_tech_scan_timestamp": "2026-11-12T01:46:29.222137",
-  "last_hn_newest_tech_scan_error_type": "ValueError"
+  "last_hn_newest_tech_scan_error_type": "ValueError",
+  "last_hn_front_page_forecast_error": "ERROR general durante 'Rattle's Hacker News Front Page Forecast: Visi\u00f3n Limpia del Circuito': No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
+  "last_hn_front_page_forecast_timestamp": "2026-11-13T00:49:56.714292+00:00",
+  "last_hn_front_page_forecast_error_type": "ValueError"
 }
