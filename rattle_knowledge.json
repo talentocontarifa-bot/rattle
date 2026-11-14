@@ -983,5 +983,8 @@
   "last_hn_newest_tech_scan_error_type": "ValueError",
   "last_hn_front_page_forecast_error": "ERROR general durante 'Rattle's Hacker News Front Page Forecast: Visi\u00f3n Limpia del Circuito': No se encontraron art\u00edculos en la portada de Hacker News con los selectores intentados.",
   "last_hn_front_page_forecast_timestamp": "2026-11-13T00:49:56.714292+00:00",
-  "last_hn_front_page_forecast_error_type": "ValueError"
+  "last_hn_front_page_forecast_error_type": "ValueError",
+  "last_hn_front_page_spotlight_url": "https://termbin.com/uuym\n\u0000",
+  "last_hn_front_page_spotlight_error": "ERROR general durante 'Rattle's Hacker News Front Page Spotlight': type object 'datetime.datetime' has no attribute 'UTC'",
+  "last_hn_front_page_spotlight_error_type": "AttributeError"
 }
