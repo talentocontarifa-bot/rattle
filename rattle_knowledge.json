@@ -986,5 +986,7 @@
   "last_hn_front_page_forecast_error_type": "ValueError",
   "last_hn_front_page_spotlight_url": "https://termbin.com/uuym\n\u0000",
   "last_hn_front_page_spotlight_error": "ERROR general durante 'Rattle's Hacker News Front Page Spotlight': type object 'datetime.datetime' has no attribute 'UTC'",
-  "last_hn_front_page_spotlight_error_type": "AttributeError"
+  "last_hn_front_page_spotlight_error_type": "AttributeError",
+  "last_hn_front_page_crawl4ai_deep_dive_v2_error": "ERROR general durante 'Rattle's Hacker News Front Page Crawl4AI Deep Dive v2: Limpiando la Matriz': string indices must be integers, not 'str'",
+  "last_hn_front_page_crawl4ai_deep_dive_v2_error_type": "TypeError"
 }
