@@ -988,5 +988,9 @@
   "last_hn_front_page_spotlight_error": "ERROR general durante 'Rattle's Hacker News Front Page Spotlight': type object 'datetime.datetime' has no attribute 'UTC'",
   "last_hn_front_page_spotlight_error_type": "AttributeError",
   "last_hn_front_page_crawl4ai_deep_dive_v2_error": "ERROR general durante 'Rattle's Hacker News Front Page Crawl4AI Deep Dive v2: Limpiando la Matriz': string indices must be integers, not 'str'",
-  "last_hn_front_page_crawl4ai_deep_dive_v2_error_type": "TypeError"
+  "last_hn_front_page_crawl4ai_deep_dive_v2_error_type": "TypeError",
+  "last_hn_front_page_crawl4ai_v3_error": "ValueError: No se encontraron art\u00edculos significativos en la portada de Hacker News con los selectores intentados.",
+  "last_hn_front_page_crawl4ai_v3_error_type": "ValueError",
+  "last_hn_front_page_crawl4ai_v3_timestamp": "2026-11-16T03:59:01.458930+00:00",
+  "last_hn_front_page_crawl4ai_v3_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 69, in rattle_hn_front_page_crawl4ai_v3\nValueError: No se encontraron art\u00edculos significativos en la portada de Hacker News con los selectores intentados.\n"
 }
