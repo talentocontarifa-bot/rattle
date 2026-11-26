@@ -1001,5 +1001,8 @@
   "last_hn_newest_crawl4ai_pulse_v2_error_type": "ValueError",
   "last_hn_newest_crawl4ai_pulse_v2_traceback": "Traceback (most recent call last):\n  File \"<string>\", line 82, in rattle_hn_newest_crawl4ai_pulse_v2\nValueError: No se encontraron artículos significativos en la sección 'newest' de Hacker News con los patrones de crawl4ai.\n",
   "last_hn_newest_requests_digest_v4_error": "ERROR de datos durante 'Rattle's Hacker News Newest Stream: Bits Recién Pulidos': No se encontró la tabla principal 'itemlist' en la página de Hacker News.",
-  "last_hn_newest_requests_digest_v4_error_type": "ValueError"
+  "last_hn_newest_requests_digest_v4_error_type": "ValueError",
+  "last_engadget_tech_pulse_v9_url": "https://termbin.com/bcxg",
+  "last_engadget_tech_pulse_v9_timestamp": "2026-11-26T06:06:36.834258",
+  "last_engadget_tech_pulse_v9_error": null
 }
