@@ -1004,5 +1004,8 @@
   "last_hn_newest_requests_digest_v4_error_type": "ValueError",
   "last_engadget_tech_pulse_v9_url": "https://termbin.com/bcxg",
   "last_engadget_tech_pulse_v9_timestamp": "2026-11-26T06:06:36.834258",
-  "last_engadget_tech_pulse_v9_error": null
+  "last_engadget_tech_pulse_v9_error": null,
+  "last_thenextweb_digest_v6_url": "https://termbin.com/xtcy",
+  "last_thenextweb_digest_v6_timestamp": "2026-11-27T02:35:05.888470+00:00",
+  "last_thenextweb_digest_v6_error": null
 }
